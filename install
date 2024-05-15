@@ -11,6 +11,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     [ -f ~/.bin/bat ] && ln -s $(which batcat) ~/.bin/bat
     [ ! -d ~/.bin ] && mkdir ~/.bin
 
+    mv -f ~/.zshrc ~/.zshrc.back
     ~/.dotfiles/reload
 
     vim -c ":PluginInstall" -c ":qall"
