@@ -24,6 +24,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
 
     source ~/.zshrc
 
+    [ ! -d ~~/.vim/bundle ] && mkdir ~~/.vim/bundle
     [ ! -d ~/.vim/bundle/Vundle.vim ] && git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
     [ ! -d ~/.tmux/plugins ] && mkdir ~/.tmux/plugins
