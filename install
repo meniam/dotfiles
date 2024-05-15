@@ -7,11 +7,6 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
 
     [ ! -d ~/.oh-my-zsh/ ] && sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-    [ -f ~/.bin/fd ] && ln -s $(which fdfind) ~/.bin/fd
-    [ -f ~/.bin/bat ] && ln -s $(which batcat) ~/.bin/bat
-
-    [ ! -d ~/.bin ] && mkdir ~/.bin
-
     mv -f ~/.zshrc ~/.zshrc.bak
 
     [ ! -d ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zjump ] && git clone https://github.com/qoomon/zjump ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zjump
@@ -29,6 +24,10 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
 
     [ ! -d ~/.tmux/plugins ] && mkdir -p ~/.tmux/plugins
     [ ! -d ~/.tmux/plugins/tpm ] && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+    [ ! -d ~/.bin ] && mkdir ~/.bin
+    [ -f ~/.bin/fd ] && ln -s $(which fdfind) ~/.bin/fd
+    [ -f ~/.bin/bat ] && ln -s $(which batcat) ~/.bin/bat
 
 #    vim -c ":PluginInstall" -c ":qall"
 #
