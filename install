@@ -13,7 +13,6 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     [ ! -d ~/.bin ] && mkdir ~/.bin
 
     mv -f ~/.zshrc ~/.zshrc.bak
-    ~/.dotfiles/reload
 
     [ ! -d ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zjump ] && git clone https://github.com/qoomon/zjump ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zjump
     [ ! -d ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-history-search ] && git clone https://github.com/qoomon/zsh-history-search ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-history-search
@@ -21,9 +20,13 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     [ ! -d ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-autosuggestions ] && git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-autosuggestions
     [ ! -d ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-history-substring-search ] && git clone https://github.com/zsh-users/zsh-history-substring-search ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-history-substring-search
 
+    ~/.dotfiles/reload
+
     source ~/.zshrc
 
     [ ! -d ~/.vim/bundle/Vundle.vim ] && git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+
+    [ ! -d ~/.tmux/plugins ] && mkdir ~/.tmux/plugins
     [ ! -d ~/.tmux/plugins/tpm ] && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
     vim -c ":PluginInstall" -c ":qall"
@@ -33,6 +36,8 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     sleep 1 && \
     ~/.tmux/plugins/tpm/scripts/install_plugins.sh && \
     tmux kill-server
+
+    source ~/.zshrc
 
 elif [[ "$OSTYPE" == "darwin"* ]]; then
 
