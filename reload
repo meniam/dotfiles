@@ -9,3 +9,5 @@ stow -v \
     tmux\
     vim\
     zsh
+
+source ~/.zshrc

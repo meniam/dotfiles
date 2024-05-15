@@ -15,9 +15,18 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     mv -f ~/.zshrc ~/.zshrc.bak
     ~/.dotfiles/reload
 
-    vim -c ":PluginInstall" -c ":qall"
+    [ ! -d ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zjump ] && git clone https://github.com/qoomon/zjump ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zjump
+    [ ! -d ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-history-search ] && git clone https://github.com/qoomon/zsh-history-search ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-history-search
+    [ ! -d ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-syntax-highlighting ] && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-syntax-highlighting
+    [ ! -d ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-autosuggestions ] && git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-autosuggestions
+    [ ! -d ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-history-substring-search ] && git clone https://github.com/zsh-users/zsh-history-substring-search ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-history-substring-search
+
+    source ~/.zshrc
 
     [ ! -d ~/.vim/bundle/Vundle.vim ] && git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+    [ ! -d ~/.tmux/plugins/tpm ] && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+    vim -c ":PluginInstall" -c ":qall"
 
     tmux start-server && \
     tmux new-session -d && \
@@ -29,20 +38,14 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 
     brew bundle --file=~/.dotfiles/install/brew/Brewfile || true
 
+    [ ! -d ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zjump ] && git clone https://github.com/qoomon/zjump ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zjump
+    [ ! -d ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-history-search ] && git clone https://github.com/qoomon/zsh-history-search ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-history-search
+    [ ! -d ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-syntax-highlighting ] && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-syntax-highlighting
+    [ ! -d ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-autosuggestions ] && git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-autosuggestions
+    [ ! -d ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-history-substring-search ] && git clone https://github.com/zsh-users/zsh-history-substring-search ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-history-substring-search
+    [ ! -d ~/.tmux/plugins/tpm ] && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
 else
     echo 'Unknown OS!'
     exit
 fi
-
-
-[ ! -d ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zjump ] && git clone https://github.com/qoomon/zjump ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zjump
-[ ! -d ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-history-search ] && git clone https://github.com/qoomon/zsh-history-search ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-history-search
-[ ! -d ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-syntax-highlighting ] && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-syntax-highlighting
-[ ! -d ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-autosuggestions ] && git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-autosuggestions
-[ ! -d ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-history-substring-search ] && git clone https://github.com/zsh-users/zsh-history-substring-search ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-history-substring-search
-
-#
-# TMUX
-#
-[ ! -d ~/.tmux/plugins/tpm ] && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-
