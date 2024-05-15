@@ -1,4 +1,6 @@
-#!/bin/zsh
+#!/bin/sh
+
+CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # [ ! -d ~/.bin ] && mkdir ~/.bin
 
@@ -9,5 +11,3 @@ stow -v \
     tmux\
     vim\
     zsh
-
-source ~/.zshrc
