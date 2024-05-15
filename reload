@@ -1,0 +1,11 @@
+#! /usr/bin/env sh
+
+[ ! -d ~/.bin ] && mkdir ~/.bin
+
+stow -v \
+    bin\
+    main\
+    git\
+    tmux\
+    vim\
+    zsh

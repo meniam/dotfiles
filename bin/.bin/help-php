@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cat ~/.bin/DOC/help-php.md

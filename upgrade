@@ -1,0 +1,9 @@
+#! /usr/bin/env sh
+
+cd ~/.dotfiles/
+
+git pull
+
+./reload
+
+cd -

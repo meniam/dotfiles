@@ -1,0 +1,9 @@
+#!/bin/bash
+
+brew bundle --file=~/.dotfiles/install/brew/Caskfile || true
+#defaults write org.hammerspoon.Hammerspoon MJConfigFile "~/.config/hammerspoon/init.lua"
+#for EXT in $$(cat ~/.dotfiles/install/brew/Codefile); do code --install-extension $$EXT; done
+xattr -d -r com.apple.quarantine ~/Library/QuickLook
+
+qlmanage -r
+qlmanage -r cache

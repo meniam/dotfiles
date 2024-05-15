@@ -1,0 +1,112 @@
+# DotFiles
+
+alias dfupdate="~/.dotfiles/upgrade"
+alias dfupgrade="~/.dotfiles/upgrade"
+
+# TMUX
+
+alias mux="tmuxinator"
+
+alias t='tmux attach || tmux new-session' # Attaches tmux to the last session; creates a new session if none exists.
+alias ta='tmux attach -t'                 # Attaches tmux to a session (example: ta portal)
+alias tn='tmux new-session'               # New session unnamed session
+alias tc='tmux new-session -s'           # Creates a new session (example: tc portal)
+alias tl='tmux list-sessions'             # Lists all ongoing sessions
+
+# Postgres
+
+alias pgt='pg_top -h localhost -U postgres'
+alias pga='pg_activity -h localhost -U postgres'
+
+alias dc="docker-compose"
+
+# CD
+
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ~="cd ~" # `cd` is probably faster to type though
+
+# Shortcuts
+alias www="cd ~/www"
+alias dl="cd ~/Downloads"
+alias dt="cd ~/Desktop"
+alias g="git"
+
+alias afk="pmset displaysleepnow"
+
+export FZF_DEFAULT_COMMAND="fd --type file --color=always"
+export FZF_DEFAULT_OPTS="--ansi"
+
+#export FZF_DEFAULT_COMMAND='fd --type file'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+
+export FZF_DEFAULT_OPTS="--ansi --preview-window 'right:60%' --preview 'bat --color=always --style=header,grid --line-range :300 {}'"
+
+alias p="fzf -m --bind ctrl-a:select-all,ctrl-d:deselect-all,ctrl-t:toggle-all --no-sort --ansi --preview 'bat --color=always --style=numbers,header,grid --line-range :500 {}'" # fuzzy search and select anything
+alias e='mcedit $(p)'
+
+alias zshconfig="vim ~/.zshrc"
+alias ohmyzsh="vim ~/.oh-my-zsh"
+
+alias reload="cd ~/.dotfiles && ~/.dotfiles/reload && source ~/.zshrc && cd -"
+alias update="cd ~/.dotfiles && ~/.dotfiles/upgrade && source ~/.zshrc && cd -"
+
+alias sudo='sudo ' # allow aliases to work with sudo
+alias type="type -a"
+
+alias cd='>/dev/null cd' # prevent stdout of special commands e.g. cd -
+alias mv='mv -i' # ask before overwrite file
+alias cp='cp -i' # ask before overwrite file
+alias rm='rm -i' # ask before remove file
+
+alias ls='ls --color=auto' # G - colorize types,
+alias ll='ls --color=auto -lphc' # -l : details; -p : file indicator; -c : last modified date; -u : last usage date; -h : human readable;
+alias lla='ls --color=auto -laphc' # -l : details; -p : file indicator; -c : last modified date; -u : last usage date; -h : human readable;
+
+alias ll1='exa --tree --level=1 --long' # -l : details; -p : file indicator; -c : last modified date; -u : last usage date; -h : human readable;
+
+alias ll2='exa --tree --level=2 --long' # -l : details; -p : file indicator; -c : last modified date; -u : last usage date; -h : human readable;
+
+alias du="du -h" # -h : human readable;
+alias df="df -h" # -h : human readable;
+
+alias grep='grep --color=auto' # colorize matching parts
+alias less='less -R -M -X' # -R : enable colors; -M : shows more detailed prompt, including file position; -N : shows line number; -X : supresses the terminal clearing at exit;
+
+alias epoch='date +%s' # print current epoch seconds
+alias wordcount="tr -s ' ' | tr ' ' '\n' | tr '[:upper:]' '[:lower:]' | sort | uniq -c | sort -nr"
+
+# help
+
+alias ctl="systemctl"
+
+
+# Network
+
+alias myip="curl -s ipinfo.io | jq -r '.ip'"
+alias myipl="ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'"
+
+# UUID
+
+uuid() {
+  od -x /dev/urandom | head -1 | awk '{OFS="-"; print $2$3,$4,$5,$6,$7$8$9}'
+}
+
+# Miscellaneous
+
+alias hosts="sudo mcedit /etc/hosts"
+alias quit="exit"
+alias week="date +%V"
+alias speedtest="wget -O /dev/null http://speed.transip.nl/100mb.bin"
+alias grip="grip -b"
+
+# MacOs
+
+# Google Chrome
+alias chrome='open /Applications/Google\ Chrome.app'
+
+# Recursively delete `.DS_Store` files
+alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
