@@ -24,19 +24,19 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
 
     source ~/.zshrc
 
-    [ ! -d ~~/.vim/bundle ] && mkdir ~~/.vim/bundle
+    [ ! -d ~/.vim/bundle ] && mkdir ~/.vim/bundle
     [ ! -d ~/.vim/bundle/Vundle.vim ] && git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
     [ ! -d ~/.tmux/plugins ] && mkdir ~/.tmux/plugins
     [ ! -d ~/.tmux/plugins/tpm ] && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
-    vim -c ":PluginInstall" -c ":qall"
-
-    tmux start-server && \
-    tmux new-session -d && \
-    sleep 1 && \
-    ~/.tmux/plugins/tpm/scripts/install_plugins.sh && \
-    tmux kill-server
+#    vim -c ":PluginInstall" -c ":qall"
+#
+#    tmux start-server && \
+#    tmux new-session -d && \
+#    sleep 1 && \
+#    ~/.tmux/plugins/tpm/scripts/install_plugins.sh && \
+#    tmux kill-server
 
     source ~/.zshrc
 
