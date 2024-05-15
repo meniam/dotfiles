@@ -37,7 +37,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     ~/.tmux/plugins/tpm/scripts/install_plugins.sh && \
     tmux kill-server
 
-    vim -c "PluginList" -c "PluginInstall" -c "wq"
+    vim -c ":PluginList" -c ":PluginInstall" -c ":qall"
 
 elif [[ "$OSTYPE" == "darwin"* ]]; then
 
