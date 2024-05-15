@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-[ ! -d ~/.bin ] && mkdir ~/.bin
+# [ ! -d ~/.bin ] && mkdir ~/.bin
 
 stow -v \
     bin\
