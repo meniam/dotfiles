@@ -52,6 +52,19 @@ function prepend-path {
   [ -d $1 ] && PATH="$1:$PATH"
 }
 
+function yy() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
+
+function htt() {
+	httpyac $1 --json -a | jq -r ".requests[0].response.body" | jq | bat --language=json
+}
+
 function pid {
   ps -ax -o "pid,command" \
   | grep --color=always "$1" \

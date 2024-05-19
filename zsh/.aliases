@@ -63,12 +63,16 @@ alias cp='cp -i' # ask before overwrite file
 alias rm='rm -i' # ask before remove file
 
 alias ls='ls --color=auto' # G - colorize types,
-alias ll='ls --color=auto -lphc' # -l : details; -p : file indicator; -c : last modified date; -u : last usage date; -h : human readable;
+#alias ll='ls --color=auto -lphc' # -l : details; -p : file indicator; -c : last modified date; -u : last usage date; -h : human readable;
 alias lla='ls --color=auto -laphc' # -l : details; -p : file indicator; -c : last modified date; -u : last usage date; -h : human readable;
 
-alias ll1='exa --tree --level=1 --long' # -l : details; -p : file indicator; -c : last modified date; -u : last usage date; -h : human readable;
+alias ll='eza --tree --level=1 --long --group --icons=always --group-directories-first' # -l : details; -p : file indicator; -c : last modified date; -u : last usage date; -h : human readable;
 
-alias ll2='exa --tree --level=2 --long' # -l : details; -p : file indicator; -c : last modified date; -u : last usage date; -h : human readable;
+alias ll1='eza --tree --level=1 --long --group --icons=always --group-directories-first' # -l : details; -p : file indicator; -c : last modified date; -u : last usage date; -h : human readable;
+alias ll2='eza --tree --level=2 --long --group --icons=always --group-directories-first' # -l : details; -p : file indicator; -c : last modified date; -u : last usage date; -h : human readable;
+
+#alias ll1='exa --tree --level=1 --long' # -l : details; -p : file indicator; -c : last modified date; -u : last usage date; -h : human readable;
+#alias ll2='exa --tree --level=2 --long' # -l : details; -p : file indicator; -c : last modified date; -u : last usage date; -h : human readable;
 
 alias du="du -h" # -h : human readable;
 alias df="df -h" # -h : human readable;
