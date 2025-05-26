@@ -114,3 +114,7 @@ alias chrome='open /Applications/Google\ Chrome.app'
 
 # Recursively delete `.DS_Store` files
 alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
+
+alias pass="pwgen -1 -s -B 12"
+
+alias lzd="lazydocker"

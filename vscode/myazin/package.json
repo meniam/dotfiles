@@ -1,0 +1,28 @@
+{
+	"name": "vscode-theme-myazin",
+	"displayName": "Myazin's Theme",
+	"description": "A theme extension for VS Code based on Darcula",
+	"version": "1.2.3",
+	"publisher": "myazin",
+	"scripts": {
+		"publish": "vsce publish"
+	},
+	"engines": {
+		"vscode": "*"
+	},
+	"categories": [
+		"Themes"
+	],
+	"contributes": {
+		"themes": [
+			{
+				"label": "Myazin",
+				"uiTheme": "vs-dark",
+				"path": "./themes/myazin.json"
+			}
+		]
+	},
+	"__metadata": {
+		"size": 13956
+	}
+}

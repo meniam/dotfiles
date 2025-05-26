@@ -1,4 +1,6 @@
-export PATH=$HOME/.bin:/opt/homebrew/opt/coreutils/libexec/gnubin:/usr/local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH
+export PATH=$HOME/.bin:/opt/homebrew/opt/coreutils/libexec/gnubin:~/.local/bin/:/usr/local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/homebrew/opt/postgresql@16/bin:$PATH
+export PATH="/opt/homebrew/opt/php@8.3/bin:$PATH"
+export PATH="/opt/homebrew/opt/php@8.3/sbin:$PATH"
 
 ZSH_CUSTOM=$HOME/.config/zsh
 
@@ -57,3 +59,16 @@ if [ -f "/root/.acme.sh/acme.sh.env" ]; then
     source "/root/.acme.sh/acme.sh.env"
 fi
 
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# export PATH="/opt/homebrew/opt/php@8.3/bin:$PATH"
+# export PATH="/opt/homebrew/opt/php@8.3/sbin:$PATH"
+# # The following lines have been added by Docker Desktop to enable Docker CLI completions.
+# fpath=(/Users/eugene/.docker/completions $fpath)
+# autoload -Uz compinit
+# compinit
+# # End of Docker CLI completions
+#
+# # Added by LM Studio CLI (lms)
+# export PATH="$PATH:/Users/eugene/.cache/lm-studio/bin"

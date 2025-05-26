@@ -73,6 +73,7 @@
 
 	# Show the user email for the current repository.
 	whoami = config user.email
+	lg = log --oneline --decorate --graph --all
 
 [apply]
 

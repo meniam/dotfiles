@@ -1,0 +1,57 @@
+#! /bin/bash
+
+GREEN="\033[1;32m"
+CYAN="\033[1;36m"
+YELLOW="\033[1;33m"
+NC="\033[0m"
+
+print_section() {
+  echo -e "\n${CYAN}== $1 ==${NC}"
+}
+
+print_cmd() {
+  echo -e "${GREEN}$1${NC}"
+  [ -n "$2" ] && echo -e "   $2"
+}
+
+echo -e "${YELLOW}Docker Swarm Cheat Sheet 🐳${NC}"
+
+print_section "📌 Инициализация Swarm"
+print_cmd "docker swarm init --advertise-addr <IP>" "Инициализация менеджера"
+
+print_section "📌 Подключение узлов"
+print_cmd "docker swarm join --token <worker_token> <manager_ip>:2377" "Подключить worker-узел"
+print_cmd "docker swarm join --token <manager_token> <manager_ip>:2377" "Подключить manager-узел"
+print_cmd "docker swarm join-token worker" "Получить токен worker"
+print_cmd "docker swarm join-token manager" "Получить токен manager"
+
+print_section "📦 Сервисы и Stack"
+print_cmd "docker stack deploy -c docker-compose.yml <stack>" "Запуск stack"
+print_cmd "docker stack rm <stack>" "Удаление stack"
+print_cmd "docker service ls" "Список всех сервисов"
+print_cmd "docker service ps <сервис>" "Задачи сервиса"
+print_cmd "docker service logs <сервис>" "Логи сервиса"
+print_cmd "docker service scale <сервис>=<кол-во>" "Масштабирование"
+print_cmd "docker service update --force <сервис>" "Принудительный рестарт"
+
+print_section "🔗 Сети"
+print_cmd "docker network create --driver overlay --attachable traefik-public" "Создание overlay-сети для Traefik"
+
+print_section "📋 Мониторинг"
+print_cmd "docker node ls" "Список узлов"
+print_cmd "docker node inspect <node> --pretty" "Инфо об узле"
+print_cmd "docker info" "Информация о текущем узле"
+
+print_section "🔧 Контейнеры и логи"
+print_cmd "docker ps" "Контейнеры на текущем узле"
+print_cmd "docker logs <container_id>" "Логи контейнера"
+print_cmd "docker inspect <id>" "Инфо о контейнере/сервисе"
+
+print_section "🚪 Удаление узла"
+print_cmd "docker swarm leave" "Покинуть кластер (worker)"
+print_cmd "docker swarm leave --force" "Покинуть кластер (manager)"
+
+print_section "⚠️ Узел в drain"
+print_cmd "docker node update --availability drain <node>" "Убрать узел из пула"
+
+echo -e "\n${YELLOW}Готово!${NC} 🚀"
