@@ -1,120 +1,162 @@
-# DotFiles
+# ================================================================================
+# DOTFILES MANAGEMENT
+# ================================================================================
 
-alias dfupdate="~/.dotfiles/upgrade"
-alias dfupgrade="~/.dotfiles/upgrade"
+alias dfupdate="~/.dotfiles/upgrade"   # Обновить dotfiles
+alias dfupgrade="~/.dotfiles/upgrade"  # Обновить dotfiles (альтернатива)
+alias reload="cd ~/.dotfiles && ~/.dotfiles/reload && source ~/.zshrc && cd -"    # Перезагрузить конфигурацию
+alias update="cd ~/.dotfiles && ~/.dotfiles/upgrade && source ~/.zshrc && cd -"   # Обновить и перезагрузить
 
-# TMUX
+# ================================================================================
+# NAVIGATION & DIRECTORIES
+# ================================================================================
 
-alias mux="tmuxinator"
+# Быстрая навигация вверх
+alias ..="cd .."            # На уровень вверх
+alias ...="cd ../.."        # На два уровня вверх
+alias ....="cd ../../.."    # На три уровня вверх
+alias .....="cd ../../../.." # На четыре уровня вверх
+alias ~="cd ~"              # В домашнюю директорию
 
-alias t='tmux attach || tmux new-session' # Attaches tmux to the last session; creates a new session if none exists.
-alias ta='tmux attach -t'                 # Attaches tmux to a session (example: ta portal)
-alias tn='tmux new-session'               # New session unnamed session
-alias tc='tmux new-session -s'           # Creates a new session (example: tc portal)
-alias tl='tmux list-sessions'             # Lists all ongoing sessions
+# Быстрые переходы
+alias www="cd ~/www"        # В папку веб-проектов
+alias dl="cd ~/Downloads"   # В папку загрузок
+alias dt="cd ~/Desktop"     # На рабочий стол
 
-# Postgres
+# ================================================================================
+# FILE OPERATIONS
+# ================================================================================
 
-alias pgt='pg_top -h localhost -U postgres'
-alias pga='pg_activity -h localhost -U postgres'
+# Безопасные операции с файлами
+alias cd='>/dev/null cd'    # Тихий cd без вывода
+alias mv='mv -i'            # Переместить с подтверждением
+alias cp='cp -i'            # Скопировать с подтверждением
+alias rm='rm -i'            # Удалить с подтверждением
 
-alias dc="docker-compose"
+# Листинг файлов (современный с eza)
+alias ls='ls --color=auto'  # Базовый ls с цветами
+alias lla='ls --color=auto -laphc'  # Подробный ls с скрытыми файлами
+alias ll='eza --tree --level=1 --long --group --icons=always --group-directories-first'   # Красивый листинг уровень 1
+alias ll1='eza --tree --level=1 --long --group --icons=always --group-directories-first'  # То же что ll
+alias ll2='eza --tree --level=2 --long --group --icons=always --group-directories-first'  # Красивый листинг уровень 2
 
-# CD
+# Системная информация
+alias du="du -h"            # Размер директорий в человекочитаемом формате
+alias df="df -h"            # Информация о дисках в человекочитаемом формате
 
-alias ..="cd .."
-alias ...="cd ../.."
-alias ....="cd ../../.."
-alias .....="cd ../../../.."
-alias ~="cd ~" # `cd` is probably faster to type though
+# Поиск и фильтрация
+alias grep='grep --color=auto'  # Grep с подсветкой
+alias less='less -R -M -X'      # Less с цветами и улучшенным промптом
 
-# Shortcuts
-alias www="cd ~/www"
-alias dl="cd ~/Downloads"
-alias dt="cd ~/Desktop"
-alias g="git"
+# ================================================================================
+# FZF (FUZZY FINDER)
+# ================================================================================
 
-alias afk="pmset displaysleepnow"
-
+# FZF настройки окружения
 export FZF_DEFAULT_COMMAND="fd --type file --color=always"
-export FZF_DEFAULT_OPTS="--ansi"
-
-#export FZF_DEFAULT_COMMAND='fd --type file'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-
-
 export FZF_DEFAULT_OPTS="--ansi --preview-window 'right:60%' --preview 'bat --color=always --style=header,grid --line-range :300 {}'"
 
-alias p="fzf -m --bind ctrl-a:select-all,ctrl-d:deselect-all,ctrl-t:toggle-all --no-sort --ansi --preview 'bat --color=always --style=numbers,header,grid --line-range :500 {}'" # fuzzy search and select anything
-alias e='mcedit $(p)'
+# FZF алиасы
+alias p="fzf -m --bind ctrl-a:select-all,ctrl-d:deselect-all,ctrl-t:toggle-all --no-sort --ansi --preview 'bat --color=always --style=numbers,header,grid --line-range :500 {}'"  # Файловый селектор с превью
+alias e='mcedit $(p)'       # Редактировать выбранный файл
 
-alias zshconfig="vim ~/.zshrc"
-alias ohmyzsh="vim ~/.oh-my-zsh"
+# ================================================================================
+# GIT
+# ================================================================================
 
-alias reload="cd ~/.dotfiles && ~/.dotfiles/reload && source ~/.zshrc && cd -"
-alias update="cd ~/.dotfiles && ~/.dotfiles/upgrade && source ~/.zshrc && cd -"
+alias g="git"               # Короткий git
 
-alias sudo='sudo ' # allow aliases to work with sudo
-alias type="type -a"
+# ================================================================================
+# TMUX
+# ================================================================================
 
-alias cd='>/dev/null cd' # prevent stdout of special commands e.g. cd -
-alias mv='mv -i' # ask before overwrite file
-alias cp='cp -i' # ask before overwrite file
-alias rm='rm -i' # ask before remove file
+alias mux="tmuxinator"      # Короткий tmuxinator
+alias t='tmux attach || tmux new-session'  # Подключиться или создать новую сессию
+alias ta='tmux attach -t'   # Подключиться к конкретной сессии
+alias tn='tmux new-session' # Создать новую безымянную сессию
+alias tc='tmux new-session -s'  # Создать именованную сессию
+alias tl='tmux list-sessions'   # Список всех сессий
 
-alias ls='ls --color=auto' # G - colorize types,
-#alias ll='ls --color=auto -lphc' # -l : details; -p : file indicator; -c : last modified date; -u : last usage date; -h : human readable;
-alias lla='ls --color=auto -laphc' # -l : details; -p : file indicator; -c : last modified date; -u : last usage date; -h : human readable;
+# ================================================================================
+# DOCKER
+# ================================================================================
 
-alias ll='eza --tree --level=1 --long --group --icons=always --group-directories-first' # -l : details; -p : file indicator; -c : last modified date; -u : last usage date; -h : human readable;
+alias dc="docker-compose"   # Короткий docker-compose
+alias lzd="lazydocker"      # Lazy Docker TUI
 
-alias ll1='eza --tree --level=1 --long --group --icons=always --group-directories-first' # -l : details; -p : file indicator; -c : last modified date; -u : last usage date; -h : human readable;
-alias ll2='eza --tree --level=2 --long --group --icons=always --group-directories-first' # -l : details; -p : file indicator; -c : last modified date; -u : last usage date; -h : human readable;
+# ================================================================================
+# DATABASES
+# ================================================================================
 
-#alias ll1='exa --tree --level=1 --long' # -l : details; -p : file indicator; -c : last modified date; -u : last usage date; -h : human readable;
-#alias ll2='exa --tree --level=2 --long' # -l : details; -p : file indicator; -c : last modified date; -u : last usage date; -h : human readable;
+# PostgreSQL
+alias pgt='pg_top -h localhost -U postgres'        # Топ процессов PostgreSQL
+alias pga='pg_activity -h localhost -U postgres'   # Активность PostgreSQL
 
-alias du="du -h" # -h : human readable;
-alias df="df -h" # -h : human readable;
+# ================================================================================
+# NETWORK
+# ================================================================================
 
-alias grep='grep --color=auto' # colorize matching parts
-alias less='less -R -M -X' # -R : enable colors; -M : shows more detailed prompt, including file position; -N : shows line number; -X : supresses the terminal clearing at exit;
+alias myip="curl -s ipinfo.io | jq -r '.ip'"       # Внешний IP адрес
+alias myipl="ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'"  # Локальные IP адреса
+alias speedtest="wget -O /dev/null http://speed.transip.nl/100mb.bin"  # Тест скорости интернета
 
-alias epoch='date +%s' # print current epoch seconds
-alias wordcount="tr -s ' ' | tr ' ' '\n' | tr '[:upper:]' '[:lower:]' | sort | uniq -c | sort -nr"
+# ================================================================================
+# TIME & DATE
+# ================================================================================
 
-# help
+alias now='date +"%T"'         # Текущее время
+alias nowdate='date +"%d-%m-%Y"'    # Текущая дата
+alias week='date +%V'           # Номер недели в году
+alias epoch='date +%s'          # Unix timestamp
+alias timestamp='date "+%Y%m%d_%H%M%S"'    # Timestamp для файлов
+alias iso8601='date -u +"%Y-%m-%dT%H:%M:%SZ"'  # ISO 8601 формат UTC
 
-alias ctl="systemctl"
+# ================================================================================
+# ARCHIVES & UTILITIES
+# ================================================================================
 
+alias targz='tar -czf'      # Создать tar.gz архив
+alias untargz='tar -xzf'    # Распаковать tar.gz архив
+alias zip='zip -r'          # Создать zip архив рекурсивно
+alias json='python3 -m json.tool'  # Форматировать JSON
+alias weather='curl wttr.in'       # Прогноз погоды
+alias qr='qrencode -t utf8'         # Генерировать QR код в терминале
 
-# Network
+# Генерация случайных данных
+# alias uuid='uuidgen | tr "[:upper:]" "[:lower:]"'  # Генерировать UUID в нижнем регистре
+alias password='openssl rand -base64 32'           # Генерировать случайный пароль
+alias pass="pwgen -1 -s -B 12"                     # Генерировать простой пароль
 
-alias myip="curl -s ipinfo.io | jq -r '.ip'"
-alias myipl="ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'"
-
-# UUID
-
+# UUID функция (альтернативная реализация)
 uuid() {
   od -x /dev/urandom | head -1 | awk '{OFS="-"; print $2$3,$4,$5,$6,$7$8$9}'
 }
 
-# Miscellaneous
 
-alias hosts="sudo mcedit /etc/hosts"
-alias quit="exit"
-alias week="date +%V"
-alias speedtest="wget -O /dev/null http://speed.transip.nl/100mb.bin"
-alias grip="grip -b"
 
-# MacOs
+# Текстовые утилиты
+alias wordcount="tr -s ' ' | tr ' ' '\n' | tr '[:upper:]' '[:lower:]' | sort | uniq -c | sort -nr"  # Подсчет слов с сортировкой
 
-# Google Chrome
-alias chrome='open /Applications/Google\ Chrome.app'
+# ================================================================================
+# SYSTEM & CONFIGURATION
+# ================================================================================
 
-# Recursively delete `.DS_Store` files
-alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
+alias ctl="systemctl"       # Короткий systemctl
+alias sudo='sudo '          # Разрешить использование алиасов с sudo
+alias type="type -a"        # Показать все варианты команды
+alias quit="exit"           # Альтернатива exit
 
-alias pass="pwgen -1 -s -B 12"
+# Редактирование конфигураций
+alias zshconfig="vim ~/.zshrc"     # Редактировать .zshrc
+alias ohmyzsh="vim ~/.oh-my-zsh"   # Редактировать Oh My Zsh
+alias hosts="sudo mcedit /etc/hosts"   # Редактировать hosts файл
 
-alias lzd="lazydocker"
+# ================================================================================
+# MACOS SPECIFIC
+# ================================================================================
+
+alias chrome='open /Applications/Google\ Chrome.app'   # Открыть Chrome
+alias afk="pmset displaysleepnow"       # Заблокировать экран
+alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"  # Удалить .DS_Store файлы
+alias grip="grip -b"                    # Grip с автооткрытием браузера

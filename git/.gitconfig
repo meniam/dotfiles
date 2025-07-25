@@ -202,3 +202,6 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+[user]
+	name = eugene
+	email = eugene.myazin@gmail.com
