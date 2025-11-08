@@ -73,10 +73,47 @@ alias g="git"               # Короткий git
 
 alias mux="tmuxinator"      # Короткий tmuxinator
 alias t='tmux attach || tmux new-session'  # Подключиться или создать новую сессию
-alias ta='tmux attach -t'   # Подключиться к конкретной сессии
+# alias ta='tmux attach -t'   # Подключиться к конкретной сессии
 alias tn='tmux new-session' # Создать новую безымянную сессию
 alias tc='tmux new-session -s'  # Создать именованную сессию
 alias tl='tmux list-sessions'   # Список всех сессий
+
+ta() {
+  local name="${1:-backup}"
+
+  # если сессия уже есть — подключаемся/переключаемся
+  if tmux has-session -t "$name" 2>/dev/null; then
+    if [ -n "$TMUX" ]; then tmux switch-client -t "$name"; else tmux attach -t "$name"; fi
+    return
+  fi
+
+  # если имя не backup — обычная пустая сессия
+  if [ "$name" != "backup" ]; then
+    tmux new-session -s "$name"
+    return
+  fi
+
+  # создаём сессию и фиксируем верхний левый пейн (tl)
+  tmux new-session -d -s "$name" -n main 'exec ${SHELL:-/bin/zsh} -l' 2>/dev/null || tmux new-session -d -s "$name" -n main
+  local tl
+  tl="$(tmux display-message -p -t "$name":main '#{pane_id}')" || return 1
+
+  # создаём верхний правый (tr), нижний левый (bl), нижний правый (br)
+  local tr bl br
+  tr="$(tmux split-window -h -t "$tl" -P -F '#{pane_id}')" || return 1
+  bl="$(tmux split-window -v -t "$tl" -P -F '#{pane_id}')" || return 1
+  br="$(tmux split-window -v -t "$tr" -P -F '#{pane_id}')" || return 1
+
+  # выровнять сетку и раскидать команды
+  tmux select-layout -t "$name":main tiled
+  tmux send-keys -t "$tl" 'clear' C-m          # верхний левый
+  tmux send-keys -t "$tr" 'docker ps' C-m   # верхний правый
+  tmux send-keys -t "$bl" 'pydf | grep -v /var/' C-m        # нижний левый
+  tmux send-keys -t "$br" 'lazydocker' C-m  # нижний правый
+
+  # подключаемся/переключаемся
+  if [ -n "$TMUX" ]; then tmux switch-client -t "$name"; else tmux attach -t "$name"; fi
+}
 
 # ================================================================================
 # DOCKER
@@ -160,3 +197,6 @@ alias chrome='open /Applications/Google\ Chrome.app'   # Открыть Chrome
 alias afk="pmset displaysleepnow"       # Заблокировать экран
 alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"  # Удалить .DS_Store файлы
 alias grip="grip -b"                    # Grip с автооткрытием браузера
+
+
+alias dns="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"

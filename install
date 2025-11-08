@@ -2,7 +2,7 @@
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
 
-    apt -y --no-install-recommends install fzf apache2-utils stow pydf tilde git-core vim net-tools dnsutils imagemagick mc zsh htop wget curl stow tmux bat coreutils fasd ffmpeg jq lynx nano peco shellcheck tree thefuck fd-find build-essential pandoc html2text &&\
+    apt -y --no-install-recommends install ripgrep fzf apache2-utils stow pydf btop git vim net-tools bind9-dnsutils imagemagick mc zsh htop wget curl stow tmux bat coreutils fasd ffmpeg jq lynx nano peco shellcheck tree thefuck fd-find build-essential && \
     apt autoremove -qq
 
     [ ! -d ~/.oh-my-zsh/ ] && sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -41,7 +41,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 
     brew bundle --file=~/.dotfiles/install/brew/Brewfile || true
 
-    brew install yazi ffmpegthumbnailer unar jq poppler fd ripgrep fzf zoxide httpyac
+    brew install yazi ffmpegthumbnailer unar jq poppler fd ripgrep ripgrep-all fzf zoxide httpyac
 
     [ ! -d ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zjump ] && git clone https://github.com/qoomon/zjump ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zjump
     [ ! -d ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-history-search ] && git clone https://github.com/qoomon/zsh-history-search ${ZSH_CUSTOM:-~/.config/zsh}/plugins/zsh-history-search

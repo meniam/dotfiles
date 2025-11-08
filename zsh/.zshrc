@@ -51,6 +51,8 @@ source "$HOME/.aliases"
 # cd ~
 # echo $START
 
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
 if [ -f "$HOME/.zshrc.local" ]; then
     source "$HOME/.zshrc.local"
 fi
@@ -72,3 +74,4 @@ fi
 #
 # # Added by LM Studio CLI (lms)
 # export PATH="$PATH:/Users/eugene/.cache/lm-studio/bin"
+
