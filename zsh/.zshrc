@@ -7,6 +7,7 @@ ZSH_CUSTOM=$HOME/.config/zsh
 export ZSH="$HOME/.oh-my-zsh"
 export DOT_BIN="$HOME/.bin"
 export CONFIG_ZSH="$HOME/.config/zsh"
+export DOCKER_CLI_HINTS=false
 
 ZSH_THEME="meniam"
 
