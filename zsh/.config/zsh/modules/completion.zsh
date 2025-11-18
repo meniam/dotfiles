@@ -3,10 +3,10 @@
 #Layout is :completion:FUNCTION:COMPLETER:COMMAND-OR-MAGIC-CONTEXT:ARGUMENT:TAG
 autoload -Uz colors && colors
 
-ZSH_COMPDUMP="${ZDOTDIR:-$HOME}/.cache/zsh/.zcompletion"
+ZSH_COMPDUMP="${ZDOTDIR:-$HOME}/.cache/zsh/.zcompdump"
 
 zstyle ':completion:*' use-cache yes
-zstyle ':completion:*' cache-path $ZSH_COMPDUMP
+zstyle ':completion:*' cache-path "${ZDOTDIR:-$HOME}/.cache/zsh/"
 
 # zstyle ':completion:*' use-cache on
 # zstyle ':completion::complete:*' cache-path "${ZDOTDIR:-$HOME}/.zcompcache"
