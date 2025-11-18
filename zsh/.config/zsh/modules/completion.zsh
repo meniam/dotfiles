@@ -4,6 +4,14 @@
 autoload -Uz colors && colors
 
 ZSH_COMPDUMP="${ZDOTDIR:-$HOME}/.cache/zsh/.zcompletion"
+
+zstyle ':completion:*' use-cache yes
+zstyle ':completion:*' cache-path $ZSH_COMPDUMP
+
+# zstyle ':completion:*' use-cache on
+# zstyle ':completion::complete:*' cache-path "${ZDOTDIR:-$HOME}/.zcompcache"
+# zstyle ':completion::complete:paket:add:*' use-cache off # disable cache for specific command e.g. paket add
+
 autoload -Uz compinit
 if [ $ZSH_COMPDUMP(Nmh-24) ]
 then # check for recent compdump file within last 24h
@@ -12,10 +20,6 @@ else
   rm -f $ZSH_COMPDUMP
   compinit
 fi
-
-# zstyle ':completion:*' use-cache on
-# zstyle ':completion::complete:*' cache-path "${ZDOTDIR:-$HOME}/.zcompcache"
-# zstyle ':completion::complete:paket:add:*' use-cache off # disable cache for specific command e.g. paket add
 
 ################
 ### COMPLETION SETUP
