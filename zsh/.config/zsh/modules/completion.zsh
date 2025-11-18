@@ -7,8 +7,6 @@ autoload -Uz colors && colors
 ZSH_CACHE_DIR="${ZDOTDIR:-$HOME}/.cache/zsh"
 ZSH_COMPDUMP="$ZSH_CACHE_DIR/.zcompdump"
 
-mkdir -p "$ZSH_CACHE_DIR"
-
 zstyle ':completion:*' use-cache yes
 zstyle ':completion:*' cache-path "$ZSH_CACHE_DIR"
 
