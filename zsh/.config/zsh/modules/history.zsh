@@ -2,7 +2,7 @@ autoload -Uz colors && colors
 
 # History ######################################################################
 
-HISTFILE=${ZDOTDIR:-$HOME}/.zhistory        # enable history saving on shell exit
+HISTFILE=${ZDOTDIR:-$HOME}/.cache/zsh/.zhistory        # enable history saving on shell exit
 HISTSIZE=100000                  # lines of history to maintain memory
 SAVEHIST=$HISTSIZE              # lines of history to maintain in history file.
 # fc -R -I                        # reads the history file $HISTSIZE
