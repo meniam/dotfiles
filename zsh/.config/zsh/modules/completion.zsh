@@ -3,23 +3,26 @@
 #Layout is :completion:FUNCTION:COMPLETER:COMMAND-OR-MAGIC-CONTEXT:ARGUMENT:TAG
 autoload -Uz colors && colors
 
-ZSH_COMPDUMP="${ZDOTDIR:-$HOME}/.cache/zsh/.zcompdump"
+# Директория для кеша/комплита
+ZSH_CACHE_DIR="${ZDOTDIR:-$HOME}/.cache/zsh"
+ZSH_COMPDUMP="$ZSH_CACHE_DIR/.zcompdump"
+
+mkdir -p "$ZSH_CACHE_DIR"
 
 zstyle ':completion:*' use-cache yes
-zstyle ':completion:*' cache-path "${ZDOTDIR:-$HOME}/.cache/zsh/"
+zstyle ':completion:*' cache-path "$ZSH_CACHE_DIR"
 
-# zstyle ':completion:*' use-cache on
-# zstyle ':completion::complete:*' cache-path "${ZDOTDIR:-$HOME}/.zcompcache"
-# zstyle ':completion::complete:paket:add:*' use-cache off # disable cache for specific command e.g. paket add
+setopt EXTENDED_GLOB
 
 autoload -Uz compinit
-if [ $ZSH_COMPDUMP(Nmh-24) ]
-then # check for recent compdump file within last 24h
-  compinit -C # -C do not validate cache
+if [[ -f $ZSH_COMPDUMP(Nmh-24) ]]; then
+  # compdump существует и свежее 24 часа — не валидируем кеш
+  compinit -C
 else
-  rm -f $ZSH_COMPDUMP
+  rm -f -- "$ZSH_COMPDUMP"
   compinit
 fi
+
 
 ################
 ### COMPLETION SETUP
