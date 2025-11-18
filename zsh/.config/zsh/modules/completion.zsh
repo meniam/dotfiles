@@ -3,7 +3,7 @@
 #Layout is :completion:FUNCTION:COMPLETER:COMMAND-OR-MAGIC-CONTEXT:ARGUMENT:TAG
 autoload -Uz colors && colors
 
-ZSH_COMPDUMP="${ZDOTDIR:-$HOME}/.zcompdump"
+ZSH_COMPDUMP="${ZDOTDIR:-$HOME}/.cache/zsh/.zcompletion"
 autoload -Uz compinit
 if [ $ZSH_COMPDUMP(Nmh-24) ]
 then # check for recent compdump file within last 24h
