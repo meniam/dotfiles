@@ -9,6 +9,9 @@ export DOT_BIN="$HOME/.bin"
 export CONFIG_ZSH="$HOME/.config/zsh"
 export DOCKER_CLI_HINTS=false
 
+# Директория для кеша/комплита
+export ZSH_COMPDUMP="${ZDOTDIR:-$HOME}/.cache/zsh/.zcompdump"
+
 ZSH_THEME="meniam"
 
 zstyle ':omz:update' mode auto      # update automatically without asking
