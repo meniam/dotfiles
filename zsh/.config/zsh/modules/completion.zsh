@@ -5,22 +5,23 @@ autoload -Uz colors && colors
 
 # Директория для кеша/комплита
 ZSH_CACHE_DIR="${ZDOTDIR:-$HOME}/.cache/zsh"
-ZSH_COMPDUMP="$ZSH_CACHE_DIR/.zcompdump"
+mkdir -p "$ZSH_CACHE_DIR"
+ZSH_COMPDUMP="$ZSH_CACHE_DIR/.zcompdump-${ZSH_VERSION}"
 
 zstyle ':completion:*' use-cache yes
 zstyle ':completion:*' cache-path "$ZSH_CACHE_DIR"
 
-setopt EXTENDED_GLOB
+if [[ -z ${ZSH:-} ]]; then
+  setopt EXTENDED_GLOB
+  autoload -Uz compinit
 
-autoload -Uz compinit
-if [[ -f $ZSH_COMPDUMP(Nmh-24) ]]; then
-  # compdump существует и свежее 24 часа — не валидируем кеш
-  compinit -C
-else
-  rm -f -- "$ZSH_COMPDUMP"
-  compinit
+  if [[ -f $ZSH_COMPDUMP(Nmh-24) ]]; then
+    compinit -C -d "$ZSH_COMPDUMP"
+  else
+    rm -f -- "$ZSH_COMPDUMP"
+    compinit -C -d "$ZSH_COMPDUMP"
+  fi
 fi
-
 
 ################
 ### COMPLETION SETUP

@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+# sshl — список хостов из ~/.ssh/config
+
+set -euo pipefail
+
+config="${SSH_CONFIG:-$HOME/.ssh/config}"
+
+if [[ ! -f "$config" ]]; then
+  echo "Файл $config не найден" >&2
+  exit 1
+fi
+
+awk '
+  function flush() {
+    if (name != "") {
+      addr = (hostname != "") ? hostname : name
+      if (port == "") port = "22"
+      addr = addr ":" port
+      if (comment != "")
+        printf "%-20s %-25s # %s\n", name, addr, comment
+      else
+        printf "%-20s %s\n", name, addr
+    }
+    name = ""; hostname = ""; port = ""; comment = ""
+  }
+
+  /^[[:space:]]*#/ {
+    sub(/^[[:space:]]*#[[:space:]]*/, "")
+    pending_comment = $0
+    next
+  }
+
+  /^[[:space:]]*Host[[:space:]]/ && !/[*?]/ {
+    flush()
+    name = $2
+    comment = pending_comment
+    pending_comment = ""
+    next
+  }
+
+  /^[[:space:]]*HostName[[:space:]]/ { hostname = $2; next }
+  /^[[:space:]]*Port[[:space:]]/     { port = $2; next }
+
+  # Любая не-пустая строка сбрасывает ожидающий комментарий
+  !/^[[:space:]]*$/ { pending_comment = "" }
+
+  END { flush() }
+' "$config"

@@ -2,7 +2,7 @@
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
 
-    apt -y --no-install-recommends install ripgrep fzf apache2-utils stow pydf btop git vim net-tools bind9-dnsutils imagemagick mc zsh htop wget curl stow tmux bat coreutils fasd ffmpeg jq lynx nano peco shellcheck tree thefuck fd-find build-essential && \
+    apt -y --no-install-recommends install ripgrep fzf apache2-utils stow pydf btop git vim net-tools bind9-dnsutils imagemagick mc zsh htop wget curl stow tmux bat coreutils fasd ffmpeg jq lynx nano peco shellcheck tree thefuck fd-find build-essential kitty-terminfo && \
     apt autoremove -qq
 
     [ ! -d ~/.oh-my-zsh/ ] && sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
