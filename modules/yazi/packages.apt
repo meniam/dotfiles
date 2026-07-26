@@ -1,0 +1,6 @@
+unzip
+p7zip-full
+jq
+fd-find
+ripgrep
+fzf

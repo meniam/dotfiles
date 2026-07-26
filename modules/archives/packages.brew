@@ -1,0 +1,6 @@
+# macOS already provides zip and unzip.
+zstd
+ouch
+bzip2
+sevenzip
+gnu-tar

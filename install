@@ -1,0 +1,180 @@
+#!/usr/bin/env bash
+# Modular dotfiles installer.
+#
+#   ./install                    Select modules interactively, or use defaults without a TTY
+#   ./install zsh nvim           Install named modules and their dependencies
+#   ./install --profile server   Install a profile
+#   ./install --select           Print a resolved selection without installing
+#   ./install --list             List modules
+#   ./install --status           Show module status
+#   ./install --verbose           Show detailed installation progress
+
+set -euo pipefail
+
+DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+MODULES_DIR="$DOTFILES_DIR/modules"
+PROFILES_DIR="$DOTFILES_DIR/profiles"
+export DOTFILES_DIR MODULES_DIR PROFILES_DIR
+
+. "$DOTFILES_DIR/lib/common.sh"
+. "$DOTFILES_DIR/lib/modules.sh"
+. "$DOTFILES_DIR/lib/picker.sh"
+
+detect_os
+
+usage() {
+  sed -n '2,10p' "$0"
+}
+
+MODE="install"
+PROFILE=""
+ARGS=()
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --list) MODE="list" ;;
+    --status) MODE="status" ;;
+    --select) MODE="select" ;;
+    --verbose) VERBOSE=1 ;;
+    --profile)
+      shift
+      PROFILE="${1:-}"
+      [ -n "$PROFILE" ] || die "--profile requires a profile name."
+      ;;
+    --profile=*) PROFILE="${1#--profile=}" ;;
+    -h|--help) usage; exit 0 ;;
+    -*) die "Unknown option: $1" ;;
+    *) ARGS+=("$1") ;;
+  esac
+  shift
+done
+export VERBOSE
+
+if [ "$MODE" = "list" ]; then
+  for module in $(list_modules); do
+    printf '%s\t%s\t%s\n' "$module" "$(module_platforms "$module")" "$(module_description "$module")"
+  done
+  exit 0
+fi
+
+if [ "$MODE" = "status" ]; then
+  if ! has_modules; then
+    warn "No modules are defined yet."
+    exit 0
+  fi
+
+  printf '\n%sModule status%s %s(OS: %s)%s\n' "$c_bold" "$c_reset" "$c_dim" "$OS" "$c_reset" >&2
+  for module in $(list_modules); do
+    platform_ok "$module" || continue
+    result=0
+    module_installed "$module" || result=$?
+    case "$result" in
+      0) marker="${c_green}ok${c_reset}"; note="installed" ;;
+      1) marker="${c_red}x${c_reset}"; note="not installed" ;;
+      *) marker="${c_dim}?${c_reset}"; note="no probe configured" ;;
+    esac
+    printf '  %b %-12s %b\n' "$marker" "$module" "$note" >&2
+  done
+  printf '\n' >&2
+  exit 0
+fi
+
+has_modules || die "No modules are defined yet."
+
+if [ "${#ARGS[@]}" -gt 0 ]; then
+  SELECTED="${ARGS[*]}"
+else
+  if [ -n "$PROFILE" ]; then
+    PRESELECTED="$(expand_profile "$PROFILE")"
+  else
+    PRESELECTED="$(default_modules)"
+  fi
+
+  if [ "$MODE" = "select" ] || [ -z "$PROFILE" ]; then
+    CANDIDATES=()
+    for module in $(list_modules); do
+      platform_ok "$module" && CANDIDATES+=("$module")
+    done
+    [ "${#CANDIDATES[@]}" -gt 0 ] || die "No modules support $OS."
+    SELECTED="$(pick_modules "$PRESELECTED" "${CANDIDATES[@]}")"
+  else
+    SELECTED="$PRESELECTED"
+  fi
+fi
+
+SELECTED="$(printf '%s' "$SELECTED" | tr -s ' ' | sed 's/^ //; s/ $//')"
+[ -n "$SELECTED" ] || die "No modules selected."
+
+# Module names are whitespace-delimited by design.
+# shellcheck disable=SC2086
+RESOLVED="$(resolve_deps $SELECTED)"
+
+if [ "$MODE" = "select" ]; then
+  printf '%s\n' "$RESOLVED"
+  exit 0
+fi
+
+TO_INSTALL=""
+TOTAL=0
+for module in $RESOLVED; do
+  if platform_ok "$module"; then
+    TO_INSTALL="$TO_INSTALL $module"
+    TOTAL=$((TOTAL + 1))
+  else
+    warn "Module '$module' does not support $OS; skipping it."
+  fi
+done
+TO_INSTALL="${TO_INSTALL# }"
+[ -n "$TO_INSTALL" ] || die "No selected modules support $OS."
+
+printf '\n%s%s--- dotfiles/install ---%s\n' "$c_bold" "$c_blue" "$c_reset" >&2
+log "OS: ${c_bold}$OS${c_reset} | modules: ${c_bold}$TOTAL${c_reset} | ${c_dim}$TO_INSTALL${c_reset}"
+
+ensure_base_tools
+ensure_stow
+
+install_module() {
+  local module="$1"
+  local module_dir="$MODULES_DIR/$module"
+  install_packages_for "$module_dir" || return 1
+  stow_module "$module_dir" || return 1
+  if [ -f "$module_dir/setup.sh" ]; then
+    step "Running setup.sh" "*"
+    OS="$OS" DOTFILES_DIR="$DOTFILES_DIR" MODULE_DIR="$module_dir" bash "$module_dir/setup.sh" || return 1
+  fi
+  return 0
+}
+
+index=0
+INSTALLED=""
+UNVERIFIED=""
+FAILED=""
+
+for module in $TO_INSTALL; do
+  index=$((index + 1))
+  header "$index" "$TOTAL" "$module" "$(module_description "$module")"
+  if install_module "$module"; then
+    result=0
+    module_installed "$module" || result=$?
+    if [ "$result" = "1" ]; then
+      warn "Module '$module' finished, but its probe did not pass."
+      UNVERIFIED="$UNVERIFIED $module"
+    else
+      success "Module '$module' is ready."
+      INSTALLED="$INSTALLED $module"
+    fi
+  else
+    warn "Module '$module' failed; continuing with the remaining modules."
+    FAILED="$FAILED $module"
+  fi
+done
+
+printf '\n%s--- Summary ---%s\n' "$c_bold" "$c_reset" >&2
+[ -n "$INSTALLED" ] && success "Installed:${INSTALLED}"
+[ -n "$UNVERIFIED" ] && warn "Finished but not verified:${UNVERIFIED}"
+if [ -n "$FAILED" ]; then
+  warn "Failed:${FAILED}"
+  warn "Retry with: ./install${FAILED}"
+  exit 1
+fi
+success "Done."

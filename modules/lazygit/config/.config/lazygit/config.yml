@@ -1,0 +1,22 @@
+gui:
+    showIcons: true
+    nerdFontsVersion: "3"
+    showFileTree: true
+    showBottomLine: true
+    showCommandLog: false
+    scrollOffMargin: 5
+    sidePanelWidth: 0.4
+git:
+    pagers:
+        - colorArg: always
+          pager: delta --dark --paging=never --side-by-side --hunk-header-style=omit --syntax-theme="Dracula"
+os:
+    editPreset: vscode
+refresher:
+    refreshInterval: 3
+    fetchInterval: 60
+update:
+    method: never
+keybinding:
+    universal:
+        quit: "q"

@@ -1,0 +1,43 @@
+# Zsh Module Guidelines
+
+## Structure
+
+The module is stowed into the user's home directory with this layout:
+
+```text
+~/.zshrc
+~/.config/zsh/import/
+├── 00-options.zsh      # Shell options
+├── 10-history.zsh      # History file and retention settings
+├── 20-path.zsh         # Command search paths
+├── 30-env.zsh          # Exported environment variables
+├── 40-completion.zsh   # Completion initialization and cache
+├── 50-plugins.zsh      # Zinit bootstrap and plugin loading
+├── 60-aliases.zsh      # Shared command aliases
+├── 70-functions.zsh    # Shared shell functions
+├── 80-prompt.zsh       # Prompt appearance and Git status
+└── 90-local.zsh        # Untracked machine-specific overrides
+```
+
+`.zshrc` is a minimal interactive-shell loader. It sources the numbered files in lexical order from `${XDG_CONFIG_HOME:-$HOME/.config}/zsh/import/`.
+
+## Placement Rules
+
+- Put shell options in `00-options.zsh`.
+- Keep history settings in `10-history.zsh` and command lookup paths in `20-path.zsh`.
+- Put exported environment variables in `30-env.zsh` and completion setup in `40-completion.zsh`.
+- Keep plugin initialization in `50-plugins.zsh`, aliases in `60-aliases.zsh`, functions in `70-functions.zsh`, and prompt settings in `80-prompt.zsh`.
+- Use `90-local.zsh` only to load optional, untracked machine-specific overrides from `${ZDOTDIR:-$HOME}/.zshrc.local`.
+
+## General Rules
+
+- Store Zsh cache and history files in `${ZDOTDIR:-$HOME}/.cache/zsh/`.
+- Keep shared configuration portable across macOS and Debian/Ubuntu; guard platform-specific commands or paths when needed.
+- Do not add credentials, tokens, personal hostnames, or machine-specific values to tracked files; use the local override file instead.
+
+## Commenting Rules
+
+- Write all comments in concise English.
+- Add one or two comment lines before each new configuration block explaining its purpose and user-visible effect.
+- Explain non-obvious behavior, ordering requirements, platform guards, or side effects; do not restate literal syntax.
+- Update or remove comments when changing the behavior they describe, and do not keep commented-out code as documentation.

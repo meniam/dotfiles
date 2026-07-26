@@ -1,0 +1,189 @@
+[[plugin.deps]]
+use = "lpnh/fr"
+rev = "3d32e55"
+hash = "f7ab219b58675582ef855a9414dbc659"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:lsar"
+rev = "bbac5e7"
+hash = "c1c66e28145e28e581e74e2d6da4fdf1"
+
+[[plugin.deps]]
+use = "boydaihungst/mediainfo"
+rev = "e079a00"
+hash = "8dd8bc3484547390ba50dfa58d7436b0"
+
+[[plugin.deps]]
+use = "Reledia/glow"
+rev = "bd3eaa5"
+hash = "92b5c58159a51c567f82b618cee2b78"
+
+[[plugin.deps]]
+use = "GrzegorzKozub/mdcat"
+rev = "7b7380a"
+hash = "40c20e6c1085d1f45309b9f148bf4f6e"
+
+[[plugin.deps]]
+use = "passion0102/mermaid"
+rev = "90e4756"
+hash = "465917273513ba3d8e9a226954c5945c"
+
+[[plugin.deps]]
+use = "wylie102/duckdb"
+rev = "3f8c863"
+hash = "87b9233a74325e95011670ed20bbd0d4"
+
+[[plugin.deps]]
+use = "cxwx/parquet-preview"
+rev = "2374bec"
+hash = "f89a2cce6a09692939d4aa8c1b0bb21"
+
+[[plugin.deps]]
+use = "AminurAlam/yazi-plugins:preview-epub"
+rev = "ce325af"
+hash = "bf6587cec9b915a54c6cd3e187b0071e"
+
+[[plugin.deps]]
+use = "macydnah/office"
+rev = "41ebef8"
+hash = "5805affd3ae8adcb3c72b6997d21c0a6"
+
+[[plugin.deps]]
+use = "Reledia/hexyl"
+rev = "016a09b"
+hash = "50da29476e744dba37d77fb209328fd1"
+
+[[plugin.deps]]
+use = "AnirudhG07/nbpreview"
+rev = "b504594"
+hash = "b83919985400521dee78e1c352b5d9db"
+
+[[plugin.deps]]
+use = "AminurAlam/yazi-plugins:preview-sqlite"
+rev = "ce325af"
+hash = "11ee002ea5080a73f2c2db5dceda50df"
+
+[[plugin.deps]]
+use = "kirasok/torrent-preview"
+rev = "f465282"
+hash = "d849ad596b8a77902e62a42403aeba40"
+
+[[plugin.deps]]
+use = "gesellkammer/audio-preview"
+rev = "c95e4f6"
+hash = "94334f36009e7e1635de43c98c6502c5"
+
+[[plugin.deps]]
+use = "Sonico98/exifaudio"
+rev = "4506f9d"
+hash = "4761fffb60a12d37096c34a356380cdf"
+
+[[plugin.deps]]
+use = "AminurAlam/yazi-plugins:preview-audio"
+rev = "ce325af"
+hash = "fdb9c99b81d675a3098ba8e380048b00"
+
+[[plugin.deps]]
+use = "AnirudhG07/rich-preview"
+rev = "7d616ad"
+hash = "d64feec9761392cbc250d199ab4b8a3a"
+
+[[plugin.deps]]
+use = "ndtoan96/ouch"
+rev = "406ce6c"
+hash = "f5afc904d5106ee368c8aa2ded43bd74"
+
+[[plugin.deps]]
+use = "Shallow-Seek/djvu-view"
+rev = "f218aa6"
+hash = "522db0412d7839c8c343f9c733713d24"
+
+[[plugin.deps]]
+use = "dimi1357/pickle"
+rev = "7f5b75c"
+hash = "2e1cff0ff812795bae4be4584da220aa"
+
+[[plugin.deps]]
+use = "AminurAlam/yazi-plugins:preview-cbz"
+rev = "ce325af"
+hash = "2a6846d55010bd8a3d2ecb2f55984296"
+
+[[plugin.deps]]
+use = "AminurAlam/yazi-plugins:preview-typst"
+rev = "ce325af"
+hash = "2aacd8b872663cc36ac6c5bf6b6dc867"
+
+[[plugin.deps]]
+use = "AminurAlam/yazi-plugins:preview-git"
+rev = "ce325af"
+hash = "ba369f2f02be9e932cf7882c113d6844"
+
+[[plugin.deps]]
+use = "pakhromov/to-pdf-preview"
+rev = "ce21e01"
+hash = "fe270b645ce168eb5016c1e3154e054c"
+
+[[plugin.deps]]
+use = "ryanda/video-grid"
+rev = "9274cba"
+hash = "74a763c400ba68e2affb23e5cfbfedcf"
+
+[[plugin.deps]]
+use = "pakhromov/xcursor-preview"
+rev = "41a97db"
+hash = "7b13baa882b7b80a2594245812200cc4"
+
+[[plugin.deps]]
+use = "figgis/yuv"
+rev = "2b4e3b2"
+hash = "b60c56ce84101f789460a15055388e30"
+
+[[plugin.deps]]
+use = "vmikk/zless-preview"
+rev = "f0735af"
+hash = "c3319f9a0af3922837a339802cd18f72"
+
+[[plugin.deps]]
+use = "AminurAlam/yazi-plugins:font-sample"
+rev = "ce325af"
+hash = "92458a50ecdd278bf36f95dec6aa52b1"
+
+[[plugin.deps]]
+use = "ahkohd/eza-preview"
+rev = "e8fb6c8"
+hash = "c238595c801caa4f28553b9af8cf8804"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:catppuccin-mocha"
+rev = "4770a34"
+hash = "7dfe41c9c3d9be76da8a844263d0bbed"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:catppuccin-frappe"
+rev = "4770a34"
+hash = "1844f850b0c5d1af511c84399c95e3d7"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:dracula"
+rev = "4770a34"
+hash = "20624fcdfcf7e4e912de05e348065e5e"
+
+[[flavor.deps]]
+use = "bennyyip/gruvbox-dark"
+rev = "619fdc5"
+hash = "d4c7003ec6dc4efd5d3a050d5c2f2575"
+
+[[flavor.deps]]
+use = "BennyOe/tokyo-night"
+rev = "8e6296f"
+hash = "d9da921c3bd37ba32ee27a8a7a40461f"
+
+[[flavor.deps]]
+use = "AdithyanA2005/nord"
+rev = "34970be"
+hash = "6e1d257f00b540acbeb194082ce073c2"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:catppuccin-macchiato"
+rev = "4770a34"
+hash = "67f2240fd9c98f21714527a24cd672f8"

@@ -1,0 +1,12 @@
+pydf
+locales
+lsb-release
+apt-transport-https
+apt-utils
+openssl
+build-essential
+gnupg2
+gpg
+pkg-config
+sudo
+kitty-terminfo

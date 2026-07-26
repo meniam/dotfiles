@@ -1,0 +1,419 @@
+[[mgr.prepend_keymap]]
+on = ["f", "r"]
+run = "plugin fr rg"
+desc = "Search file by content (rg)"
+
+[[mgr.prepend_keymap]]
+on = ["f", "a"]
+run = "plugin fr rga"
+desc = "Search file by content (rga)"
+
+# eza-preview.yazi: directory tree preview controls
+[[mgr.prepend_keymap]]
+on = ["e", "t"]
+run = "plugin eza-preview"
+desc = "Toggle tree/list dir preview"
+
+[[mgr.prepend_keymap]]
+on = ["e", "-"]
+run = "plugin eza-preview inc-level"
+desc = "Increment tree level"
+
+[[mgr.prepend_keymap]]
+on = ["e", "_"]
+run = "plugin eza-preview dec-level"
+desc = "Decrement tree level"
+
+[[mgr.prepend_keymap]]
+on = ["e", "$"]
+run = "plugin eza-preview toggle-follow-symlinks"
+desc = "Toggle tree follow symlinks"
+
+[[mgr.prepend_keymap]]
+on = ["e", "*"]
+run = "plugin eza-preview toggle-hidden"
+desc = "Toggle hidden files"
+
+[[mgr.prepend_keymap]]
+on = ["e", "g", "i"]
+run = "plugin eza-preview toggle-git-ignore"
+desc = "Toggle .gitignore files"
+
+[[mgr.prepend_keymap]]
+on = ["e", "g", "s"]
+run = "plugin eza-preview toggle-git-status"
+desc = "Toggle showing git status"
+
+[[mgr.prepend_keymap]]
+on = ["у", "е"]
+run = "plugin eza-preview"
+desc = "Toggle tree/list dir preview"
+
+[[mgr.prepend_keymap]]
+on = ["у", "п", "ш"]
+run = "plugin eza-preview toggle-git-ignore"
+desc = "Toggle .gitignore files"
+
+[[mgr.prepend_keymap]]
+on = ["у", "п", "ы"]
+run = "plugin eza-preview toggle-git-status"
+desc = "Toggle showing git status"
+
+# Duplicate [mgr] bindings for the Russian keyboard layout: the same physical keys.
+# Punctuation is omitted because it either matches Latin keys through AltGr or conflicts with another binding.
+
+[[mgr.prepend_keymap]]
+on = "й"
+run = "quit"
+desc = "Quit"
+
+[[mgr.prepend_keymap]]
+on = "Й"
+run = "quit --no-cwd-file"
+desc = "Quit without writing the cwd file"
+
+[[mgr.prepend_keymap]]
+on = "л"
+run = "arrow prev"
+desc = "Previous file"
+
+[[mgr.prepend_keymap]]
+on = "о"
+run = "arrow next"
+desc = "Next file"
+
+[[mgr.prepend_keymap]]
+on = ["п", "п"]
+run = "arrow top"
+desc = "Go to the start of the list"
+
+[[mgr.prepend_keymap]]
+on = "П"
+run = "arrow bot"
+desc = "Go to the end of the list"
+
+[[mgr.prepend_keymap]]
+on = "р"
+run = "leave"
+desc = "Go to the parent directory"
+
+[[mgr.prepend_keymap]]
+on = "д"
+run = "enter"
+desc = "Enter directory"
+
+[[mgr.prepend_keymap]]
+on = "Р"
+run = "back"
+desc = "Back in history"
+
+[[mgr.prepend_keymap]]
+on = "Д"
+run = "forward"
+desc = "Forward in history"
+
+[[mgr.prepend_keymap]]
+on = "м"
+run = "visual_mode"
+desc = "Visual mode (select)"
+
+[[mgr.prepend_keymap]]
+on = "М"
+run = "visual_mode --unset"
+desc = "Visual mode (clear selection)"
+
+[[mgr.prepend_keymap]]
+on = "Л"
+run = "seek -5"
+desc = "Scroll preview up"
+
+[[mgr.prepend_keymap]]
+on = "О"
+run = "seek 5"
+desc = "Scroll preview down"
+
+[[mgr.prepend_keymap]]
+on = "o"
+run = 'shell "code \"$@\"" --orphan'
+desc = "Open in VS Code"
+
+[[mgr.prepend_keymap]]
+on = "щ"
+run = 'shell "code \"$@\"" --orphan'
+desc = "Open in VS Code"
+
+[[mgr.prepend_keymap]]
+on = "Щ"
+run = "open --interactive"
+desc = "Open with..."
+
+[[mgr.prepend_keymap]]
+on = "н"
+run = "yank"
+desc = "Copy (yank)"
+
+[[mgr.prepend_keymap]]
+on = "ч"
+run = "yank --cut"
+desc = "Cut"
+
+[[mgr.prepend_keymap]]
+on = "з"
+run = "paste"
+desc = "Paste"
+
+[[mgr.prepend_keymap]]
+on = "З"
+run = "paste --force"
+desc = "Paste and overwrite"
+
+[[mgr.prepend_keymap]]
+on = "Н"
+run = "unyank"
+desc = "Cancel yank"
+
+[[mgr.prepend_keymap]]
+on = "Ч"
+run = "unyank"
+desc = "Cancel yank"
+
+[[mgr.prepend_keymap]]
+on = "в"
+run = "remove"
+desc = "Move to trash"
+
+[[mgr.prepend_keymap]]
+on = "В"
+run = "remove --permanently"
+desc = "Delete permanently"
+
+[[mgr.prepend_keymap]]
+on = "ф"
+run = "create"
+desc = "Create file or directory"
+
+[[mgr.prepend_keymap]]
+on = "Ф"
+run = "bulk_create"
+desc = "Bulk create"
+
+[[mgr.prepend_keymap]]
+on = "к"
+run = "rename --cursor=before_ext"
+desc = "Rename"
+
+[[mgr.prepend_keymap]]
+on = "ы"
+run = "search --via=fd"
+desc = "Search by name (fd)"
+
+[[mgr.prepend_keymap]]
+on = "Ы"
+run = "search --via=rg"
+desc = "Search by content (rg)"
+
+[[mgr.prepend_keymap]]
+on = "z"
+run = "plugin zoxide"
+desc = "Jump with zoxide"
+
+[[mgr.prepend_keymap]]
+on = "Z"
+run = "plugin fzf"
+desc = "Jump with fzf"
+
+[[mgr.prepend_keymap]]
+on = "я"
+run = "plugin zoxide"
+desc = "Jump with zoxide"
+
+[[mgr.prepend_keymap]]
+on = "Я"
+run = "plugin fzf"
+desc = "Jump with fzf"
+
+[[mgr.prepend_keymap]]
+on = "т"
+run = "find_arrow"
+desc = "Go to next match"
+
+[[mgr.prepend_keymap]]
+on = "Т"
+run = "find_arrow --previous"
+desc = "Go to previous match"
+
+[[mgr.prepend_keymap]]
+on = "а"
+run = "filter --smart"
+desc = "Filter"
+
+[[mgr.prepend_keymap]]
+on = "ц"
+run = "tasks:show"
+desc = "Task manager"
+
+[[mgr.prepend_keymap]]
+on = "ж"
+run = "shell --interactive"
+desc = "Interactive shell command"
+
+[[mgr.prepend_keymap]]
+on = "Ж"
+run = "shell --block --interactive"
+desc = "Blocking shell command"
+
+[[mgr.prepend_keymap]]
+on = "ю"
+run = "hidden toggle"
+desc = "Toggle hidden files"
+
+# goto (g -> п)
+[[mgr.prepend_keymap]]
+on = ["п", "р"]
+run = "cd ~"
+desc = "Home"
+
+[[mgr.prepend_keymap]]
+on = ["п", "с"]
+run = "cd ~/.config"
+desc = "Go to ~/.config"
+
+[[mgr.prepend_keymap]]
+on = ["п", "в"]
+run = "cd ~/Downloads"
+desc = "Go to Downloads"
+
+[[mgr.prepend_keymap]]
+on = ["g", "4"]
+run = "cd ~/www/4p"
+desc = "Open 4p"
+
+[[mgr.prepend_keymap]]
+on = ["g", "e"]
+run = "cd ~/www/evirma/evirma"
+desc = "Open Evirma"
+
+[[mgr.prepend_keymap]]
+on = ["g", "c"]
+run = "cd ~/www/4p/catalog"
+desc = "Open catalog"
+
+[[mgr.prepend_keymap]]
+on = ["g", "b"]
+run = "cd ~/www/brain"
+desc = "Open Brain"
+
+[[mgr.prepend_keymap]]
+on = ["п", "е"]
+run = "plugin trash"
+desc = "Go to trash"
+
+[[mgr.prepend_keymap]]
+on = ["п", "а"]
+run = "follow"
+desc = "Follow symlink"
+
+[[mgr.prepend_keymap]]
+on = ["g", "B"]
+run = "cd ~/Documents/Obsidian/Brain"
+desc = "Open Obsidian Brain"
+
+[[mgr.prepend_keymap]]
+on = ["п", "И"]
+run = "cd ~/Documents/Obsidian/Brain"
+desc = "Open Obsidian Brain"
+
+# linemode (m -> ь)
+[[mgr.prepend_keymap]]
+on = ["ь", "ы"]
+run = "linemode size"
+desc = "Linemode: size"
+
+[[mgr.prepend_keymap]]
+on = ["ь", "з"]
+run = "linemode permissions"
+desc = "Linemode: permissions"
+
+[[mgr.prepend_keymap]]
+on = ["ь", "и"]
+run = "linemode btime"
+desc = "Linemode: btime"
+
+[[mgr.prepend_keymap]]
+on = ["ь", "ь"]
+run = "linemode mtime"
+desc = "Linemode: mtime"
+
+[[mgr.prepend_keymap]]
+on = ["ь", "щ"]
+run = "linemode owner"
+desc = "Linemode: owner"
+
+[[mgr.prepend_keymap]]
+on = ["ь", "т"]
+run = "linemode none"
+desc = "Linemode: none"
+
+# copy (c -> с)
+[[mgr.prepend_keymap]]
+on = ["с", "с"]
+run = "copy path"
+desc = "Copy file URL"
+
+[[mgr.prepend_keymap]]
+on = ["с", "в"]
+run = "copy dirname"
+desc = "Copy directory URL"
+
+[[mgr.prepend_keymap]]
+on = ["с", "а"]
+run = "copy filename"
+desc = "Copy filename"
+
+[[mgr.prepend_keymap]]
+on = ["с", "т"]
+run = "copy name_without_ext"
+desc = "Copy filename without extension"
+
+# tabs (t -> е)
+[[mgr.prepend_keymap]]
+on = ["е", "е"]
+run = "tab_create --current"
+desc = "New tab"
+
+[[mgr.prepend_keymap]]
+on = ["е", "к"]
+run = "tab_rename --interactive"
+desc = "Rename tab"
+
+# fr plugin (f r / f a -> а к / а ф)
+[[mgr.prepend_keymap]]
+on = ["а", "к"]
+run = "plugin fr rg"
+desc = "Search file by content (rg)"
+
+[[mgr.prepend_keymap]]
+on = ["а", "ф"]
+run = "plugin fr rga"
+desc = "Search file by content (rga)"
+
+# tab switch (["]"→ х/ъ, "{"/"}"→ Х/Ъ)
+[[mgr.prepend_keymap]]
+on = "х"
+run = "tab_switch -1 --relative"
+desc = "Previous tab"
+
+[[mgr.prepend_keymap]]
+on = "ъ"
+run = "tab_switch 1 --relative"
+desc = "Next tab"
+
+[[mgr.prepend_keymap]]
+on = "Х"
+run = "tab_swap -1"
+desc = "Swap with previous tab"
+
+[[mgr.prepend_keymap]]
+on = "Ъ"
+run = "tab_swap 1"
+desc = "Swap with next tab"

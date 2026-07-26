@@ -1,0 +1,120 @@
+#:schema https://yazi-rs.github.io/schemas/yazi.json
+
+[mgr]
+ratio          = [1, 4, 3]
+sort_by        = "alphabetical"
+sort_sensitive = false
+sort_reverse   = false
+sort_dir_first = true
+sort_translit  = false
+linemode       = "size"
+show_hidden    = false
+show_symlink   = true
+scrolloff      = 5
+mouse_events   = ["click", "scroll"]
+title_format   = "Yazi: {cwd}"
+
+[preview]
+wrap           = "no"
+tab_size       = 2
+max_width      = 3600
+max_height     = 3600
+cache_dir      = ""
+image_delay    = 30
+image_filter   = "triangle"
+image_quality  = 75
+sixel_fraction = 15
+ueberzug_scale = 1
+ueberzug_offset = [0, 0, 0, 0]
+
+[opener]
+vscode = [
+	{ run = 'code "$@"', desc = "VS Code", orphan = true, for = "unix" },
+]
+
+[open]
+prepend_rules = [
+	{ mime = "text/html", use = ["open", "vscode", "reveal"] },
+	{ mime = "text/*", use = ["open", "vscode", "reveal"] },
+	{ mime = "application/{json,ndjson,javascript,wine-extension-ini}", use = ["open", "vscode", "reveal"] },
+]
+
+[plugin]
+# Preloaders have a hard limit of 16 rules across built-in and custom rules. Group extensions with {a,b,c}.
+prepend_preloaders = [
+	{ mime = "{audio,video,image}/*", run = "mediainfo" },
+	{ mime = "application/subrip", run = "mediainfo" },
+
+	{ url = "*.{csv,tsv,json,parquet,txt,xlsx}", run = "duckdb", multi = false },
+
+	{ mime = "application/{vnd.openxmlformats-officedocument.*,openxmlformats-officedocument.*,vnd.oasis.opendocument.*,oasis.opendocument.*,ms-*,msword}", run = "office" },
+	{ url = "*.docx", run = "office" },
+
+	{ url = "*.epub", run = "preview-epub" },
+
+	{ url = "*.cb{z,r}", run = "preview-cbz" },
+	{ url = "*.typ", run = "preview-typst" },
+	{ url = "*.yuv", run = "yuv" },
+]
+
+prepend_previewers = [
+	# Narrow formats come before archive and text rules so broader matchers do not claim them.
+	{ url = "*.txt.gz", run = "zless-preview" },
+	{ url = "*.{djvu,djv}", run = "djvu-view" },
+	{ url = "*.{pkl,pickle}", run = "pickle" },
+	{ url = "*.cb{z,r}", run = "preview-cbz" },
+	{ url = "*.typ", run = "preview-typst" },
+	{ url = "*.yuv", run = "yuv" },
+	{ mime = "image/x-xcursor", run = "xcursor-preview" },
+	{ url = "**/.git/", run = "preview-git" },
+
+	# Archives use ouch instead of lsar. Keep lsar available as an alternative if needed.
+	{ mime = "application/{*zip,tar,bzip2,7z*,rar,xz,zstd,java-archive}", run = "ouch" },
+
+	# Media replaces the built-in image and video previewers.
+	{ mime = "{audio,video,image}/*", run = "mediainfo" },
+	{ mime = "application/subrip", run = "mediainfo" },
+
+	# Markdown and Mermaid use the active Markdown previewer; glow and mdcat are not enabled.
+	{ url = "*.md", run = "mermaid" },
+	{ url = "*.mmd", run = "mermaid" },
+	{ url = "*.mermaid", run = "mermaid" },
+
+	# Tabular data uses DuckDB; parquet-preview, miller, and rich-preview are installed but not enabled.
+	{ url = "*.csv", run = "duckdb" },
+	{ url = "*.tsv", run = "duckdb" },
+	{ url = "*.json", run = "duckdb" },
+	{ url = "*.parquet", run = "duckdb" },
+	{ url = "*.txt", run = "duckdb" },
+	{ url = "*.xlsx", run = "duckdb" },
+	{ url = "*.db", run = "duckdb" },
+	{ url = "*.duckdb", run = "duckdb" },
+
+	# SQLite database schema
+	{ url = "*.sqlite3", run = "preview-sqlite" },
+	{ mime = "application/sqlite3", run = "preview-sqlite" },
+
+	# Office documents
+	{ mime = "application/{vnd.openxmlformats-officedocument.*,openxmlformats-officedocument.*,vnd.oasis.opendocument.*,oasis.opendocument.*,ms-*,msword}", run = "office" },
+	{ url = "*.docx", run = "office" },
+
+	# EPUB cover preview
+	{ url = "*.epub", run = "preview-epub" },
+
+	# Jupyter notebooks
+	{ url = "*.ipynb", run = "nbpreview" },
+
+	# Torrent files
+	{ mime = "application/bittorrent", run = "torrent-preview" },
+
+	# Directories use eza instead of the built-in folder previewer; press e then t to switch tree/list mode.
+	{ url = "*/", run = "eza-preview" },
+
+	# Text uses a Git gutter preview after Markdown, CSV, and plain-text rules have been handled.
+	{ mime = "text/*", run = "vscode-git-gutter" },
+]
+
+append_previewers = [
+	# Universal hex fallback has low priority and does not replace specialized previewers above.
+	{ url = "*", run = "hexyl" },
+]
