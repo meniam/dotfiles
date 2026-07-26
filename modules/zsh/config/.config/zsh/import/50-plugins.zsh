@@ -20,11 +20,6 @@ if source "$ZINIT_HOME/zinit.zsh"; then
   # Repository: https://github.com/zsh-users/zsh-autosuggestions
   zinit light zsh-users/zsh-autosuggestions
 
-  # Replace the completion menu with an interactive FZF-powered selector.
-  # Press Tab, filter the candidates, and press Enter to select one.
-  # Repository: https://github.com/Aloxaf/fzf-tab
-  zinit light Aloxaf/fzf-tab
-
   # Load syntax highlighting before history search so both highlight the command line correctly.
   # Type a command normally; valid commands, options, and paths are colored automatically.
   # Repository: https://github.com/zdharma-continuum/fast-syntax-highlighting

@@ -15,3 +15,6 @@ export YAZI_ZOXIDE_OPTS="--no-exact"
 export FZF_DEFAULT_COMMAND="fd --type file --color=always"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_DEFAULT_OPTS="--ansi --preview-window 'right:60%' --preview 'bat --color=always --style=header,grid --line-range :300 {}'"
+
+# Keep regular Tab for Zsh completions; use ~~ followed by Tab for FZF completion.
+export FZF_COMPLETION_TRIGGER="${FZF_COMPLETION_TRIGGER:-~~}"
