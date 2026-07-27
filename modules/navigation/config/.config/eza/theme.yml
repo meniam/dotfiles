@@ -1,0 +1,628 @@
+colourful: true
+filekinds:
+  normal: { foreground: '#c0caf5' }
+  directory: { foreground: '#7aa2f7' }
+  symlink: { foreground: '#2ac3de' }
+  pipe: { foreground: '#414868' }
+  block_device: { foreground: '#e0af68' }
+  char_device: { foreground: '#e0af68' }
+  socket: { foreground: '#414868' }
+  special: { foreground: '#9d7cd8' }
+  executable: { foreground: '#9ece6a' }
+  mount_point: { foreground: '#b4f9f8' }
+perms:
+  user_read: { foreground: '#2ac3de' }
+  user_write: { foreground: '#bb9af7' }
+  user_execute_file: { foreground: '#9ece6a' }
+  user_execute_other: { foreground: '#9ece6a' }
+  group_read: { foreground: '#2ac3de' }
+  group_write: { foreground: '#ff9e64' }
+  group_execute: { foreground: '#9ece6a' }
+  other_read: { foreground: '#2ac3de' }
+  other_write: { foreground: '#ff007c' }
+  other_execute: { foreground: '#9ece6a' }
+  special_user_file: { foreground: '#ff007c' }
+  special_other: { foreground: '#db4b4b' }
+  attribute: { foreground: '#737aa2' }
+size:
+  major: { foreground: '#2ac3de' }
+  minor: { foreground: '#9d7cd8' }
+  number_byte: { foreground: '#a9b1d6' }
+  number_kilo: { foreground: '#89ddff' }
+  number_mega: { foreground: '#2ac3de' }
+  number_giga: { foreground: '#ff9e64' }
+  number_huge: { foreground: '#ff007c' }
+  unit_byte: { foreground: '#a9b1d6' }
+  unit_kilo: { foreground: '#89ddff' }
+  unit_mega: { foreground: '#2ac3de' }
+  unit_giga: { foreground: '#ff9e64' }
+  unit_huge: { foreground: '#ff007c' }
+users:
+  user_you: { foreground: '#3d59a1' }
+  user_root: { foreground: '#bb9af7' }
+  user_other: { foreground: '#2ac3de' }
+  group_yours: { foreground: '#89ddff' }
+  group_root: { foreground: '#bb9af7' }
+  group_other: { foreground: '#c0caf5' }
+links:
+  normal: { foreground: '#89ddff' }
+  multi_link_file: { foreground: '#2ac3de' }
+git:
+  new: { foreground: '#9ece6a' }
+  modified: { foreground: '#bb9af7' }
+  deleted: { foreground: '#db4b4b' }
+  renamed: { foreground: '#2ac3de' }
+  typechange: { foreground: '#2ac3de' }
+  ignored: { foreground: '#545c7e' }
+  conflicted: { foreground: '#ff9e64' }
+git_repo:
+  branch_main: { foreground: '#737aa2' }
+  branch_other: { foreground: '#b4f9f8' }
+  git_clean: { foreground: '#292e42' }
+  git_dirty: { foreground: '#bb9af7' }
+security_context:
+  colon: { foreground: '#545c7e' }
+  user: { foreground: '#737aa2' }
+  role: { foreground: '#2ac3de' }
+  typ: { foreground: '#3d59a1' }
+  range: { foreground: '#9d7cd8' }
+file_type:
+  image: { foreground: '#89ddff' }
+  video: { foreground: '#b4f9f8' }
+  music: { foreground: '#73daca' }
+  lossless: { foreground: '#41a6b5' }
+  crypto: { foreground: '#db4b4b' }
+  document: { foreground: '#a9b1d6' }
+  compressed: { foreground: '#ff9e64' }
+  temp: { foreground: '#737aa2' }
+  compiled: { foreground: '#737aa2' }
+  build: { foreground: '#1abc9c' }
+  source: { foreground: '#bb9af7' }
+# Kept in sync with the LS_COLORS array in modules/zsh/config/.config/zsh/import/30-env.zsh.
+filenames:
+  Makefile: { filename: { foreground: '#555753' } }
+  LICENSE: { filename: { foreground: '#555753' } }
+  justfile: { filename: { foreground: '#555753' } }
+  _history: { filename: { foreground: '#555753' } }
+  -lock.json: { filename: { foreground: '#555753' } }
+  LICENSE.md: { filename: { foreground: '#555753' } }
+  INSTALL: { filename: { foreground: '#555753' } }
+  HISTORY: { filename: { foreground: '#555753' } }
+  NOTICE: { filename: { foreground: '#555753' } }
+  PATENTS: { filename: { foreground: '#555753' } }
+  VERSION: { filename: { foreground: '#555753' } }
+  Dockerfile: { filename: { foreground: '#555753' } }
+  Containerfile: { filename: { foreground: '#555753' } }
+  lock: { filename: { foreground: '#555753' } }
+  lockfile: { filename: { foreground: '#555753' } }
+  core: { filename: { foreground: '#555753' } }
+  rc: { filename: { foreground: '#555753' } }
+  id_dsa: { filename: { foreground: '#d75f5f' } }
+  id_ecdsa: { filename: { foreground: '#d75f5f' } }
+  id_ed25519: { filename: { foreground: '#d75f5f' } }
+  id_rsa: { filename: { foreground: '#d75f5f' } }
+  authorized_keys: { filename: { foreground: '#d75f5f' } }
+  known_hosts: { filename: { foreground: '#d75f5f' } }
+  cfg: { filename: { foreground: '#87af87' } }
+  config: { filename: { foreground: '#d7af5f' } }
+  conf: { filename: { foreground: '#87af87' } }
+  node_modules: { filename: { foreground: '#6c6c6c' } }
+  vendor: { filename: { foreground: '#6c6c6c' } }
+  cache: { filename: { foreground: '#6c6c6c' } }
+  .git: { filename: { foreground: '#6c6c6c' } }
+  .github: { filename: { foreground: '#6c6c6c' } }
+  .idea: { filename: { foreground: '#6c6c6c' } }
+  .vscode: { filename: { foreground: '#6c6c6c' } }
+  .cursor: { filename: { foreground: '#6c6c6c' } }
+  .bin: { filename: { foreground: '#ffd75f' } }
+  bin: { filename: { foreground: '#ffd75f' } }
+  doc: { filename: { foreground: '#00ff5f' } }
+  docs: { filename: { foreground: '#00ff5f' } }
+  .docker: { filename: { foreground: '#d7af5f' } }
+  webpack-configs: { filename: { foreground: '#d7af5f' } }
+  configs: { filename: { foreground: '#d7af5f' } }
+  plan: { filename: { foreground: '#d7af5f' } }
+  plans: { filename: { foreground: '#d7af5f' } }
+  translation: { filename: { foreground: '#d7af5f' } }
+  translations: { filename: { foreground: '#d7af5f' } }
+  .agents: { filename: { foreground: '#ff87d7' } }
+  .claude: { filename: { foreground: '#ff87d7' } }
+  .pi: { filename: { foreground: '#ff87d7' } }
+  CLAUDE.md: { filename: { foreground: '#ff87d7' } }
+  AGENTS.md: { filename: { foreground: '#ff87d7' } }
+  src: { filename: { foreground: '#00d787' } }
+  composer.json: { filename: { foreground: '#d75f00' } }
+  docker-compose.yaml: { filename: { foreground: '#d75f00' } }
+  compose.yaml: { filename: { foreground: '#d75f00' } }
+  package.json: { filename: { foreground: '#d75f00' } }
+  phpstan.neon: { filename: { foreground: '#d75f00' } }
+  CHANGELOG: { filename: { foreground: '#ffd700' } }
+  CHANGELOG.md: { filename: { foreground: '#ffd700' } }
+  AUTHORS: { filename: { foreground: '#ffd700' } }
+  BUILD: { filename: { foreground: '#afff5f' } }
+  CHANGES: { filename: { foreground: '#ffd700' } }
+  CODEOWNERS: { filename: { foreground: '#ffd700' } }
+  CONTRIBUTING: { filename: { foreground: '#ffd700' } }
+  CONTRIBUTING.md: { filename: { foreground: '#ffd700' } }
+  CONTRIBUTORS: { filename: { foreground: '#ffd700' } }
+  COPYING: { filename: { foreground: '#ffd700' } }
+  COPYRIGHT: { filename: { foreground: '#ffd700' } }
+  README: { filename: { foreground: '#ffd700' } }
+  README.md: { filename: { foreground: '#ffd700' } }
+  README.rst: { filename: { foreground: '#ffd700' } }
+
+extensions:
+  sh: { filename: { foreground: '#00d75f' } }
+  BAT: { filename: { foreground: '#00d75f' } }
+  bat: { filename: { foreground: '#00d75f' } }
+  bash: { filename: { foreground: '#00d75f' } }
+  zsh: { filename: { foreground: '#00d75f' } }
+  fish: { filename: { foreground: '#00d75f' } }
+  sed: { filename: { foreground: '#00d75f' } }
+  vim: { filename: { foreground: '#00d75f' } }
+  kak: { filename: { foreground: '#00d75f' } }
+  nu: { filename: { foreground: '#00d75f' } }
+  bak: { filename: { foreground: '#555753' } }
+  dat: { filename: { foreground: '#555753' } }
+  backup: { filename: { foreground: '#555753' } }
+  old: { filename: { foreground: '#555753' } }
+  out: { filename: { foreground: '#555753' } }
+  sample: { filename: { foreground: '#555753' } }
+  dist: { filename: { foreground: '#555753' } }
+  socket: { filename: { foreground: '#555753' } }
+  cache: { filename: { foreground: '#555753' } }
+  pid: { filename: { foreground: '#555753' } }
+  sock: { filename: { foreground: '#555753' } }
+  swap: { filename: { foreground: '#555753' } }
+  tmp: { filename: { foreground: '#555753' } }
+  lock: { filename: { foreground: '#555753' } }
+  swp: { filename: { foreground: '#555753' } }
+  gitignore: { filename: { foreground: '#555753' } }
+  syncignore: { filename: { foreground: '#555753' } }
+  DS_Store: { filename: { foreground: '#555753' } }
+  gitattributes: { filename: { foreground: '#555753' } }
+  gitmodules: { filename: { foreground: '#555753' } }
+  containerignore: { filename: { foreground: '#555753' } }
+  CFUserTextEncoding: { filename: { foreground: '#555753' } }
+  SKIP: { filename: { foreground: '#555753' } }
+  aria2: { filename: { foreground: '#555753' } }
+  dll: { filename: { foreground: '#555753' } }
+  dylib: { filename: { foreground: '#555753' } }
+  elc: { filename: { foreground: '#555753' } }
+  eln: { filename: { foreground: '#555753' } }
+  mdump: { filename: { foreground: '#555753' } }
+  o: { filename: { foreground: '#555753' } }
+  orig: { filename: { foreground: '#555753' } }
+  part: { filename: { foreground: '#555753' } }
+  pyc: { filename: { foreground: '#555753' } }
+  rlib: { filename: { foreground: '#555753' } }
+  scan: { filename: { foreground: '#555753' } }
+  stackdump: { filename: { foreground: '#555753' } }
+  zcompdump: { filename: { foreground: '#555753' } }
+  zwc: { filename: { foreground: '#555753' } }
+  un~: { filename: { foreground: '#555753' } }
+  BUP: { filename: { foreground: '#555753' } }
+  localized: { filename: { foreground: '#555753' } }
+  pem: { filename: { foreground: '#d75f5f' } }
+  key: { filename: { foreground: '#d75f5f' } }
+  pub: { filename: { foreground: '#d75f5f' } }
+  p12: { filename: { foreground: '#d75f5f' } }
+  p7s: { filename: { foreground: '#d75f5f' } }
+  gpg: { filename: { foreground: '#d75f5f' } }
+  pgp: { filename: { foreground: '#d75f5f' } }
+  asc: { filename: { foreground: '#d75f5f' } }
+  sig: { filename: { foreground: '#d75f5f' } }
+  signature: { filename: { foreground: '#d75f5f' } }
+  enc: { filename: { foreground: '#d75f5f' } }
+  bfe: { filename: { foreground: '#d75f5f' } }
+  php: { filename: { foreground: '#00d787' } }
+  phpstub: { filename: { foreground: '#00d787' } }
+  js: { filename: { foreground: '#00d787' } }
+  ts: { filename: { foreground: '#00d787' } }
+  py: { filename: { foreground: '#00d787' } }
+  C: { filename: { foreground: '#00d787' } }
+  c: { filename: { foreground: '#00d787' } }
+  c++: { filename: { foreground: '#00d787' } }
+  cc: { filename: { foreground: '#00d787' } }
+  cp: { filename: { foreground: '#00d787' } }
+  cpp: { filename: { foreground: '#00d787' } }
+  cxx: { filename: { foreground: '#00d787' } }
+  H: { filename: { foreground: '#00d787' } }
+  h: { filename: { foreground: '#00d787' } }
+  h++: { filename: { foreground: '#00d787' } }
+  hpp: { filename: { foreground: '#00d787' } }
+  hxx: { filename: { foreground: '#00d787' } }
+  hi: { filename: { foreground: '#00d787' } }
+  ii: { filename: { foreground: '#00d787' } }
+  tcc: { filename: { foreground: '#00d787' } }
+  cs: { filename: { foreground: '#00d787' } }
+  cr: { filename: { foreground: '#00d787' } }
+  ctp: { filename: { foreground: '#00d787' } }
+  M: { filename: { foreground: '#00d787' } }
+  m: { filename: { foreground: '#00d787' } }
+  mm: { filename: { foreground: '#00d787' } }
+  S: { filename: { foreground: '#00d787' } }
+  s: { filename: { foreground: '#00d787' } }
+  asm: { filename: { foreground: '#00d787' } }
+  F: { filename: { foreground: '#00d787' } }
+  f: { filename: { foreground: '#00d787' } }
+  F03: { filename: { foreground: '#00d787' } }
+  f03: { filename: { foreground: '#00d787' } }
+  F08: { filename: { foreground: '#00d787' } }
+  f08: { filename: { foreground: '#00d787' } }
+  F90: { filename: { foreground: '#00d787' } }
+  f90: { filename: { foreground: '#00d787' } }
+  F95: { filename: { foreground: '#00d787' } }
+  f95: { filename: { foreground: '#00d787' } }
+  for: { filename: { foreground: '#00d787' } }
+  ftn: { filename: { foreground: '#00d787' } }
+  java: { filename: { foreground: '#00d787' } }
+  coffee: { filename: { foreground: '#00d787' } }
+  jsm: { filename: { foreground: '#00d787' } }
+  jsp: { filename: { foreground: '#00d787' } }
+  cjs: { filename: { foreground: '#00d787' } }
+  mjs: { filename: { foreground: '#00d787' } }
+  jsx: { filename: { foreground: '#00d787' } }
+  tsx: { filename: { foreground: '#00d787' } }
+  sc: { filename: { foreground: '#00d787' } }
+  scala: { filename: { foreground: '#00d787' } }
+  clj: { filename: { foreground: '#00d787' } }
+  cljc: { filename: { foreground: '#00d787' } }
+  cljs: { filename: { foreground: '#00d787' } }
+  cljw: { filename: { foreground: '#00d787' } }
+  el: { filename: { foreground: '#00d787' } }
+  cl: { filename: { foreground: '#00d787' } }
+  lisp: { filename: { foreground: '#00d787' } }
+  agda: { filename: { foreground: '#00d787' } }
+  agdai: { filename: { foreground: '#00d787' } }
+  lagda: { filename: { foreground: '#00d787' } }
+  lagda.md: { filename: { foreground: '#00d787' } }
+  lagda.rst: { filename: { foreground: '#00d787' } }
+  lagda.tex: { filename: { foreground: '#00d787' } }
+  lhs: { filename: { foreground: '#00d787' } }
+  hs: { filename: { foreground: '#00d787' } }
+  ml: { filename: { foreground: '#00d787' } }
+  mli: { filename: { foreground: '#00d787' } }
+  mll: { filename: { foreground: '#00d787' } }
+  mly: { filename: { foreground: '#00d787' } }
+  rkt: { filename: { foreground: '#00d787' } }
+  R: { filename: { foreground: '#00d787' } }
+  go: { filename: { foreground: '#00d787' } }
+  gs: { filename: { foreground: '#00d787' } }
+  rs: { filename: { foreground: '#00d787' } }
+  rb: { filename: { foreground: '#00d787' } }
+  gemspec: { filename: { foreground: '#00d787' } }
+  lua: { filename: { foreground: '#00d787' } }
+  moon: { filename: { foreground: '#00d787' } }
+  nim: { filename: { foreground: '#00d787' } }
+  nimble: { filename: { foreground: '#00d787' } }
+  zig: { filename: { foreground: '#00d787' } }
+  v: { filename: { foreground: '#00d787' } }
+  vala: { filename: { foreground: '#00d787' } }
+  vapi: { filename: { foreground: '#00d787' } }
+  vb: { filename: { foreground: '#00d787' } }
+  vba: { filename: { foreground: '#00d787' } }
+  vbs: { filename: { foreground: '#00d787' } }
+  sx: { filename: { foreground: '#00d787' } }
+  swift: { filename: { foreground: '#00d787' } }
+  scpt: { filename: { foreground: '#00d787' } }
+  tcl: { filename: { foreground: '#00d787' } }
+  dart: { filename: { foreground: '#00d787' } }
+  ahk: { filename: { foreground: '#00d787' } }
+  xsh: { filename: { foreground: '#00d787' } }
+  awk: { filename: { foreground: '#00d787' } }
+  m4: { filename: { foreground: '#00d787' } }
+  ipynb: { filename: { foreground: '#00d787' } }
+  conf: { filename: { foreground: '#87af87' } }
+  csv: { filename: { foreground: '#87af87' } }
+  json: { filename: { foreground: '#87af87' } }
+  neon: { filename: { foreground: '#87af87' } }
+  ini: { filename: { foreground: '#87af87' } }
+  toml: { filename: { foreground: '#87af87' } }
+  xml: { filename: { foreground: '#87af87' } }
+  service: { filename: { foreground: '#87af87' } }
+  properties: { filename: { foreground: '#87af87' } }
+  yml: { filename: { foreground: '#d7af5f' } }
+  yaml: { filename: { foreground: '#d7af5f' } }
+  md: { filename: { foreground: '#5faf5f' } }
+  txt: { filename: { foreground: '#5faf5f' } }
+  adoc: { filename: { foreground: '#5faf5f' } }
+  asciidoc: { filename: { foreground: '#5faf5f' } }
+  markdown: { filename: { foreground: '#5faf5f' } }
+  mkd: { filename: { foreground: '#5faf5f' } }
+  org: { filename: { foreground: '#5faf5f' } }
+  pod: { filename: { foreground: '#5faf5f' } }
+  rst: { filename: { foreground: '#5faf5f' } }
+  tex: { filename: { foreground: '#5faf5f' } }
+  textile: { filename: { foreground: '#5faf5f' } }
+  etx: { filename: { foreground: '#5faf5f' } }
+  info: { filename: { foreground: '#5faf5f' } }
+  nfo: { filename: { foreground: '#5faf5f' } }
+  norg: { filename: { foreground: '#5faf5f' } }
+  pdf: { filename: { foreground: '#87d700' } }
+  doc: { filename: { foreground: '#87d700' } }
+  docx: { filename: { foreground: '#87d700' } }
+  xls: { filename: { foreground: '#87d700' } }
+  xlsx: { filename: { foreground: '#87d700' } }
+  PDF: { filename: { foreground: '#87d700' } }
+  odb: { filename: { foreground: '#87d700' } }
+  odt: { filename: { foreground: '#87d700' } }
+  pages: { filename: { foreground: '#87d700' } }
+  rtf: { filename: { foreground: '#87d700' } }
+  azw: { filename: { foreground: '#87d700' } }
+  azw3: { filename: { foreground: '#87d700' } }
+  cbr: { filename: { foreground: '#87d700' } }
+  cbz: { filename: { foreground: '#87d700' } }
+  chm: { filename: { foreground: '#87d700' } }
+  djvu: { filename: { foreground: '#87d700' } }
+  epub: { filename: { foreground: '#87d700' } }
+  fb2: { filename: { foreground: '#87d700' } }
+  mobi: { filename: { foreground: '#87d700' } }
+  numbers: { filename: { foreground: '#87d700' } }
+  ods: { filename: { foreground: '#87d700' } }
+  odp: { filename: { foreground: '#87d700' } }
+  pps: { filename: { foreground: '#87d700' } }
+  ppt: { filename: { foreground: '#87d700' } }
+  ppts: { filename: { foreground: '#87d700' } }
+  pptx: { filename: { foreground: '#87d700' } }
+  dhall: { filename: { foreground: '#87d700' } }
+  dtd: { filename: { foreground: '#87d700' } }
+  bib: { filename: { foreground: '#87d700' } }
+  pgn: { filename: { foreground: '#87d700' } }
+  fxml: { filename: { foreground: '#87d700' } }
+  hjson: { filename: { foreground: '#87d700' } }
+  json5: { filename: { foreground: '#87d700' } }
+  jsonc: { filename: { foreground: '#87d700' } }
+  jsonl: { filename: { foreground: '#87d700' } }
+  jsonnet: { filename: { foreground: '#87d700' } }
+  msg: { filename: { foreground: '#87d700' } }
+  ndjson: { filename: { foreground: '#87d700' } }
+  rdata: { filename: { foreground: '#87d700' } }
+  rego: { filename: { foreground: '#87d700' } }
+  rnc: { filename: { foreground: '#87d700' } }
+  rng: { filename: { foreground: '#87d700' } }
+  rss: { filename: { foreground: '#87d700' } }
+  sexp: { filename: { foreground: '#87d700' } }
+  sgml: { filename: { foreground: '#87d700' } }
+  xsd: { filename: { foreground: '#87d700' } }
+  sql: { filename: { foreground: '#5fd787' } }
+  msql: { filename: { foreground: '#5fd787' } }
+  mysql: { filename: { foreground: '#5fd787' } }
+  pgsql: { filename: { foreground: '#5fd787' } }
+  prisma: { filename: { foreground: '#5fd787' } }
+  prql: { filename: { foreground: '#5fd787' } }
+  sqlite: { filename: { foreground: '#5f5f87' } }
+  accdb: { filename: { foreground: '#5f5f87' } }
+  accde: { filename: { foreground: '#5f5f87' } }
+  accdr: { filename: { foreground: '#5f5f87' } }
+  accdt: { filename: { foreground: '#5f5f87' } }
+  db: { filename: { foreground: '#5f5f87' } }
+  mdb: { filename: { foreground: '#5f5f87' } }
+  mde: { filename: { foreground: '#5f5f87' } }
+  nc: { filename: { foreground: '#5f5f87' } }
+  typelib: { filename: { foreground: '#5f5f87' } }
+  fmp12: { filename: { foreground: '#5f5f87' } }
+  fp7: { filename: { foreground: '#5f5f87' } }
+  localstorage: { filename: { foreground: '#5f5f87' } }
+  bin: { filename: { foreground: '#5f5f87' } }
+  img: { filename: { foreground: '#5f5f87' } }
+  iso: { filename: { foreground: '#5f5f87' } }
+  qcow: { filename: { foreground: '#5f5f87' } }
+  toast: { filename: { foreground: '#5f5f87' } }
+  vcd: { filename: { foreground: '#5f5f87' } }
+  vdi: { filename: { foreground: '#5f5f87' } }
+  vfd: { filename: { foreground: '#5f5f87' } }
+  vhd: { filename: { foreground: '#5f5f87' } }
+  vhdx: { filename: { foreground: '#5f5f87' } }
+  vmdk: { filename: { foreground: '#5f5f87' } }
+  sparseimage: { filename: { foreground: '#5f5f87' } }
+  dmp: { filename: { foreground: '#5f5f87' } }
+  fvd: { filename: { foreground: '#5f5f87' } }
+  tar: { filename: { foreground: '#729fcf' } }
+  tgz: { filename: { foreground: '#729fcf' } }
+  arj: { filename: { foreground: '#729fcf' } }
+  taz: { filename: { foreground: '#729fcf' } }
+  lzh: { filename: { foreground: '#729fcf' } }
+  lzma: { filename: { foreground: '#729fcf' } }
+  tlz: { filename: { foreground: '#729fcf' } }
+  txz: { filename: { foreground: '#729fcf' } }
+  zip: { filename: { foreground: '#729fcf' } }
+  z: { filename: { foreground: '#729fcf' } }
+  Z: { filename: { foreground: '#729fcf' } }
+  dz: { filename: { foreground: '#729fcf' } }
+  gz: { filename: { foreground: '#729fcf' } }
+  lz: { filename: { foreground: '#729fcf' } }
+  xz: { filename: { foreground: '#729fcf' } }
+  bz2: { filename: { foreground: '#729fcf' } }
+  bz: { filename: { foreground: '#729fcf' } }
+  tbz: { filename: { foreground: '#729fcf' } }
+  tbz2: { filename: { foreground: '#729fcf' } }
+  tz: { filename: { foreground: '#729fcf' } }
+  deb: { filename: { foreground: '#729fcf' } }
+  rpm: { filename: { foreground: '#729fcf' } }
+  jar: { filename: { foreground: '#729fcf' } }
+  rar: { filename: { foreground: '#729fcf' } }
+  ace: { filename: { foreground: '#729fcf' } }
+  zoo: { filename: { foreground: '#729fcf' } }
+  cpio: { filename: { foreground: '#729fcf' } }
+  7z: { filename: { foreground: '#729fcf' } }
+  rz: { filename: { foreground: '#729fcf' } }
+  a: { filename: { foreground: '#729fcf' } }
+  br: { filename: { foreground: '#729fcf' } }
+  lrz: { filename: { foreground: '#729fcf' } }
+  lzo: { filename: { foreground: '#729fcf' } }
+  s7z: { filename: { foreground: '#729fcf' } }
+  sz: { filename: { foreground: '#729fcf' } }
+  warc: { filename: { foreground: '#729fcf' } }
+  WARC: { filename: { foreground: '#729fcf' } }
+  zipx: { filename: { foreground: '#729fcf' } }
+  zpaq: { filename: { foreground: '#729fcf' } }
+  zst: { filename: { foreground: '#729fcf' } }
+  zstd: { filename: { foreground: '#729fcf' } }
+  zz: { filename: { foreground: '#729fcf' } }
+  apk: { filename: { foreground: '#afaf00' } }
+  bsp: { filename: { foreground: '#afaf00' } }
+  cab: { filename: { foreground: '#afaf00' } }
+  car: { filename: { foreground: '#afaf00' } }
+  crx: { filename: { foreground: '#afaf00' } }
+  dmg: { filename: { foreground: '#afaf00' } }
+  ipa: { filename: { foreground: '#afaf00' } }
+  jad: { filename: { foreground: '#afaf00' } }
+  pak: { filename: { foreground: '#afaf00' } }
+  pk3: { filename: { foreground: '#afaf00' } }
+  vpk: { filename: { foreground: '#afaf00' } }
+  war: { filename: { foreground: '#afaf00' } }
+  xpi: { filename: { foreground: '#afaf00' } }
+  ear: { filename: { foreground: '#afaf00' } }
+  phtml: { filename: { foreground: '#ffaf5f' } }
+  html: { filename: { foreground: '#ffaf5f' } }
+  htmlx: { filename: { foreground: '#ffaf5f' } }
+  twig: { filename: { foreground: '#ffaf5f' } }
+  htm: { filename: { foreground: '#ffaf5f' } }
+  jhtm: { filename: { foreground: '#ffaf5f' } }
+  mht: { filename: { foreground: '#ffaf5f' } }
+  vue: { filename: { foreground: '#ffaf5f' } }
+  svelte: { filename: { foreground: '#ffaf5f' } }
+  astro: { filename: { foreground: '#ffaf5f' } }
+  ejs: { filename: { foreground: '#ffaf5f' } }
+  pug: { filename: { foreground: '#ffaf5f' } }
+  mustache: { filename: { foreground: '#ffaf5f' } }
+  css: { filename: { foreground: '#8787ff' } }
+  scss: { filename: { foreground: '#8787ff' } }
+  less: { filename: { foreground: '#8787ff' } }
+  sass: { filename: { foreground: '#8787ff' } }
+  sassc: { filename: { foreground: '#8787ff' } }
+  jpg: { filename: { foreground: '#d75fd7' } }
+  jpeg: { filename: { foreground: '#d75fd7' } }
+  gif: { filename: { foreground: '#d75fd7' } }
+  bmp: { filename: { foreground: '#d75fd7' } }
+  pbm: { filename: { foreground: '#d75fd7' } }
+  pgm: { filename: { foreground: '#d75fd7' } }
+  ppm: { filename: { foreground: '#d75fd7' } }
+  tga: { filename: { foreground: '#d75fd7' } }
+  xbm: { filename: { foreground: '#d75fd7' } }
+  xpm: { filename: { foreground: '#d75fd7' } }
+  tif: { filename: { foreground: '#d75fd7' } }
+  tiff: { filename: { foreground: '#d75fd7' } }
+  png: { filename: { foreground: '#d75fd7' } }
+  svg: { filename: { foreground: '#d75fd7' } }
+  svgz: { filename: { foreground: '#d75fd7' } }
+  mng: { filename: { foreground: '#d75fd7' } }
+  pcx: { filename: { foreground: '#d75fd7' } }
+  xcf: { filename: { foreground: '#d75fd7' } }
+  xwd: { filename: { foreground: '#d75fd7' } }
+  yuv: { filename: { foreground: '#d75fd7' } }
+  cgm: { filename: { foreground: '#d75fd7' } }
+  emf: { filename: { foreground: '#d75fd7' } }
+  webp: { filename: { foreground: '#d75fd7' } }
+  avif: { filename: { foreground: '#d75fd7' } }
+  JPG: { filename: { foreground: '#d75fd7' } }
+  TIFF: { filename: { foreground: '#d75fd7' } }
+  cdr: { filename: { foreground: '#d75fd7' } }
+  dicom: { filename: { foreground: '#d75fd7' } }
+  flif: { filename: { foreground: '#d75fd7' } }
+  icns: { filename: { foreground: '#d75fd7' } }
+  ico: { filename: { foreground: '#d75fd7' } }
+  jxl: { filename: { foreground: '#d75fd7' } }
+  psd: { filename: { foreground: '#d75fd7' } }
+  pxd: { filename: { foreground: '#d75fd7' } }
+  pxm: { filename: { foreground: '#d75fd7' } }
+  ai: { filename: { foreground: '#d75fd7' } }
+  drw: { filename: { foreground: '#d75fd7' } }
+  eps: { filename: { foreground: '#d75fd7' } }
+  epsf: { filename: { foreground: '#d75fd7' } }
+  ps: { filename: { foreground: '#d75fd7' } }
+  mov: { filename: { foreground: '#ad7fa8' } }
+  mpg: { filename: { foreground: '#ad7fa8' } }
+  mpeg: { filename: { foreground: '#ad7fa8' } }
+  m2v: { filename: { foreground: '#ad7fa8' } }
+  mkv: { filename: { foreground: '#ad7fa8' } }
+  ogm: { filename: { foreground: '#ad7fa8' } }
+  mp4: { filename: { foreground: '#ad7fa8' } }
+  m4v: { filename: { foreground: '#ad7fa8' } }
+  mp4v: { filename: { foreground: '#ad7fa8' } }
+  vob: { filename: { foreground: '#ad7fa8' } }
+  qt: { filename: { foreground: '#ad7fa8' } }
+  nuv: { filename: { foreground: '#ad7fa8' } }
+  wmv: { filename: { foreground: '#ad7fa8' } }
+  asf: { filename: { foreground: '#ad7fa8' } }
+  rm: { filename: { foreground: '#ad7fa8' } }
+  rmvb: { filename: { foreground: '#ad7fa8' } }
+  flc: { filename: { foreground: '#ad7fa8' } }
+  avi: { filename: { foreground: '#ad7fa8' } }
+  fli: { filename: { foreground: '#ad7fa8' } }
+  flv: { filename: { foreground: '#ad7fa8' } }
+  gl: { filename: { foreground: '#ad7fa8' } }
+  dl: { filename: { foreground: '#ad7fa8' } }
+  axv: { filename: { foreground: '#ad7fa8' } }
+  anx: { filename: { foreground: '#ad7fa8' } }
+  ogv: { filename: { foreground: '#ad7fa8' } }
+  ogx: { filename: { foreground: '#ad7fa8' } }
+  IFO: { filename: { foreground: '#ad7fa8' } }
+  MOV: { filename: { foreground: '#ad7fa8' } }
+  divx: { filename: { foreground: '#ad7fa8' } }
+  f4v: { filename: { foreground: '#ad7fa8' } }
+  3g2: { filename: { foreground: '#ad7fa8' } }
+  3gp: { filename: { foreground: '#ad7fa8' } }
+  VOB: { filename: { foreground: '#ad7fa8' } }
+  webm: { filename: { foreground: '#ad7fa8' } }
+  aac: { filename: { foreground: '#06989a' } }
+  au: { filename: { foreground: '#06989a' } }
+  flac: { filename: { foreground: '#06989a' } }
+  mid: { filename: { foreground: '#06989a' } }
+  midi: { filename: { foreground: '#06989a' } }
+  mka: { filename: { foreground: '#06989a' } }
+  mp3: { filename: { foreground: '#06989a' } }
+  mpc: { filename: { foreground: '#06989a' } }
+  ogg: { filename: { foreground: '#06989a' } }
+  ra: { filename: { foreground: '#06989a' } }
+  wav: { filename: { foreground: '#06989a' } }
+  axa: { filename: { foreground: '#06989a' } }
+  oga: { filename: { foreground: '#06989a' } }
+  spx: { filename: { foreground: '#06989a' } }
+  xspf: { filename: { foreground: '#06989a' } }
+  m3u: { filename: { foreground: '#06989a' } }
+  m3u8: { filename: { foreground: '#06989a' } }
+  aiff: { filename: { foreground: '#06989a' } }
+  alac: { filename: { foreground: '#06989a' } }
+  ape: { filename: { foreground: '#06989a' } }
+  cda: { filename: { foreground: '#06989a' } }
+  pcm: { filename: { foreground: '#06989a' } }
+  wv: { filename: { foreground: '#06989a' } }
+  wvc: { filename: { foreground: '#06989a' } }
+  3ga: { filename: { foreground: '#06989a' } }
+  S3M: { filename: { foreground: '#06989a' } }
+  amr: { filename: { foreground: '#06989a' } }
+  caf: { filename: { foreground: '#06989a' } }
+  dts: { filename: { foreground: '#06989a' } }
+  fcm: { filename: { foreground: '#06989a' } }
+  m4a: { filename: { foreground: '#06989a' } }
+  mod: { filename: { foreground: '#06989a' } }
+  mp4a: { filename: { foreground: '#06989a' } }
+  opus: { filename: { foreground: '#06989a' } }
+  s3m: { filename: { foreground: '#06989a' } }
+  sid: { filename: { foreground: '#06989a' } }
+  wma: { filename: { foreground: '#06989a' } }
+  woff: { filename: { foreground: '#5f8787' } }
+  woff2: { filename: { foreground: '#5f8787' } }
+  ttf: { filename: { foreground: '#5f8787' } }
+  otf: { filename: { foreground: '#5f8787' } }
+  eot: { filename: { foreground: '#5f8787' } }
+  PFA: { filename: { foreground: '#5f8787' } }
+  afm: { filename: { foreground: '#5f8787' } }
+  fnt: { filename: { foreground: '#5f8787' } }
+  fon: { filename: { foreground: '#5f8787' } }
+  pfa: { filename: { foreground: '#5f8787' } }
+  pfb: { filename: { foreground: '#5f8787' } }
+  pfm: { filename: { foreground: '#5f8787' } }
+punctuation: { foreground: '#414868' }
+date: { foreground: '#e0af68' }
+inode: { foreground: '#737aa2' }
+blocks: { foreground: '#737aa2' }
+header: { foreground: '#a9b1d6' }
+octal: { foreground: '#ff9e64' }
+flags: { foreground: '#9d7cd8' }
+symlink_path: { foreground: '#89ddff' }
+control_char: { foreground: '#ff9e64' }
+broken_symlink: { foreground: '#ff007c' }
+broken_path_overlay: { foreground: '#ff007c' }
