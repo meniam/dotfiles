@@ -20,6 +20,8 @@ zsh_init_completion() {
   zstyle ':completion:*' group-name ''
   zstyle ':completion:*' list-grouped yes
   zstyle ':completion:*' list-dirs-first yes
+  # shellcheck disable=SC2086,SC2296
+  zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 
   # zsh-completions extends completion support for many third-party commands.
   # Type a command or argument prefix and press Tab to view available completions.
@@ -30,6 +32,13 @@ zsh_init_completion() {
   # Build or reuse the completion dump after the extra definitions are available.
   autoload -Uz compinit
   compinit -d "$ZSH_COMPDUMP"
+
+  # Ask just for completions at runtime so Tab lists recipes from the current justfile.
+  # The generated script delegates recipe and argument discovery to just itself.
+  if command -v just >/dev/null 2>&1; then
+    # shellcheck disable=SC1090
+    source <(just --completions zsh)
+  fi
 
   # Restore the legacy FZF completion shortcut without taking over the Tab key.
   # The package location differs between Homebrew and Debian/Ubuntu installations.
