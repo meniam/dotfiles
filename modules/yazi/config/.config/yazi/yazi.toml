@@ -31,11 +31,15 @@ ueberzug_offset = [0, 0, 0, 0]
 vscode = [
 	{ run = 'code "$@"', desc = "VS Code", orphan = true, for = "unix" },
 ]
+vim = [
+	{ run = 'vim "$@"', desc = "Vim", block = true, for = "unix" },
+]
 
 [open]
 prepend_rules = [
-	{ mime = "text/html", use = ["open", "vscode", "reveal"] },
-	{ mime = "text/*", use = ["open", "vscode", "reveal"] },
+	{ url = "*.md", use = ["open", "vscode", "vim", "reveal"] },
+	{ mime = "text/html", use = ["open", "vscode", "vim", "reveal"] },
+	{ mime = "text/*", use = ["open", "vscode", "vim", "reveal"] },
 	{ mime = "application/{json,ndjson,javascript,wine-extension-ini}", use = ["open", "vscode", "reveal"] },
 ]
 
@@ -83,7 +87,6 @@ prepend_previewers = [
 	# Tabular data uses DuckDB; parquet-preview, miller, and rich-preview are installed but not enabled.
 	{ url = "*.csv", run = "duckdb" },
 	{ url = "*.tsv", run = "duckdb" },
-	{ url = "*.json", run = "duckdb" },
 	{ url = "*.parquet", run = "duckdb" },
 	{ url = "*.txt", run = "duckdb" },
 	{ url = "*.xlsx", run = "duckdb" },

@@ -4,12 +4,138 @@ light = "catppuccin-mocha"
 
 [filetype]
 rules = [
-	{ mime = "image/*", fg = "#94e2d5" },
-	{ mime = "{audio,video}/*", fg = "#f9e2af" },
-	{ mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", fg = "#f5c2e7" },
-	{ mime = "application/{pdf,doc,rtf}", fg = "#a6e3a1" },
-	{ mime = "vfs/{absent,stale}", fg = "#9399b2" },
-	{ url = "*", fg = "#cdd6f4" },
-	{ url = "*/", fg = "#89b4fa", bold = true },
-]
+	# File kinds from the eza theme. Rules are matched from top to bottom.
+	{ url = "*", is = "orphan", fg = "#ff007c" },
+	{ url = "*", is = "link", fg = "#2ac3de" },
+	{ url = "*", is = "fifo", fg = "#414868" },
+	{ url = "*", is = "block", fg = "#e0af68" },
+	{ url = "*", is = "char", fg = "#e0af68" },
+	{ url = "*", is = "sock", fg = "#414868" },
+	{ url = "*", is = "sticky", fg = "#9d7cd8" },
+	{ url = "*", is = "exec", fg = "#9ece6a" },
 
+	# Explicit filename and extension rules, kept in sync with the LS_COLORS
+	# array in modules/zsh/config/.config/zsh/import/30-env.zsh.
+	# Keep these above the generic type rules so they take precedence, like eza.
+	# Exact filenames (project docs, special files) come before any *.ext rule
+	# below, since e.g. *.md would otherwise steal CLAUDE.md/README.md first.
+
+	# Disables Folders
+	{ url = "*.{git,github,idea,vscode,cursor}/", fg = "#6c6c6c" },
+	{ url = "**/{node_modules,vendor,cache}/", fg = "#6c6c6c" },
+
+	# Yellow folders
+	{ url = "*.bin/", fg = "#ffd75f", bold = true },
+	{ url = "**/bin/", fg = "#ffd75f", bold = true },
+
+	# Green folders
+	{ url = "**/{doc,docs}/", fg = "#00ff5f", bold = true },
+
+	# Yellow folders
+	{ url = "*.docker/", fg = "#d7af5f" },
+	{ url = "**/{config,webpack-configs,configs,plan,plans,translation,translations}/", fg = "#d7af5f" },
+
+	# AGENTS
+	{ url = "*.{agents,claude,pi}/", fg = "#ff87d7", bold = true },
+
+	# src folders
+	{ url = "**/src/", fg = "#00d787", bold = true },
+
+	# special files
+	{ url = "**/{composer.json,docker-compose.yaml,compose.yaml,package.json,phpstan.neon}", fg = "#d75f00" },
+
+	# AGENTS docs (CLAUDE.md/AGENTS.md are files, not folders, unlike the rest of the AGENTS group above)
+	{ url = "**/{CLAUDE.md,AGENTS.md}", fg = "#ff87d7", bold = true },
+
+	# Important Docs
+	{ url = "**/{CHANGELOG,CHANGELOG.md,AUTHORS,CHANGES,CODEOWNERS,CONTRIBUTING,CONTRIBUTING.md,CONTRIBUTORS,COPYING,COPYRIGHT,README,README.md,README.rst}", fg = "#ffd700", bold = true },
+	{ url = "**/BUILD", fg = "#afff5f" },
+
+	# Executable
+	{ url = "*.{sh,BAT,bat,bash,zsh,fish,sed,vim,kak,nu}", fg = "#00d75f", bold = true },
+
+	# Backup / misc / trash
+	{ url = "*.{bak,dat,backup,old,out,sample,dist,socket,cache,pid,sock,swap,tmp,lock,swp,gitignore,syncignore,DS_Store,gitattributes,gitmodules,containerignore,CFUserTextEncoding,SKIP,aria2,dll,dylib,elc,eln,mdump,o,orig,part,pyc,rlib,scan,stackdump,zcompdump,zwc,un~,BUP,localized}", fg = "#555753" },
+	{ url = "**/{Makefile,LICENSE,justfile,_history,-lock.json,LICENSE.md,INSTALL,HISTORY,NOTICE,PATENTS,VERSION,Dockerfile,Containerfile,lock,lockfile,core,rc}", fg = "#555753" },
+
+	# Crypto
+	{ url = "*.{pem,key,pub,p12,p7s,gpg,pgp,asc,sig,signature,enc,bfe}", fg = "#d75f5f" },
+	{ url = "**/{id_dsa,id_ecdsa,id_ed25519,id_rsa,authorized_keys,known_hosts}", fg = "#d75f5f" },
+
+	# Code
+	{ url = "*.{php,phpstub,js,ts,py}", fg = "#00d787" },
+
+	# Code: C family
+	{ url = "*.{C,c,c++,cc,cp,cpp,cxx,H,h,h++,hpp,hxx,hi,ii,tcc,cs,cr,ctp}", fg = "#00d787" },
+
+	# Code: Objective-C / assembly
+	{ url = "*.{M,m,mm,S,s,asm}", fg = "#00d787" },
+
+	# Code: Fortran
+	{ url = "*.{F,f,F03,f03,F08,f08,F90,f90,F95,f95,for,ftn}", fg = "#00d787" },
+
+	# Code: JVM / JS family
+	{ url = "*.{java,coffee,jsm,jsp,cjs,mjs,jsx,tsx,sc,scala,clj,cljc,cljs,cljw}", fg = "#00d787" },
+
+	# Code: Lisp / functional
+	{ url = "*.{el,cl,lisp,agda,agdai,lagda,lagda.md,lagda.rst,lagda.tex,lhs,hs,ml,mli,mll,mly,rkt}", fg = "#00d787" },
+
+	# Code: other languages
+	{ url = "*.{R,go,gs,rs,rb,gemspec,lua,moon,nim,nimble,zig,v,vala,vapi,vb,vba,vbs,sx,swift,scpt,tcl,dart,ahk,xsh,awk,m4,ipynb}", fg = "#00d787" },
+
+	# Config
+	{ url = "*.{conf,csv,json,neon,ini,toml,xml,service,properties}", fg = "#87af87" },
+	{ url = "**/{cfg,config,conf}", fg = "#87af87" },
+	{ url = "*.{yml,yaml}", fg = "#d7af5f" },
+
+	# Markdown, text
+	{ url = "*.{md,txt,adoc,asciidoc,markdown,mkd,org,pod,rst,tex,textile,etx,info,nfo,norg}", fg = "#5faf5f" },
+
+	# Text / Documents / doc
+	{ url = "*.{pdf,doc,docx,xls,xlsx,PDF,odb,odt,pages,rtf,azw,azw3,cbr,cbz,chm,djvu,epub,fb2,mobi,numbers,ods,odp,pps,ppt,ppts,pptx,dhall,dtd,bib,pgn,fxml,hjson,json5,jsonc,jsonl,jsonnet,msg,ndjson,rdata,rego,rnc,rng,rss,sexp,sgml,xsd}", fg = "#87d700" },
+
+	# SQL
+	{ url = "*.{sql,msql,mysql,pgsql,prisma,prql}", fg = "#5fd787" },
+
+	# Db
+	{ url = "*.{sqlite,accdb,accde,accdr,accdt,db,mdb,mde,nc,typelib,fmp12,fp7,localstorage,bin,img,iso,qcow,toast,vcd,vdi,vfd,vhd,vhdx,vmdk,sparseimage,dmp,fvd}", fg = "#5f5f87" },
+
+	# Archives
+	{ url = "*.{tar,tgz,arj,taz,lzh,lzma,tlz,txz,zip,z,Z,dz,gz,lz,xz,bz2,bz,tbz,tbz2,tz,deb,rpm,jar,rar,ace,zoo,cpio,7z,rz,a,br,lrz,lzo,s7z,sz,warc,WARC,zipx,zpaq,zst,zstd,zz}", fg = "#729fcf" },
+
+	# Installers / packages
+	{ url = "*.{apk,bsp,cab,car,crx,dmg,ipa,jad,pak,pk3,vpk,war,xpi,ear}", fg = "#afaf00", bold = true },
+
+	# HTML
+	{ url = "*.{phtml,html,htmlx,twig,htm,jhtm,mht}", fg = "#ffaf5f" },
+
+	# Templating
+	{ url = "*.{vue,svelte,astro,ejs,pug,mustache}", fg = "#ffaf5f" },
+
+	# Styles
+	{ url = "*.{css,scss,less,sass,sassc}", fg = "#8787ff", bold = true },
+
+	# Images
+	{ url = "*.{jpg,jpeg,gif,bmp,pbm,pgm,ppm,tga,xbm,xpm,tif,tiff,png,svg,svgz,mng,pcx,xcf,xwd,yuv,cgm,emf,webp,avif,JPG,TIFF,cdr,dicom,flif,icns,ico,jxl,psd,pxd,pxm,ai,drw,eps,epsf,ps}", fg = "#d75fd7" },
+
+	# Video
+	{ url = "*.{mov,mpg,mpeg,m2v,mkv,ogm,mp4,m4v,mp4v,vob,qt,nuv,wmv,asf,rm,rmvb,flc,avi,fli,flv,gl,dl,axv,anx,ogv,ogx,IFO,MOV,divx,f4v,3g2,3gp,VOB,webm}", fg = "#ad7fa8", bold = true },
+
+	# Audio
+	{ url = "*.{aac,au,flac,mid,midi,mka,mp3,mpc,ogg,ra,wav,axa,oga,spx,xspf,m3u,m3u8,aiff,alac,ape,cda,pcm,wv,wvc,3ga,S3M,amr,caf,dts,fcm,m4a,mod,mp4a,opus,s3m,sid,wma}", fg = "#06989a" },
+
+	# Fonts
+	{ url = "*.{woff,woff2,ttf,otf,eot,PFA,afm,fnt,fon,pfa,pfb,pfm}", fg = "#5f8787" },
+
+	# Generic eza file-type categories.
+	{ url = "*.{bash,c,cc,clj,cljs,cpp,cs,csh,cxx,dart,el,elm,erl,ex,exs,fish,fs,fsx,go,groovy,h,hpp,hrl,hs,hxx,java,js,jsx,kt,kts,lua,mjs,nim,php,pl,pm,py,rb,rs,scala,sh,sol,svelte,swift,tf,ts,tsx,vue,zig,zsh}", fg = "#bb9af7" },
+
+	{ mime = "image/*", fg = "#89ddff" },
+	{ mime = "video/*", fg = "#b4f9f8" },
+	{ mime = "audio/*", fg = "#73daca" },
+	{ mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", fg = "#ff9e64" },
+	{ mime = "application/{pdf,doc,rtf}", fg = "#a9b1d6" },
+	{ mime = "vfs/{absent,stale}", fg = "#ff007c" },
+	{ url = "*/", fg = "#7aa2f7", bold = true },
+	{ url = "*", fg = "#c0caf5" },
+]

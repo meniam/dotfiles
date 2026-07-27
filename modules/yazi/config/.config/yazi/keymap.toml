@@ -73,6 +73,11 @@ run = "quit --no-cwd-file"
 desc = "Quit without writing the cwd file"
 
 [[mgr.prepend_keymap]]
+on = "<F10>"
+run = "quit"
+desc = "Quit"
+
+[[mgr.prepend_keymap]]
 on = "л"
 run = "arrow prev"
 desc = "Previous file"
