@@ -277,4 +277,3 @@ config.quick_select_patterns = {
 }
 
 return config
-
