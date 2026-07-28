@@ -257,9 +257,9 @@ config.keys = {
   { key = "LeftArrow", mods = "OPT", action = wezterm.action.SendString("\x1bb") },
   { key = "RightArrow", mods = "OPT", action = wezterm.action.SendString("\x1bf") },
 
-  -- Word navigation with selection
-  { key = "LeftArrow", mods = "SHIFT", action = wezterm.action.SendString("\x1b[1;5D") },
-  { key = "RightArrow", mods = "SHIFT", action = wezterm.action.SendString("\x1b[1;5C") },
+  -- Character selection
+  { key = "LeftArrow", mods = "SHIFT", action = wezterm.action.SendString("\x1b[1;2D") },
+  { key = "RightArrow", mods = "SHIFT", action = wezterm.action.SendString("\x1b[1;2C") },
 
   -- Switch tabs by number
   { key = "1", mods = "CMD", action = wezterm.action.ActivateTab(0) },
@@ -274,6 +274,9 @@ config.keys = {
 
   -- Toggle current pane zoom
   { key = "z", mods = "CTRL|SHIFT", action = wezterm.action.TogglePaneZoomState },
+
+  -- Quick select
+  { key = "Space", mods = "CTRL|SHIFT", action = wezterm.action.QuickSelect },
 }
 
 -- Quick-select links and paths
