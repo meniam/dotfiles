@@ -222,6 +222,11 @@ config.keys = {
     mods = "CTRL|SHIFT",
     action = wezterm.action_callback(scrollback_fzf),
   },
+  {
+    key = "phys:f",
+    mods = "CTRL|SHIFT",
+    action = wezterm.action_callback(scrollback_fzf),
+  },
   { key = "k", mods = "CMD", action = wezterm.action.ClearScrollback("ScrollbackAndViewport") },
 
   -- Pane navigation
