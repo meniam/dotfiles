@@ -199,6 +199,13 @@ config.audible_bell = "Disabled"
 config.automatically_reload_config = true
 config.window_close_confirmation = "NeverPrompt"
 
+-- Launch menu (SSH shortcuts)
+config.launch_menu = {
+  { label = "ssh: s", args = { "ssh", "s" } },
+  { label = "ssh: router", args = { "ssh", "router" } },
+  { label = "ssh: db-server", args = { "ssh", "db-server" } },
+}
+
 -- Key bindings
 config.keys = {
   { key = "d", mods = "CMD", action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
@@ -276,7 +283,10 @@ config.keys = {
   { key = "z", mods = "CTRL|SHIFT", action = wezterm.action.TogglePaneZoomState },
 
   -- Quick select
-  { key = "Space", mods = "CTRL|SHIFT", action = wezterm.action.QuickSelect },
+  { key = "Space", mods = "CTRL", action = wezterm.action.QuickSelect },
+
+  -- Launch menu (SSH shortcuts)
+  { key = "o", mods = "CMD|SHIFT", action = wezterm.action.ShowLauncherArgs({ flags = "FUZZY|LAUNCH_MENU_ITEMS" }) },
 }
 
 -- Quick-select links and paths
