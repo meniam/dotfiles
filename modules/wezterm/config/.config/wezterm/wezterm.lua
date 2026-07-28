@@ -108,8 +108,8 @@ config.colors = {
   cursor_bg = "#fefffe",
   cursor_fg = "#000000",
 
-  selection_bg = "#fefb67",
-  selection_fg = "none",
+  selection_bg = "#ffdd2d",
+  selection_fg = "#000000cc",
 
   ansi = {
     "#14191e", -- black
