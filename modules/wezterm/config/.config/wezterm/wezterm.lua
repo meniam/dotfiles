@@ -245,9 +245,9 @@ config.keys = {
   { key = "LeftArrow", mods = "CMD", action = wezterm.action.ActivateTabRelative(-1) },
   { key = "RightArrow", mods = "CMD", action = wezterm.action.ActivateTabRelative(1) },
 
-  -- Start / end of line
-  { key = "LeftArrow", mods = "OPT|SHIFT", action = wezterm.action.SendString("\x01") },
-  { key = "RightArrow", mods = "OPT|SHIFT", action = wezterm.action.SendString("\x05") },
+  -- Word selection (macOS-style: Option+Shift extends selection by word)
+  { key = "LeftArrow", mods = "OPT|SHIFT", action = wezterm.action.SendString("\x1b[1;4D") },
+  { key = "RightArrow", mods = "OPT|SHIFT", action = wezterm.action.SendString("\x1b[1;4C") },
 
   -- Start / end of line
   { key = "LeftArrow", mods = "CMD|SHIFT", action = wezterm.action.SendString("\x01") },
