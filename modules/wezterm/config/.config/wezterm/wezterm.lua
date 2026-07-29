@@ -46,7 +46,10 @@ local function scrollback_fzf(_, pane)
   f:write(text)
   f:close()
 
-  local cmd = string.format("cat %q | %q; rm -f %q", tmp, SCROLLBACK_FZF, tmp)
+  -- GUI-launched WezTerm inherits launchd's minimal PATH, which excludes Homebrew;
+  -- prepend it so fzf resolves even when the pane's shell profile isn't sourced.
+  local cmd =
+    string.format('export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"; cat %q | %q; rm -f %q', tmp, SCROLLBACK_FZF, tmp)
   local ok_split, split_err = pcall(function()
     pane:split({
       direction = "Right",
@@ -57,6 +60,15 @@ local function scrollback_fzf(_, pane)
   end)
   if not ok_split then
     wezterm.log_error("scrollback_fzf: " .. tostring(split_err))
+  end
+end
+
+-- Copy terminal selections normally; otherwise ask ZLE to copy its active region.
+local function copy_terminal_or_zle_selection(window, pane)
+  if window:get_selection_text_for_pane(pane) ~= "" then
+    window:perform_action(wezterm.action.CopyTo("Clipboard"), pane)
+  else
+    window:perform_action(wezterm.action.SendString("\x1b[99~"), pane)
   end
 end
 
@@ -93,6 +105,11 @@ wezterm.on("format-tab-title", function(tab, _, _, _, hover)
     { Text = title },
   }
 end)
+
+-- Send Option as a plain Alt modifier instead of composing accented characters,
+-- so ctrl+alt+<key> chords reach terminal apps (e.g. herdr) as real modifier combos.
+config.send_composed_key_when_left_alt_is_pressed = false
+config.send_composed_key_when_right_alt_is_pressed = false
 
 -- Font (matches Kitty)
 config.font = wezterm.font("FiraCode Nerd Font Mono")
@@ -213,11 +230,14 @@ config.keys = {
   { key = "w", mods = "CMD", action = wezterm.action.CloseCurrentPane({ confirm = false }) },
   { key = "phys:w", mods = "CMD", action = wezterm.action.CloseCurrentPane({ confirm = false }) },
   { key = "t", mods = "CMD", action = wezterm.action.SpawnTab("CurrentPaneDomain") },
+  { key = "y", mods = "CMD", action = wezterm.action.SpawnCommandInNewTab({ args = { "yazi" } }) },
   {
     key = "t",
     mods = "CMD|SHIFT",
     action = wezterm.action_callback(function()
-      local ok, reason, code = os.execute("herdr tab create --focus >>/tmp/herdr-hotkey.log 2>&1")
+      local ok, reason, code = os.execute(
+        'export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"; herdr tab create --focus >>/tmp/herdr-hotkey.log 2>&1'
+      )
       if not ok then
         wezterm.log_error("herdr tab create failed: " .. tostring(reason) .. " " .. tostring(code))
       end
@@ -235,6 +255,7 @@ config.keys = {
     action = wezterm.action_callback(scrollback_fzf),
   },
   { key = "k", mods = "CMD", action = wezterm.action.ClearScrollback("ScrollbackAndViewport") },
+  { key = "c", mods = "CMD", action = wezterm.action_callback(copy_terminal_or_zle_selection) },
 
   -- Pane navigation
   { key = "h", mods = "CMD|SHIFT", action = wezterm.action.ActivatePaneDirection("Left") },
@@ -256,13 +277,17 @@ config.keys = {
   { key = "LeftArrow", mods = "OPT|SHIFT", action = wezterm.action.SendString("\x1b[1;4D") },
   { key = "RightArrow", mods = "OPT|SHIFT", action = wezterm.action.SendString("\x1b[1;4C") },
 
-  -- Start / end of line
-  { key = "LeftArrow", mods = "CMD|SHIFT", action = wezterm.action.SendString("\x01") },
-  { key = "RightArrow", mods = "CMD|SHIFT", action = wezterm.action.SendString("\x05") },
+  -- Start / end of line selection (CMD+SHIFT extends selection to line start/end)
+  { key = "LeftArrow", mods = "CMD|SHIFT", action = wezterm.action.SendString("\x1b[97;6u") },
+  { key = "RightArrow", mods = "CMD|SHIFT", action = wezterm.action.SendString("\x1b[101;6u") },
+  { key = "LeftArrow", mods = "CTRL|SHIFT", action = wezterm.action.SendString("\x1b[97;6u") },
+  { key = "RightArrow", mods = "CTRL|SHIFT", action = wezterm.action.SendString("\x1b[101;6u") },
 
   -- Word navigation
   { key = "LeftArrow", mods = "OPT", action = wezterm.action.SendString("\x1bb") },
   { key = "RightArrow", mods = "OPT", action = wezterm.action.SendString("\x1bf") },
+  { key = "LeftArrow", mods = "CTRL", action = wezterm.action.SendString("\x1bb") },
+  { key = "RightArrow", mods = "CTRL", action = wezterm.action.SendString("\x1bf") },
 
   -- Character selection
   { key = "LeftArrow", mods = "SHIFT", action = wezterm.action.SendString("\x1b[1;2D") },
