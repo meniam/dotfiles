@@ -170,22 +170,77 @@ ensure_stow() {
   command -v stow >/dev/null 2>&1 || die "GNU Stow could not be installed."
 }
 
+# Physical path a symlink points at, with its parent directory resolved.
+link_destination() {
+  local link="$1" destination destination_dir
+  destination="$(readlink "$link")" || return 1
+  case "$destination" in
+    /*) ;;
+    *) destination="$(dirname "$link")/$destination" ;;
+  esac
+  destination_dir="$(cd -P "$(dirname "$destination")" 2>/dev/null && pwd -P)" || return 1
+  printf '%s/%s' "$destination_dir" "$(basename "$destination")"
+}
+
+# True when any parent directory of a $HOME-relative path is a symlink.
+has_symlinked_parent() {
+  local relative prefix="$HOME" component saved_ifs
+  relative="$(dirname "$1")"
+  [ "$relative" = "." ] && return 1
+  saved_ifs="$IFS"
+  IFS=/
+  # shellcheck disable=SC2086
+  set -- $relative
+  IFS="$saved_ifs"
+  for component in "$@"; do
+    prefix="$prefix/$component"
+    [ -L "$prefix" ] && return 0
+  done
+  return 1
+}
+
 stow_module() {
   local module_dir="$1"
   local package="$module_dir/config"
   [ -d "$package" ] || return 0
+  [ -n "${HOME:-}" ] || die "HOME is not set; refusing to touch dotfiles."
 
-  local backup_root relative target backup
+  local backup_root relative target backup target_dir repo_root destination
   backup_root="$HOME/.dotfiles-backups/$(date +%Y%m%d-%H%M%S)-$$"
+  repo_root="$(cd -P "${DOTFILES_DIR:-$module_dir/../..}" && pwd -P)"
   while IFS= read -r relative; do
     relative="${relative#./}"
     target="$HOME/$relative"
-    if [ -e "$target" ] && [ ! -L "$target" ]; then
-      backup="$backup_root/$relative"
-      mkdir -p "$(dirname "$backup")"
-      mv "$target" "$backup"
-      warn "Backed up ~/$relative to $backup"
+
+    # Stow folds directories, so an earlier run can leave ~/.config/nvim as a
+    # symlink into this repository, and a user can point it anywhere else.
+    # Either way the path resolves outside ~, and moving the target would
+    # delete the real file instead of backing up a copy of it.
+    if has_symlinked_parent "$relative"; then
+      log "Skipping ~/$relative: a parent directory is a symlink."
+      continue
     fi
+
+    if [ -L "$target" ]; then
+      # A link this repository already owns is left for stow to restow.
+      # A foreign one is moved aside, otherwise stow aborts on the conflict.
+      destination="$(link_destination "$target")" || destination=""
+      case "$destination/" in
+        "$repo_root"/*) continue ;;
+      esac
+    elif [ ! -e "$target" ]; then
+      continue
+    else
+      target_dir="$(cd -P "$(dirname "$target")" 2>/dev/null && pwd -P)" || continue
+      case "$target_dir/" in
+        "$repo_root"/*) continue ;;
+      esac
+    fi
+
+    backup="$backup_root/$relative"
+    mkdir -p "$(dirname "$backup")"
+    mv "$target" "$backup"
+    warn "Backed up ~/$relative to $backup"
   done < <(cd "$package" && find . \( -type f -o -type l \) -print)
 
   stow -d "$module_dir" -t "$HOME" --restow config
