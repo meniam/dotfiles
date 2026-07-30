@@ -39,11 +39,20 @@ app_watcher = hs.application.watcher.new(function(app_name, event_type, app)
     if app_name == "Arc" then
       win:moveToUnit({0, 0, 0.5, 1})
     elseif app_name == "Telegram" then
-      win:setFrame(hs.geometry.rect(1400, 80, 420, 900))
+      -- win:setFrame(hs.geometry.rect(1400, 80, 420, 900))
+      win:moveToUnit({0.09, 0.1, 0.83, 0.8})
     elseif app_name == "WezTerm" then
+      win:moveToUnit({0.09, 0.1, 0.83, 0.8})
+    elseif app_name == "Code" then
+      win:moveToUnit({0.09, 0.1, 0.83, 0.8})
+    elseif app_name == "Docker" then
+      win:moveToUnit({0.09, 0.1, 0.83, 0.8})
+    elseif app_name == "Docker Desktop" then
       win:moveToUnit({0.09, 0.1, 0.83, 0.8})
     elseif app_name == "ChatGPT" then
       win:moveToUnit({0.3, 0.1, 0.4, 0.8})
+    elseif app_name == "Zoom Workplace" then
+      win:moveToUnit({0.09, 0.1, 0.83, 0.8})
     elseif app_name == "PhpStorm" then
       win:maximize()
     end
