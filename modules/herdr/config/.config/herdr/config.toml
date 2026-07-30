@@ -1,0 +1,65 @@
+onboarding = false
+
+[theme]
+name = "tokyo-night"
+auto_switch = false
+light_name = "catppuccin-latte"
+dark_name = "catppuccin"
+
+[theme.custom]
+# panel_bg = "#14191e"
+accent = "#cba6f7"
+# surface0 = "#85149f"
+# surface1 = "#98834e"
+# surface_dim = "#3d3d3d"
+# overlay0 = "#30637a"
+# overlay1 = "#4e4279"
+# text = "#cdd6f4"
+# subtext0 = "#1f3799"
+# mauve = "#cba6f7"
+# green = "#a6e3a1"
+# yellow = "#f9e2af"
+# red = "#f38ba8"
+# blue = "#89b4fa"
+# teal = "#94e2d5"
+# peach = "#fab387"
+
+[terminal]
+default_shell = "/bin/zsh"
+
+[keys]
+prefix = "ctrl+a"
+toggle_sidebar = "prefix+a"
+new_tab = "ctrl+alt+o"
+
+[ui]
+mouse_capture = true
+accent = "#cba6f7"
+pane_borders = true
+pane_gaps = false
+
+agent_panel_sort = "spaces"
+
+show_agent_labels_on_pane_borders = true
+[worktrees]
+directory = "~/.herdr/worktrees"
+
+[session]
+resume_agents_on_restore = true
+
+[[keys.command]]
+key = "prefix+f"
+type = "shell"
+command = "herdr plugin action invoke open-file-viewer --plugin herdr-file-viewer"
+
+[[keys.command]]
+key = "prefix+shift+f"
+type = "shell"
+command = "herdr plugin action invoke open-file-viewer-tab --plugin herdr-file-viewer"
+
+[ui.sound]
+enabled = true
+
+[experimental]
+pane_history = true
+switch_ascii_input_source_in_prefix = true
