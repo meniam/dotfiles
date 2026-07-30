@@ -8,7 +8,6 @@ typeset -a existing_path_entries
 path_entries=(
   "$HOME/.bin"
   "$HOME/.local/bin"
-  "/usr/local/bin"
   "/opt/homebrew/bin"
   "/opt/homebrew/sbin"
   "/opt/homebrew/opt/coreutils/libexec/gnubin"
@@ -17,6 +16,7 @@ path_entries=(
   "/opt/homebrew/opt/python/libexec/bin"
   "/opt/homebrew/opt/ruby/bin"
   "/opt/homebrew/opt/postgresql@16/bin"
+  "/usr/local/bin"
   "/usr/sbin"
   "/usr/bin"
   "/sbin"
