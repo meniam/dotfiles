@@ -81,3 +81,5 @@ alias afk='pmset displaysleepnow'
 alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
 alias grip='grip -b'
 alias dns='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
+alias hs='cd /Users/eugene/www/myazin/hs'
+alias hsv='cd /Users/eugene/www/myazin/hs && code .'
