@@ -5,7 +5,7 @@ set -euo pipefail
 detect_os
 
 if [ "$OS" = "linux" ] && ! command -v ouch >/dev/null 2>&1; then
-  if apt-cache show ouch >/dev/null 2>&1; then
+  if apt_has_candidate ouch; then
     step "Installing Ouch from configured APT sources" "*"
     apt_install ouch
   else
@@ -35,14 +35,23 @@ if [ "$OS" = "mac" ] && { ! command -v rar >/dev/null 2>&1 || ! command -v unrar
 fi
 
 if [ "$OS" = "linux" ]; then
+  # RAR support is proprietary: it lives in non-free and is not built for every
+  # architecture. Treat it as optional so the rest of the module still counts.
   for package in rar unrar; do
     command -v "$package" >/dev/null 2>&1 && continue
-    if apt-cache show "$package" >/dev/null 2>&1; then
+    if apt_has_candidate "$package"; then
       step "Installing $package from configured APT sources" "*"
-      apt_install "$package"
-    else
-      warn "'$package' is unavailable from the configured APT sources."
-      warn "Enable the appropriate non-free or multiverse repository, then rerun this module."
+      apt_install "$package" || warn "'$package' could not be installed."
+      continue
     fi
+
+    if [ "$package" = "unrar" ] && apt_has_candidate unrar-free; then
+      step "Installing unrar-free instead of the non-free unrar" "*"
+      apt_install unrar-free || warn "'unrar-free' could not be installed."
+      continue
+    fi
+
+    warn "'$package' is unavailable from the configured APT sources on $(dpkg --print-architecture 2>/dev/null || uname -m)."
+    warn "Enable the non-free component, or extract RAR archives with 7z instead."
   done
 fi
