@@ -243,6 +243,20 @@ config.keys = {
       end
     end),
   },
+  {
+    key = "w",
+    mods = "CMD|SHIFT",
+    action = wezterm.action_callback(function()
+      local ok, reason, code = os.execute([[
+        export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+        tab_id=$(herdr tab list | jq -r '.result.tabs[] | select(.focused==true) | .tab_id')
+        [ -n "$tab_id" ] && herdr tab close "$tab_id"
+      ]] .. " >>/tmp/herdr-hotkey.log 2>&1")
+      if not ok then
+        wezterm.log_error("herdr tab close failed: " .. tostring(reason) .. " " .. tostring(code))
+      end
+    end),
+  },
   { key = "f", mods = "CMD", action = wezterm.action.Search("CurrentSelectionOrEmptyString") },
   {
     key = "f",
