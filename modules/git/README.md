@@ -25,7 +25,9 @@ The module installs LazyGit and links its configuration file to `~/.config/lazyg
 
 It also `[include]`s `work.conf` and `personal.conf` for machine-specific `[user]` identity and other personal overrides (e.g. `diff.external`). Neither file is part of the module; both are gitignored by the dotfiles repo and meant to be created locally per machine — Git silently skips an `[include]` whose target does not exist.
 
-`~/.config/git/.gitconfig` is not one of Git's auto-discovered config paths (those are `~/.gitconfig` and `~/.config/git/config`), so `setup.sh` wires it in with `git config --global include.path ~/.config/git/.gitconfig`.
+`~/.config/git/.gitconfig` is not one of Git's auto-discovered config paths (those are `~/.gitconfig` and `~/.config/git/config`), so something has to pull it in. That job belongs to `config/.gitconfig`, which stow links to `~/.gitconfig` along with the rest of the package: it is a two-line manifest that `[include]`s `~/.config/git/.gitconfig` and then `~/.gitconfig.local`.
+
+Wiring it this way rather than through `git config --global include.path` keeps the whole chain declarative — `stow -D` removes it as cleanly as it was added, and no install step mutates a file outside the module. `~/.gitconfig.local` is the per-machine escape hatch and is not part of the repository.
 
 ## Aliases
 
