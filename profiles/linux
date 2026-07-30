@@ -1,12 +1,7 @@
 # Profile: Debian server
 linux
-archives
 docker
-lazygit
+git
 must-have
-storage
-mc
 media
-navigation
-storage
-yazi
+fs

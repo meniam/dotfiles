@@ -1,0 +1,25 @@
+eza
+fd
+ripgrep
+fzf
+peco
+tree
+bat
+stow
+entr
+glow
+jq
+yq
+parallel
+yazi
+sevenzip
+zoxide
+midnight-commander
+# macOS already provides zip and unzip.
+zstd
+ouch
+bzip2
+gnu-tar
+ncdu
+dust
+duf

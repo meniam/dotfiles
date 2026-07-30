@@ -1,0 +1,30 @@
+eza
+fd-find
+ripgrep
+fzf
+peco
+fasd
+tree
+file
+bat
+stow
+entr
+glow
+jq
+yq
+parallel
+unzip
+zip
+zstd
+bzip2
+tar
+p7zip-full
+mc
+# libext2fs2t64 (mc's ext2fs-attributes dependency) does not declare this in
+# its own Depends on Debian trixie, so --no-install-recommends leaves mc
+# unable to load: "error while loading shared libraries: libcom_err.so.2".
+libcom-err2
+ncdu
+du-dust
+duf
+pydf

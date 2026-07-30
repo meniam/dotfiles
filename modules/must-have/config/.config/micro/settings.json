@@ -1,0 +1,21 @@
+{
+    "colorscheme": "gotham",
+    "tabsize": 4,
+    "tabstospaces": true,
+    "autosave": 0,
+    "savecursor": true,
+    "saveundo": true,
+    "scrollmargin": 5,
+    "scrollspeed": 2,
+    "clipboard": "terminal",
+    "cursorline": true,
+    "ruler": true,
+    "softwrap": false,
+    "statusline": true,
+    "diffgutter": true,
+    "rmtrailingws": false,
+    "hlsearch": true,
+    "ignorecase": true,
+    "smartpaste": true,
+    "matchbrace": true
+}

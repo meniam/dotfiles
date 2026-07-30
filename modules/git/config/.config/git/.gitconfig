@@ -1,0 +1,18 @@
+[include]
+    path = ~/.config/git/core.conf
+[include]
+    path = ~/.config/git/color.conf
+[include]
+    path = ~/.config/git/diff.conf
+[include]
+    path = ~/.config/git/urls.conf
+[include]
+    path = ~/.config/git/lfs.conf
+[include]
+    path = ~/.config/git/aliases.conf
+[include]
+    path = ~/.config/git/delta.conf
+[include]
+    path = ~/.config/git/work.conf
+[include]
+    path = ~/.config/git/personal.conf

@@ -9,7 +9,7 @@ Machine-specific values and secrets are intentionally excluded.
 
 - Selective installation of modules and their dependencies
 - Interactive module picker for terminal sessions
-- Profiles for machine roles such as `mac` or `linux`
+- Profiles for machine roles such as `desktop` or `linux`
 - Per-module manifests for Homebrew formulae, macOS casks, and APT packages
 - GNU Stow linking of selected configuration files into `$HOME`
 - Module status checks through optional installation probes
@@ -28,9 +28,9 @@ GNU Stow is installed automatically when a selected module needs it.
 ```bash
 ./install --list
 ./install --select
-./install mc yazi
-./install wezterm kitty lazydocker
-./install --profile mac
+./install fs git
+./install desktop multiplexer
+./install --profile desktop
 ./install --status
 ```
 
@@ -47,18 +47,13 @@ GNU Stow is installed automatically when a selected module needs it.
 
 | Module       | Purpose                                         | Notes                                                                                                          |
 | ------------ | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `mc`         | Midnight Commander file manager                 | Includes its configuration.                                                                                    |
-| `lazygit`    | Terminal interface for Git                      | Includes its configuration.                                                                                    |
-| `navigation` | Terminal navigation and file workflow           | Installs search, filtering, file inspection, and Markdown viewing tools. `mc` remains a separate module.       |
-| `archives`   | Archive creation and extraction                 | Installs ZIP, UnZip, and Zstandard tools.                                                                      |
-| `storage`    | Disk usage and free space analysis              | Installs Ncdu, Dust, Duf, and Pydf where available.                                                            |
+| `git`        | Git and GitHub command-line tooling             | Installs Git, GitHub CLI, Git LFS, and the Lazygit terminal UI.                                                 |
+| `fs`         | Terminal navigation and file workflow           | Search, filtering, file inspection, Markdown viewing, archive tools, and disk usage analysis, plus the Yazi and Midnight Commander file managers; depends on `media`. |
 | `media`      | Media inspection, conversion, and preview tools | Installs FFmpeg, ImageMagick, MediaInfo, ExifTool, Poppler, and Chafa.                                         |
-| `yazi`       | Terminal file manager                           | Includes its core configuration and depends on `media`. Locked plugins and flavors are restored by `setup.sh`. |
-| `wezterm`    | GPU-accelerated terminal emulator               | Includes its Lua configuration. Homebrew installs the cask on macOS.                                           |
-| `kitty`      | GPU-accelerated terminal emulator               | Includes its custom configuration and split-toggle script. Homebrew installs the cask on macOS.                |
+| `multiplexer` | Terminal multiplexer tools                     | Installs tmux with TPM-managed plugins, and the herdr agent multiplexer.                                       |
 | `lazydocker` | Terminal interface for Docker                   | Includes an empty upstream configuration file; Linux uses the project's upstream installer.                    |
 | `must-have`  | Cross-platform baseline tools                   | Installs the common command-line baseline for macOS and Linux.                                                  |
-| `mac`        | macOS desktop software                          | Default macOS module; installs macOS-specific formulae and casks, plus all other macOS-compatible modules.     |
+| `desktop`    | macOS desktop software                          | Default macOS module; installs macOS-specific formulae and casks, plus Hammerspoon, WezTerm, Kitty, and all other macOS-compatible modules. |
 | `linux`      | Debian/Ubuntu system prerequisites               | Installs Linux-specific command-line tools and build prerequisites.                                              |
 
 ## Adding a module
@@ -105,7 +100,7 @@ Included profiles:
 
 | Profile | Purpose |
 | ------- | ------- |
-| `mac`   | Installs every module supported on macOS; the Linux-only module is excluded. |
+| `desktop` | Installs every module supported on macOS; the Linux-only module is excluded. |
 | `linux` | Installs the Debian server baseline. |
 
 Create `profiles/<name>` with one module name per line:

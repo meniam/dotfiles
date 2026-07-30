@@ -4,3 +4,5 @@ htop
 ca-certificates
 screen
 micro
+make
+just
