@@ -12,7 +12,7 @@ case "$OS" in
     brew install --cask wezterm
     ;;
   linux)
-    if apt-cache show wezterm >/dev/null 2>&1; then
+    if apt_has_candidate wezterm; then
       step "Installing WezTerm from configured APT sources" "*"
       apt_install wezterm
     else

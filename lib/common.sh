@@ -86,6 +86,15 @@ apt_install() {
   $SUDO apt-get install -y --no-install-recommends "$@"
 }
 
+# True when APT can actually install a package. `apt-cache show` is not enough:
+# it also succeeds for a package APT merely knows about, such as one built for
+# another architecture or living in a component that is not enabled.
+apt_has_candidate() {
+  local candidate
+  candidate="$(apt-cache policy "$1" 2>/dev/null | awk '/^  Candidate:/ { print $2; exit }')"
+  [ -n "$candidate" ] && [ "$candidate" != "(none)" ]
+}
+
 brew_install() {
   [ "$#" -gt 0 ] || return 0
   local formula
