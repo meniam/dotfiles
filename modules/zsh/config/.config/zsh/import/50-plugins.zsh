@@ -30,6 +30,35 @@ if source "$ZINIT_HOME/zinit.zsh"; then
   # Repository: https://github.com/zsh-users/zsh-history-substring-search
   zinit light zsh-users/zsh-history-substring-search
 
+  # Match the command-line selection color to the terminal's text selection color.
+  # See selection_bg/selection_fg in wezterm.lua for the terminal-side counterpart.
+  zle_highlight=('region:bg=#ffdd2d,fg=#000000')
+
+  # Select command-line text with Shift-modified navigation keys.
+  # Cmd+C copies the active region to the macOS clipboard through the widget below.
+  # Repository: https://github.com/jirutka/zsh-shift-select
+  zinit light jirutka/zsh-shift-select
+
+  # Copy the active command-line region to both the ZLE kill buffer and pbcopy.
+  # WezTerm sends this private sequence when Cmd+C has no terminal selection.
+  copy-zle-region-to-clipboard() {
+    (( REGION_ACTIVE && MARK != CURSOR )) || return 0
+
+    if (( ! $+commands[pbcopy] )); then
+      zle -M 'pbcopy is not available.'
+      return 1
+    fi
+
+    zle copy-region-as-kill
+    if ! print -rn -- "$CUTBUFFER" | command pbcopy; then
+      zle -M 'Failed to copy the selected text with pbcopy.'
+      return 1
+    fi
+  }
+  zle -N copy-zle-region-to-clipboard
+  bindkey -M emacs '^[[99~' copy-zle-region-to-clipboard
+  bindkey -M shift-select '^[[99~' copy-zle-region-to-clipboard
+
   # Keep the legacy fuzzy search and match-highlighting appearance.
   HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=default,fg=magenta,bold'
   HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='bg=default,fg=black,bold'
