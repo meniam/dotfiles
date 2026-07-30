@@ -46,8 +46,6 @@ case ":$PATH:" in
 esac
 export PATH
 
-have_tty() { [ -t 2 ]; }
-
 with_timeout() {
   local seconds="$1"
   shift
