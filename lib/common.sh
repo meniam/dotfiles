@@ -252,11 +252,15 @@ stow_module() {
     warn "Backed up ~/$relative to $backup"
   done < <(cd "$package" && find . \( -type f -o -type l \) -print)
 
-  stow -d "$module_dir" -t "$HOME" --restow config
+  # --no-folding: several modules share top-level directories such as
+  # ~/.config. Folding would replace ~/.config with a symlink into whichever
+  # module's package stows it first, and every later module would then see
+  # a ~/.config "not owned" by its own stow directory and abort.
+  stow -d "$module_dir" -t "$HOME" --no-folding --restow config
 }
 
 unstow_module() {
   local module_dir="$1"
   [ -d "$module_dir/config" ] || return 0
-  stow -d "$module_dir" -t "$HOME" -D config
+  stow -d "$module_dir" -t "$HOME" --no-folding -D config
 }
