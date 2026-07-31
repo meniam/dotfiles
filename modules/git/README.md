@@ -47,7 +47,10 @@ The tracked Git configuration is split by concern:
 - `delta.conf` enables navigation, hyperlinks, line numbers, side-by-side
   wrapping, ANSI syntax colours, interactive-patch overrides, blame syntax,
   and `zdiff3` merge conflicts.
-- `urls.conf` defines `gh:`, `github:`, `gst:`, and `gist:` shorthands.
+- `urls.conf` defines the `gh:`, `github:`, `gst:`, and `gist:` shorthands.
+  `gh:`/`gst:` clone over SSH; `github:`/`gist:` clone anonymously over HTTPS
+  and push over SSH. Both also rewrite the `git://` scheme GitHub shut down in
+  2022, so a remote still recorded with it fetches over HTTPS.
 - `lfs.conf` wires the Git LFS clean, smudge, and process filters.
 - `signing.conf` selects the SSH signature format and the allowed-signers file.
 - `aliases.conf` contains the aliases and shared `pretty.brief` log format.
