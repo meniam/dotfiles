@@ -1,6 +1,22 @@
 # Hide Homebrew environment-variable hints without disabling automatic updates.
 export HOMEBREW_NO_ENV_HINTS=1
 
+# Editor used by everything that honours EDITOR/VISUAL: Git commit messages and
+# interactive rebase, `crontab -e`, less's `v`, fzf's edit binding. Nothing set
+# it before, so Git fell through to `vi`.
+#
+# Resolved here rather than as `core.editor` in the git module: that module does
+# not depend on nvim, so hardcoding it there breaks Git on a machine that
+# installed git without nvim. The loop degrades to whatever is present instead.
+for zsh_editor_candidate in nvim vim vi; do
+  if (( $+commands[$zsh_editor_candidate] )); then
+    export EDITOR="$zsh_editor_candidate"
+    export VISUAL="$zsh_editor_candidate"
+    break
+  fi
+done
+unset zsh_editor_candidate
+
 # Initialize Zoxide's directory-jumping command and record directory changes.
 # Type 'z <query>' to jump to a frequently used directory matching the query.
 if (( $+commands[zoxide] )); then
