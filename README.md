@@ -101,7 +101,7 @@ with `#` are ignored.
 
 | Profile | Modules | Intended use |
 | --- | --- | --- |
-| `code` | `php85`, `node24`, `rust` | Language toolchains. `php85` is skipped on unsupported platforms. |
+| `code` | `php85`, `node24`, `rust`, `python`, `mise` | Language toolchains. `php85` is skipped on unsupported platforms. `mise` layers per-project versions over the fixed toolchains. |
 | `docker` | `git`, `fs`, `zsh` | A container-oriented interactive shell environment. This profile does not install Docker Engine or Docker Desktop. |
 | `linux` | `linux`, `docker`, `git`, `must-have`, `media`, `fs` | Debian server and command-line environment. |
 | `mac` | `must-have`, `docker`, `git`, `media`, `fs`, `nvim`, `multiplexer`, `desktop`, `zsh`, `ssh` | Full macOS workstation environment. |
