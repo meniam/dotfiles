@@ -1,0 +1,78 @@
+# Default application handlers, applied by `duti ~/.config/duti/settings.duti`.
+#
+# Format: one `bundle-id<TAB>type<TAB>role` line per binding. `#` starts a
+# comment. A value beginning with a dot is a filename extension; everything else
+# is a Uniform Type Identifier. Reapplying a binding that is already in place is
+# a no-op, so this file can be applied on every install.
+#
+# LaunchServices binds handlers to type identifiers, not to extensions: duti
+# resolves an extension to its UTI first, which makes `.py` and
+# public.python-script the same instruction — and also means one identifier can
+# carry several extensions, as public.php-script does for .php, .php3, .php4 and
+# .phtml. Types are therefore named directly below, and an extension is used
+# only where the identifier behind it is generated per machine.
+#
+# Assignments propagate asynchronously. `duti -x <ext>` can still report the
+# previous application for a few seconds after a successful write; that is
+# LaunchServices catching up, not a failed binding.
+#
+# Visual Studio Code handles every editable type here. Switching editors means
+# replacing the bundle ID on those lines: `com.sublimetext.4`,
+# `com.todesktop.230313mzl4w4u92` (Cursor), or `com.jetbrains.PhpStorm`.
+
+# Plain text, and the parents that cover source files with no type of their own.
+com.microsoft.VSCode	public.plain-text	all
+com.microsoft.VSCode	public.source-code	all
+com.microsoft.VSCode	public.script	all
+
+# Shell and scripting languages.
+com.microsoft.VSCode	public.shell-script	all
+com.microsoft.VSCode	public.bash-script	all
+com.microsoft.VSCode	public.zsh-script	all
+com.microsoft.VSCode	public.python-script	all
+com.microsoft.VSCode	public.ruby-script	all
+com.microsoft.VSCode	public.php-script	all
+com.microsoft.VSCode	org.lua	all
+com.microsoft.VSCode	org.rust-lang.rust-script	all
+com.microsoft.VSCode	org.golang.go-script	all
+com.microsoft.VSCode	public.c-source	all
+com.microsoft.VSCode	public.c-header	all
+
+# Web assets.
+com.microsoft.VSCode	com.netscape.javascript-source	all
+com.microsoft.VSCode	public.css	all
+
+# Configuration, data, and diffs.
+com.microsoft.VSCode	public.yaml	all
+com.microsoft.VSCode	public.toml	all
+com.microsoft.VSCode	com.microsoft.ini	all
+com.microsoft.VSCode	org.iso.sql	all
+com.microsoft.VSCode	public.xml	all
+com.microsoft.VSCode	public.patch-file	all
+
+# `.conf` has no identifier of its own: the UTI behind it is exported by
+# whichever VPN client or utility registered the extension on this machine, so
+# the extension is bound instead of a name that differs per install.
+com.microsoft.VSCode	.conf	all
+
+# `.ts` is bound deliberately, with a side effect: its UTI is
+# public.mpeg-2-transport-stream, which is the correct type for the container
+# format and indistinguishable from TypeScript. Downloaded transport streams
+# therefore open in the editor as well; `Open With` still reaches VLC.
+com.microsoft.VSCode	public.mpeg-2-transport-stream	all
+
+# Applications that are already the right answer, pinned so that installing or
+# updating something else cannot take the type over. HTML stays with the browser:
+# `*.twig.html` consequently opens in Chrome too, because LaunchServices only
+# ever sees the last extension of a file name.
+com.google.Chrome	public.html	all
+abnerworks.Typora	net.daringfireball.markdown	all
+com.xujiwei.powerjsoneditor	public.json	all
+
+# `.log` is left as it is, with Console.
+#
+# Extensions that no application declares a real type for — .jsx, .tsx, .sass,
+# .scss, .twig, .env, .local — resolve to an identifier macOS generates on the
+# fly, and LaunchServices refuses a handler for it: duti reports `error -50`.
+# Those are bound by extension instead, in
+# ~/.config/launchservices/handlers.conf.
