@@ -1,7 +1,10 @@
 # Profile: macOS desktop
+must-have
 docker
 git
 media
 fs
 nvim
+multiplexer
 desktop
+zsh
