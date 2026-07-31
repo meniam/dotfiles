@@ -89,7 +89,7 @@ supported platform. Dependencies are installed before the selected module.
 | `python` | macOS, Linux | off | — | uv with a managed CPython interpreter, the Ruff linter, the ty type checker, and user-level uv and REPL configuration. |
 | `rust` | macOS, Linux | off | — | The minimal stable Rust toolchain through rustup, including Cargo and rustc. |
 | `ssh` | macOS, Linux | on | — | OpenSSH client defaults with connection multiplexing, keychain support on macOS, and includes for private per-host configuration. |
-| `zsh` | macOS, Linux | off | — | Zsh with a modular Zinit-based configuration and plugin warm-up. |
+| `zsh` | macOS, Linux | off | — | Zsh with a modular Zinit-based configuration, the Powerlevel10k prompt, and plugin warm-up. |
 
 Every module contains a `README.md` with its packages, configuration, setup
 behavior, and platform-specific limitations.

@@ -15,6 +15,14 @@ fi
 if source "$ZINIT_HOME/zinit.zsh"; then
   zsh_init_completion
 
+  # Prompt theme. Loaded first so the instant prompt replayed by .zshrc is taken
+  # over by the real prompt as early as possible. Its settings live in
+  # ../p10k.zsh and are applied by 80-prompt.zsh; depth=1 skips the history of a
+  # repository that is only ever used at its tip.
+  # Repository: https://github.com/romkatv/powerlevel10k
+  zinit ice depth=1
+  zinit light romkatv/powerlevel10k
+
   # Suggest commands from history while the command line is being edited.
   # Type a command prefix and press Right Arrow to accept the grey suggestion.
   # Repository: https://github.com/zsh-users/zsh-autosuggestions
