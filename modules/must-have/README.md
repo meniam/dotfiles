@@ -35,6 +35,7 @@ modules on macOS and Debian/Ubuntu Linux.
 | `~/.editorconfig` | Provides fallback UTF-8, line-ending, whitespace, and indentation rules outside projects with their own EditorConfig. |
 | `~/.hushlogin` | Suppresses the login banner in new shells. |
 | `~/.config/micro/settings.json` | Configures Micro's theme, indentation, clipboard, search, wrapping, and editor UI. |
+| `~/.config/direnv/direnv.toml` | Raises direnv's slow-`.envrc` warning to 20 seconds and stops it from printing the changed variables on every directory switch. |
 
 `setup.sh` installs the Micro plugins `fzf`, `filemanager`, `editorconfig`,
 `palettero`, `monokai-dark`, and `gotham-colors`. A failed plugin installation
@@ -60,6 +61,18 @@ installer skips packages with no candidate and reports a warning. The module
 probe therefore treats `tldr` as optional on Linux, while Homebrew installations
 must provide it.
 
-The module installs `direnv` but does not add a shell hook. Enable the hook in a
-machine-local shell override when automatic `.envrc` loading is desired.
+direnv does nothing until a shell hook calls it on every prompt. The `zsh`
+module evaluates `direnv hook zsh` when the binary is present, so installing
+both modules is what makes `.envrc` files load automatically; for any other
+shell the hook belongs in a machine-local rc file. An `.envrc` also stays
+inactive until `direnv allow` is run in its directory, which is deliberate — the
+file is shell code that would otherwise execute on `cd` into a cloned
+repository. `hide_env_diff` in `direnv.toml` needs direnv 2.34 or later and is
+ignored by older builds, which parse the file without failing on unknown keys.
+
+Both direnv and the `mise` module manage the environment on directory changes,
+and mise upstream does not support the combination. They stay out of each
+other's way when direnv is limited to plain variables and `PATH` is left to
+mise; the `mise` module's README describes the split.
+
 The `fs` module depends on `must-have` for fzf.
