@@ -56,6 +56,8 @@ the configured fzf completion trigger.
 - Zoxide is initialized when available, and Yazi receives fuzzy Zoxide options.
 - Eza reads the theme from the `fs` module through `EZA_CONFIG_DIR`.
 - ripgrep reads the `fs` module's configuration only when that file exists.
+- `PYTHONSTARTUP` and `PYTHON_HISTORY` are exported only when the `python`
+  module's startup file exists, which moves REPL history to `~/.cache/python/`.
 - fzf defaults use fd for discovery and bat for previews.
 - the `y` function runs Yazi and changes the shell to Yazi's final directory.
 - tmux, Docker, Git, filesystem, and media shortcuts become useful when their

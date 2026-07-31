@@ -39,6 +39,19 @@ rg_config_file="${XDG_CONFIG_HOME:-$HOME/.config}/ripgrep/ripgreprc"
 [[ -r "$rg_config_file" ]] && export RIPGREP_CONFIG_PATH="$rg_config_file"
 unset rg_config_file
 
+# Load the startup file stowed by the python module in interactive interpreters
+# and keep REPL history in the XDG cache. Both variables are set together on
+# purpose: a PYTHONSTARTUP naming a missing file makes every session start with a
+# traceback, and PYTHON_HISTORY pointing outside $HOME only keeps history because
+# that startup file creates the directory first. PYTHON_HISTORY is honoured by
+# Python 3.13 and later; older interpreters keep using ~/.python_history.
+python_startup_file="${XDG_CONFIG_HOME:-$HOME/.config}/python/startup.py"
+if [[ -r "$python_startup_file" ]]; then
+  export PYTHONSTARTUP="$python_startup_file"
+  export PYTHON_HISTORY="${XDG_CACHE_HOME:-$HOME/.cache}/python/history"
+fi
+unset python_startup_file
+
 # Keep the legacy file-type colours for GNU ls and Zsh completion menus, split into a readable array.
 typeset -a legacy_ls_colors
 
