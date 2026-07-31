@@ -1,22 +1,25 @@
-# common settings that generally should always be used with your language specific settings
+# Global attributes, applied through core.attributesFile in core.conf. A
+# repository's own .gitattributes overrides anything set here.
 
+# Normalise to LF in the repository and in the working tree, letting Git detect
+# which files are text. The sections below only override this default.
 * text=auto eol=lf
 
+# Documents. These are container formats, so they are marked binary: Git then
+# skips both end-of-line normalisation and any attempt to diff them by line.
 #
-# The above will handle all files NOT found below
-#
+# `diff=astextplain` used to be here instead. That driver ships with Git for
+# Windows and does not exist on macOS or Linux, and no [diff "astextplain"]
+# section defines it, so Git silently ignored the attribute. Character classes
+# cover the upper- and mixed-case spellings, which a plain `*.pdf` pattern does
+# not match.
+*.[Dd][Oo][Cc] binary
+*.[Dd][Oo][Cc][Xx] binary
+*.[Dd][Oo][Tt] binary
+*.[Pp][Dd][Ff] binary
+*.[Rr][Tt][Ff] binary
 
-# Documents
-*.doc	 diff=astextplain
-*.DOC	 diff=astextplain
-*.docx diff=astextplain
-*.DOCX diff=astextplain
-*.dot  diff=astextplain
-*.DOT  diff=astextplain
-*.pdf  diff=astextplain
-*.PDF	 diff=astextplain
-*.rtf	 diff=astextplain
-*.RTF	 diff=astextplain
+# Markup and tabular data
 *.md text
 *.adoc text
 *.textile text
