@@ -33,4 +33,6 @@ Provides terminal tools for finding, inspecting, filtering, and working with fil
 | [Duf](https://github.com/muesli/duf) | Displays disk free space in a readable table. |
 | [Pydf](https://github.com/k4rtik/pydf) | Displays filesystem free space with colourized output. |
 
+`bat` reads `~/.config/bat/config`, which selects the terminal-palette `ansi` theme for the same reason the Git module does, and maps the file names this repository uses (`*.conf` Git includes, `module.conf`, `packages.*`, `justfile`) onto the right syntaxes. Because bat derives the syntax from the file name, piped input arrives unhighlighted: pass `bat -l md` or `bat --file-name=answer.md`.
+
 `fasd` is installed from APT only because it is not included in the Homebrew manifest; macOS provides `file` as a system utility. `pydf` is installed from APT only because it is not included in the Homebrew manifest. The module depends on `media` for Yazi previews; Yazi's locked plugins and flavors are restored by `setup.sh`. On Linux, `setup.sh` uses a configured APT package for Ouch when available or the project's official static release otherwise. RAR and UnRAR are proprietary utilities: the Linux setup uses them only when the configured APT sources provide the packages, which may require enabling a non-free or multiverse repository.

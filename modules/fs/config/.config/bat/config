@@ -1,0 +1,47 @@
+### bat — syntax-highlighting pager and `cat` replacement.
+#
+# Format: one command-line argument per line, `#` starts a comment. Every
+# option here is only a default — the same flag passed on the command line
+# still wins, so `bat --style=plain` keeps working.
+#
+# bat picks the syntax from the *file name*. Input read from a pipe has no
+# name (the header shows `STDIN`) and is rendered as plain text, so colourise
+# piped Markdown with `bat -l md` or `bat --file-name=answer.md`.
+
+# Same theme-agnostic rule as the Git module's color.conf and delta.conf:
+# `ansi` paints with the terminal's own 16 colours instead of a hardcoded
+# palette, so output stays readable when the terminal flips between light and
+# dark. Swap for a named theme (`Nord`, `Catppuccin Mocha`, ... — see
+# `bat --list-themes`) to get richer colours at the cost of pinning the output
+# to one terminal background.
+--theme="ansi"
+
+# Line numbers, a filename header and the surrounding grid, plus `changes` so
+# the Git gutter marks added and modified lines while a tracked file is read.
+--style="numbers,changes,header-filename,grid"
+
+--tabs=4
+
+# Colourised input (`git log --color=always | bat`) would otherwise show its
+# escape sequences literally; `auto` strips them before highlighting.
+--strip-ansi=auto
+
+### Syntax mappings for file names bat does not recognise on its own.
+
+# The Git module splits its configuration into `*.conf` includes; only the
+# main `~/.config/git/config` is mapped to the Git Config syntax by default.
+--map-syntax="**/.config/git/*.conf:Git Config"
+--map-syntax="**/modules/git/config/.config/git/*.conf:Git Config"
+
+# Module manifests are shell assignments sourced by the installer.
+--map-syntax="module.conf:Bourne Again Shell (bash)"
+
+# Package manifests are comment-annotated one-name-per-line lists, which is
+# exactly what the pip requirements syntax highlights.
+--map-syntax="packages.apt:Requirements.txt"
+--map-syntax="packages.brew:Requirements.txt"
+
+# just recipes are Makefile-shaped.
+--map-syntax="justfile:Makefile"
+--map-syntax=".justfile:Makefile"
+--map-syntax="*.just:Makefile"
