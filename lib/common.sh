@@ -93,6 +93,21 @@ apt_has_candidate() {
   [ -n "$candidate" ] && [ "$candidate" != "(none)" ]
 }
 
+# Reduce a package list to the tokens APT can actually install. Manifests target
+# several Debian and Ubuntu releases, so a package that only exists on a newer
+# release must be skipped instead of aborting the whole module.
+apt_filter_available() {
+  local package available=""
+  for package in "$@"; do
+    if apt_has_candidate "$package"; then
+      available="$available $package"
+    else
+      warn "APT has no candidate for '$package'; skipping it."
+    fi
+  done
+  printf '%s' "${available# }"
+}
+
 brew_install() {
   [ "$#" -gt 0 ] || return 0
   local formula
@@ -148,10 +163,21 @@ install_packages_for() {
     if [ -n "$packages" ]; then
       log "Packages ($OS): $packages"
       # Package manifests contain one simple package name per line.
-      # shellcheck disable=SC2086
       case "$OS" in
-        linux) apt_install $packages ;;
-        mac) brew_install $packages ;;
+        linux)
+          # shellcheck disable=SC2086
+          packages="$(apt_filter_available $packages)"
+          if [ -n "$packages" ]; then
+            # shellcheck disable=SC2086
+            apt_install $packages
+          else
+            warn "No installable APT package remains for this module."
+          fi
+          ;;
+        mac)
+          # shellcheck disable=SC2086
+          brew_install $packages
+          ;;
       esac
     fi
   fi
