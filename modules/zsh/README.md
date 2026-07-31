@@ -54,6 +54,13 @@ the configured fzf completion trigger.
 ## Cross-module integration
 
 - Zoxide is initialized when available, and Yazi receives fuzzy Zoxide options.
+- mise is activated when the `mise` module installed it, which switches tool
+  versions per directory. Activation is part of the interactive configuration
+  only, so non-interactive shells keep the plain `PATH`.
+- direnv is hooked when the `must-have` module installed it. direnv prepends
+  itself to `precmd_functions`, so mise's hook runs after it and keeps the last
+  word on `PATH`; a variable set in both `mise.toml` and `.envrc` ends up with
+  the mise value.
 - Eza reads the theme from the `fs` module through `EZA_CONFIG_DIR`.
 - ripgrep reads the `fs` module's configuration only when that file exists.
 - `PYTHONSTARTUP` and `PYTHON_HISTORY` are exported only when the `python`

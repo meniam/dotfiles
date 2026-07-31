@@ -23,6 +23,23 @@ if (( $+commands[zoxide] )); then
   eval "$(zoxide init zsh)"
 fi
 
+# Switch tool versions per directory. mise rewrites PATH on every prompt from
+# the mise.toml, .tool-versions, or .nvmrc that applies to the current
+# directory; a directory that pins nothing is left alone, so the Homebrew or
+# APT toolchain stays in charge outside projects.
+if (( $+commands[mise] )); then
+  eval "$(mise activate zsh)"
+fi
+
+# Load an approved .envrc when entering a directory and unload it when leaving.
+# direnv prepends itself to precmd_functions regardless of where it is hooked,
+# so mise runs after it and keeps the last word on PATH. A variable set by both
+# therefore takes the mise value; leave tool paths to mise and .envrc to
+# project variables.
+if (( $+commands[direnv] )); then
+  eval "$(direnv hook zsh)"
+fi
+
 # Keep Yazi's Zoxide picker fuzzy instead of requiring an exact match.
 # This applies the same matching behavior to Yazi's Z command and shell z command.
 export YAZI_ZOXIDE_OPTS="--no-exact"

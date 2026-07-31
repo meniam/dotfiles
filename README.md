@@ -80,6 +80,7 @@ supported platform. Dependencies are installed before the selected module.
 | `git` | macOS, Linux | on | — | Git, GitHub CLI, Git LFS, delta, LazyGit, shared configuration, and semantic diff tooling on macOS. |
 | `linux` | Linux | on | `must-have` | Debian/Ubuntu command-line tools, certificates, terminal data, and build prerequisites. |
 | `media` | macOS, Linux | off | — | FFmpeg, ImageMagick, MediaInfo, ExifTool, Poppler, and Chafa. |
+| `mise` | macOS, Linux | off | — | Per-project tool versions with mise, including `.nvmrc` and `.tool-versions` support. The Linux setup uses the upstream APT repository on Debian and Ubuntu, amd64 and arm64. |
 | `multiplexer` | macOS, Linux | off | — | tmux with TPM-managed plugins and the Herdr agent multiplexer. |
 | `must-have` | macOS, Linux | on | — | Cross-platform baseline tools such as curl, wget, rsync, htop, btop, Micro, Make, Just, direnv, and fzf. |
 | `node24` | macOS, Linux | off | — | Node.js 24 and npm through Homebrew or the NodeSource repository. The Linux setup supports Debian and Ubuntu. |
