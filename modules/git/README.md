@@ -15,6 +15,7 @@ Git and GitHub command-line tooling with a modular global configuration.
 | [Git LFS](https://git-lfs.com/) | Versions large files alongside a Git repository. |
 | [delta](https://github.com/dandavison/delta) | Renders syntax-highlighted, side-by-side Git output. |
 | [LazyGit](https://github.com/jesseduffield/lazygit) | Provides an interactive terminal interface for Git. |
+| [Tig](https://jonas.github.io/tig/) | Browses history, blame, and stashes in a keyboard-driven pager. |
 | [sem](https://ataraxy-labs.github.io/sem/) | Provides entity-level semantic diff through `git sdiff` on macOS. |
 
 `sem-cli` is only present in the Homebrew manifest. The `sdiff` alias checks
