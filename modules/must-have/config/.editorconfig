@@ -1,9 +1,17 @@
 # EditorConfig is awesome: https://EditorConfig.org
+# Property reference, including the `unset` value used below:
+# https://spec.editorconfig.org/
 
 # Fallback for files outside a project that ships its own .editorconfig.
 root = true
 
-# Unix-style newlines with a newline ending every file
+# Universal rules, plus four spaces as the default width. Four is the documented
+# convention of the languages edited here that have one: PHP (PSR-12), Python
+# (PEP 8), and Rust, whose rustfmt writes four and is not configurable in
+# practice. Sections below override it where an ecosystem says otherwise.
+# https://www.php-fig.org/psr/psr-12/
+# https://peps.python.org/pep-0008/
+# https://doc.rust-lang.org/style-guide/
 [*]
 end_of_line = lf
 insert_final_newline = true
@@ -12,14 +20,71 @@ charset = utf-8
 indent_style = space
 indent_size = 4
 
-# Trailing whitespace is a hard line break in Markdown
+# Two trailing spaces are a hard line break in Markdown, so trimming them
+# silently rewrites the document.
+# https://spec.commonmark.org/current/
 [*.md]
 trim_trailing_whitespace = false
 
-# Ecosystems that conventionally indent with two spaces
-[*.{js,jsx,ts,tsx,mjs,cjs,json,jsonc,yml,yaml,css,scss,html,vue,svelte,toml}]
+# The web toolchain, where two spaces are the formatter's default rather than a
+# preference: Prettier ships tabWidth 2 and reformats these files on save in most
+# setups, npm itself rewrites package.json with two, and the JSON.stringify(value,
+# null, 2) idiom produces the same for generated JSON. Nesting is the underlying
+# reason — JSX, nested objects, and CSS at four spaces run out of line width.
+# https://prettier.io/docs/options
+[*.{js,jsx,ts,tsx,mjs,cjs,json,jsonc,css,scss,html,vue,svelte}]
 indent_size = 2
 
-# Tab indentation (no size specified)
-[{Makefile,*.mk,*.go}]
+# In YAML indentation is grammar, not layout, and the specification forbids tab
+# characters in it outright. Two is what every common emitter writes — libyaml,
+# PyYAML, kubectl, Compose — and what keeps a five-level document such as a
+# GitHub Actions workflow (on / jobs / job / steps / with) readable.
+# https://yaml.org/spec/1.2.2/
+[*.{yml,yaml}]
+indent_size = 2
+
+# TOML is flat: `key = value` pairs under a header need no indentation at all,
+# and this only takes effect inside a multi-line array or inline table. Kept at
+# two for consistency with the data formats above.
+# https://toml.io/en/v1.0.0
+[*.toml]
+indent_size = 2
+
+# Lua as the Neovim ecosystem writes it — lazy.nvim, NvChad, and the plugin
+# configurations derived from them all use two, as does the community style
+# guide. This value is load-bearing: StyLua's own default is tabs, and it reads
+# EditorConfig unless a stylua.toml is present, so removing the section changes
+# how every formatted Lua file in this repository comes out.
+# http://lua-users.org/wiki/LuaStyleGuide
+# https://github.com/JohnnyMorganz/StyLua
+[*.lua]
+indent_size = 2
+
+# Shell has no single convention: Google's guide requires two spaces, while shfmt
+# defaults to tabs and plenty of projects use four. Two is chosen here to match
+# the installer, lib/, and module setup scripts of this repository, which would
+# otherwise contradict the four-space default above.
+# https://google.github.io/styleguide/shellguide.html
+[*.{sh,bash,zsh}]
+indent_size = 2
+
+# A tab before a recipe line is required by make itself, not preferred: spaces
+# there produce `missing separator`.
+# https://pubs.opengroup.org/onlinepubs/9699919799/utilities/make.html
+[{Makefile,*.mk}]
 indent_style = tab
+
+# gofmt emits tabs and is not configurable, so anything else is reverted the next
+# time the file is formatted.
+# https://go.dev/doc/effective_go#formatting
+[*.go]
+indent_style = tab
+
+# Whitespace is data in a patch: a leading space marks a context line, and a
+# trimmed line end makes the patch fail to apply. Indentation is unset rather
+# than set, because a patch has no indentation of its own to normalise.
+# https://git-scm.com/docs/git-apply
+[*.{diff,patch}]
+trim_trailing_whitespace = false
+indent_style = unset
+indent_size = unset

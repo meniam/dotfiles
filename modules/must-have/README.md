@@ -30,7 +30,7 @@ modules on macOS and Debian/Ubuntu Linux.
 
 | Target | Purpose |
 | --- | --- |
-| `~/.curlrc` | Enables automatic redirect referers and a 60-second connection timeout. |
+| `~/.curlrc` | Follows redirects, requests compression, retries a transient failure three times, defaults a schemeless URL to HTTPS, disables URL globbing, sets an automatic redirect referer, and times a connection out after 60 seconds. |
 | `~/.wgetrc` | Configures timestamping, bounded retries, timeouts, recursive behavior, and stable requested filenames. |
 | `~/.editorconfig` | Provides fallback UTF-8, line-ending, whitespace, and indentation rules outside projects with their own EditorConfig. |
 | `~/.hushlogin` | Suppresses the login banner in new shells. |
@@ -42,7 +42,18 @@ is reported as a warning and does not fail the module.
 
 Both download configuration files apply to every curl or Wget invocation,
 including installer scripts. They intentionally avoid settings that rename or
-redirect downloaded files unexpectedly.
+redirect downloaded files unexpectedly. Following redirects stays within that
+rule because curl derives the local file name from the URL it was given and
+nothing else, and `--remote-header-name`, which would let a server choose the
+name, is not enabled. `--silent` and `--fail` are left out for a related reason:
+both change what a caller sees instead of how the transfer happens, hiding error
+messages and response bodies that scripts read.
+
+`~/.editorconfig` sets two spaces for Lua and for shell scripts, matching the
+Neovim, WezTerm, Hammerspoon, and installer sources in this repository rather
+than the four-space default. StyLua reads EditorConfig, so the Lua value also
+decides how it reformats. Patches keep their trailing whitespace, without which
+they stop applying.
 
 APT package availability differs across Debian and Ubuntu releases. The shared
 installer skips packages with no candidate and reports a warning. The module
