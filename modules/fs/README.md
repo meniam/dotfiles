@@ -1,38 +1,73 @@
 # FS
 
-Provides terminal tools for finding, inspecting, filtering, and working with files, including the Yazi and Midnight Commander file managers, common archive utilities, and disk usage analysis.
+Terminal tools for finding, inspecting, filtering, previewing, archiving, and
+managing files and disk space.
+
+- Platforms: macOS and Linux
+- Default: off
+- Dependencies: `media`, `must-have`
+
+## Included tools
 
 | Utility | Purpose |
 | --- | --- |
-| [Eza](https://eza.rocks/) | Lists files and directories with modern, Git-aware output. |
-| [fd](https://github.com/sharkdp/fd) | Finds files and directories with a fast, simple command-line interface. |
-| [ripgrep](https://github.com/BurntSushi/ripgrep) | Searches file contents recursively with fast regular-expression matching. |
-| [fzf](https://github.com/junegunn/fzf) | Interactively filters lists with fuzzy matching. |
-| [peco](https://github.com/peco/peco) | Interactively filters text streams in the terminal. |
-| [fasd](https://github.com/clvv/fasd) | Tracks frequently used files and directories for fast shell navigation. |
-| [tree](https://oldmanprogrammer.net/source.php?dir=projects/tree) | Displays directory hierarchies as a tree. |
+| [Eza](https://eza.rocks/) | Lists files with Git metadata, icons, and a custom colour theme. |
+| [fd](https://github.com/sharkdp/fd) | Finds files and directories with a concise command-line interface. |
+| [ripgrep](https://github.com/BurntSushi/ripgrep) | Searches file contents recursively. |
+| [fzf](https://github.com/junegunn/fzf) | Interactively filters lists; supplied by the `must-have` dependency. |
+| [peco](https://github.com/peco/peco) | Interactively filters text streams. |
+| [fasd](https://github.com/clvv/fasd) | Tracks frequently used paths on Linux. |
+| [zoxide](https://github.com/ajeetdsouza/zoxide) | Learns frequently used directories on macOS. |
+| [tree](https://oldmanprogrammer.net/source.php?dir=projects/tree) | Displays directory hierarchies. |
 | [file](https://darwinsys.com/file/) | Identifies file types from their contents. |
-| [bat](https://github.com/sharkdp/bat) | Displays file contents with syntax highlighting and Git integration. |
-| [GNU Stow](https://www.gnu.org/software/stow/) | Manages sets of symbolic links, including dotfiles. |
+| [bat](https://github.com/sharkdp/bat) | Displays files with syntax highlighting and Git integration. |
+| [GNU Stow](https://www.gnu.org/software/stow/) | Manages sets of symbolic links, including this repository's payloads. |
 | [entr](https://eradman.com/entrproject/) | Runs a command when watched files change. |
-| [Glow](https://github.com/charmbracelet/glow) | Renders Markdown files in the terminal. |
-| [Yazi](https://yazi-rs.github.io/) | Navigates and manages files in a terminal user interface. |
-| [UnZip](https://infozip.sourceforge.net/UnZip.html) | Extracts ZIP archives required by the Linux Yazi installer. |
-| [7-Zip](https://www.7-zip.org/) | Creates and extracts 7z and other archive formats for file previews. |
-| [zoxide](https://github.com/ajeetdsouza/zoxide) | Learns frequently used directories for fast navigation. |
-| [Midnight Commander](https://midnight-commander.org/) | Dual-pane terminal file manager for navigating, viewing, and manipulating files. |
-| [Zip](https://infozip.sourceforge.net/Zip.html) | Creates ZIP archives from files and directories. |
-| [Zstandard](https://facebook.github.io/zstd/) | Compresses and decompresses data with the Zstandard algorithm. |
-| [Ouch](https://github.com/ouch-org/ouch) | Creates, extracts, and lists many archive formats through a unified command-line interface. |
-| [bzip2](https://sourceware.org/bzip2/) | Compresses and decompresses data with the bzip2 algorithm. |
-| [GNU Tar](https://www.gnu.org/software/tar/) | Creates and extracts tar archives and their compressed variants. |
-| [RAR](https://www.rarlab.com/) | Creates proprietary RAR archives for compression and backup workflows. |
-| [UnRAR](https://www.rarlab.com/rar_add.htm) | Extracts and tests proprietary RAR archives. |
-| [Ncdu](https://dev.yorhel.nl/ncdu) | Browses directory sizes interactively in a terminal interface. |
-| [Dust](https://github.com/bootandy/dust) | Shows disk usage with a compact, visual directory summary. |
-| [Duf](https://github.com/muesli/duf) | Displays disk free space in a readable table. |
-| [Pydf](https://github.com/k4rtik/pydf) | Displays filesystem free space with colourized output. |
+| [Glow](https://github.com/charmbracelet/glow) | Renders Markdown in the terminal. |
+| [jq](https://jqlang.github.io/jq/) | Queries and transforms JSON. |
+| [yq](https://github.com/mikefarah/yq) | Queries and transforms YAML and related formats. |
+| [GNU Parallel](https://www.gnu.org/software/parallel/) | Runs jobs concurrently from command-line input. |
+| [Yazi](https://yazi-rs.github.io/) | Navigates files with rich previews in a terminal UI. |
+| [Midnight Commander](https://midnight-commander.org/) | Provides a dual-pane terminal file manager and editor. |
+| Zip, UnZip, 7-Zip, Zstandard, bzip2, and tar | Creates and extracts common archive formats. |
+| [Ouch](https://github.com/ouch-org/ouch) | Provides one interface for multiple archive formats. |
+| RAR and UnRAR | Creates and extracts proprietary RAR archives when platform packages are available. |
+| [Ncdu](https://dev.yorhel.nl/ncdu), [Dust](https://github.com/bootandy/dust), and [Duf](https://github.com/muesli/duf) | Inspects disk usage and free space. |
+| [Pydf](https://github.com/k4rtik/pydf) | Displays colourized filesystem usage on Linux. |
 
-`bat` reads `~/.config/bat/config`, which selects the terminal-palette `ansi` theme for the same reason the Git module does, and maps the file names this repository uses (`*.conf` Git includes, `module.conf`, `packages.*`, `justfile`) onto the right syntaxes. Because bat derives the syntax from the file name, piped input arrives unhighlighted: pass `bat -l md` or `bat --file-name=answer.md`.
+## Configuration
 
-`fasd` is installed from APT only because it is not included in the Homebrew manifest; macOS provides `file` as a system utility. `pydf` is installed from APT only because it is not included in the Homebrew manifest. The module depends on `media` for Yazi previews; Yazi's locked plugins and flavors are restored by `setup.sh`. On Linux, `setup.sh` uses a configured APT package for Ouch when available or the project's official static release otherwise. RAR and UnRAR are proprietary utilities: the Linux setup uses them only when the configured APT sources provide the packages, which may require enabling a non-free or multiverse repository.
+| Target | Purpose |
+| --- | --- |
+| `~/.config/bat/config` | Uses the terminal-aware `ansi` theme, enables structured output, and maps repository-specific filenames to syntaxes. |
+| `~/.config/eza/theme.yml` | Defines file-kind, permission, Git, filename, and extension colours. |
+| `~/.config/ripgrep/ripgreprc` | Enables smart case, hidden-file search, `.git` exclusion, long-line previews, automatic PCRE2 fallback, and the `pkgs` type. |
+| `~/.config/yazi/` | Configures layout, openers, keymaps, previewers, themes, and locked plugins and flavours. |
+| `~/.config/mc/ini` | Configures Midnight Commander. |
+| `~/.pydfrc` | Configures Pydf's columns, colours, and filesystem display. |
+
+`bat` chooses syntax from a filename, so piped input may need an explicit
+language such as `bat -l md` or a synthetic filename such as
+`bat --file-name=answer.md`.
+
+ripgrep has no default configuration path. The `zsh` module exports
+`RIPGREP_CONFIG_PATH` only when the stowed file exists; without that environment
+variable the file remains inert. Its settings affect ripgrep calls made by
+fzf, Yazi, Neovim, and other programs, so output-shaping options such as
+`--heading`, `--pretty`, and `--json` do not belong in the shared file.
+
+## Platform and setup notes
+
+- macOS uses Homebrew for Yazi, Ouch, and the archive tools. The operating
+  system already supplies `file`, Zip, and UnZip.
+- Linux downloads the current official Yazi release for x86_64 or arm64 into
+  `~/.local/bin` when a working Yazi is not already present.
+- `setup.sh` restores the revisions locked in Yazi's `package.toml` with
+  `ya pkg install`.
+- Linux installs Ouch from APT when available and otherwise downloads its
+  official static release for x86_64 or arm64.
+- RAR and UnRAR may require a non-free repository on Linux. Their absence is a
+  warning during setup, but the module probe still reports the module as
+  incomplete because both commands are part of the advertised toolset.
+- The `media` dependency supplies FFmpeg, ImageMagick, MediaInfo, Poppler, and
+  Chafa for Yazi previews. The `must-have` dependency supplies fzf.
