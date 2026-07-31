@@ -85,3 +85,49 @@ ta() {
 uuid() {
   od -x /dev/urandom | head -1 | awk '{OFS="-"; print $2$3,$4,$5,$6,$7$8$9}'
 }
+
+# Ask Pi a question about the current shell, passing the working directory and
+# the ten most recent commands as context, and render the answer as Markdown.
+# Run 'askPi why did the build fail' or use the '=' alias below.
+askPi() {
+  if (( ! $+commands[pi] )); then
+    print -u2 -- 'askPi: pi is not installed'
+    return 127
+  fi
+
+  if [[ -z "$*" ]]; then
+    print -u2 -- 'askPi: pass a question, for example: = why did the build fail'
+    return 2
+  fi
+
+  local -a recent_commands
+  local -i event
+
+  for (( event = HISTCMD - 1; event >= 1 && ${#recent_commands} < 10; event-- )); do
+    [[ -n "${history[$event]}" ]] && recent_commands+=("${history[$event]}")
+  done
+
+  local -a prompt_lines
+  prompt_lines=(
+    '<system>'
+    "Пользователь находится в директории: ${PWD}"
+    'Последние 10 вводимых команд:'
+  )
+
+  local command_line
+  for command_line in "${recent_commands[@]}"; do
+    prompt_lines+=("- ${command_line}")
+  done
+
+  prompt_lines+=('</system>' '' '<question>' "$*" '</question>')
+
+  local session_file="${HOME}/.pi/agent/sessions/console/session.jsonl"
+  command mkdir -p -- "${session_file:h}" || return 1
+
+  command pi --session "$session_file" -p "${(F)prompt_lines}" | command bat -l md
+}
+
+# Alias '=' to askPi. The `alias` builtin cannot take '=' as a name, so the
+# alias is registered through the `aliases` associative array instead.
+# `noglob` keeps question marks and asterisks in the question from being globbed.
+aliases[=]='noglob askPi'
