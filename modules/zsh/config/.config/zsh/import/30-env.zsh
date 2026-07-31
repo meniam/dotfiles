@@ -14,6 +14,15 @@ export YAZI_ZOXIDE_OPTS="--no-exact"
 # Load the eza theme from the stowed XDG configuration directory on every platform.
 export EZA_CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/eza"
 
+# Point ripgrep at the configuration file stowed by the fs module; ripgrep reads
+# no configuration file unless this variable names one. The existence check is
+# required rather than tidy: when the variable points at a missing file, every
+# single rg invocation fails with a read error, which is what a shell-only
+# install without the fs module would produce.
+rg_config_file="${XDG_CONFIG_HOME:-$HOME/.config}/ripgrep/ripgreprc"
+[[ -r "$rg_config_file" ]] && export RIPGREP_CONFIG_PATH="$rg_config_file"
+unset rg_config_file
+
 # Keep the legacy file-type colours for GNU ls and Zsh completion menus, split into a readable array.
 typeset -a legacy_ls_colors
 

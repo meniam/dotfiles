@@ -1,0 +1,49 @@
+### ripgrep — recursive content search.
+#
+# ripgrep has no default configuration path: it reads this file only because
+# the Zsh module exports RIPGREP_CONFIG_PATH in 30-env.zsh. Format is one
+# command-line argument per line, `#` starts a comment, and the rest of the
+# line is taken literally with no shell parsing — quotes become part of the
+# value, so `--glob="!.git"` looks for a directory whose name really is
+# `"!.git"`. Arguments here are prepended to the command line, so a flag
+# passed to `rg` still wins over the same flag below.
+#
+# Every rg invocation reads this file, including the ones other programs make
+# (fzf, Yazi, Neovim's pickers). Keep it to flags that decide which files are
+# searched or how the pattern matches; never add output-shaping flags such as
+# --heading, --pretty or --json, which break callers that parse rg's
+# `file:line:column:text` output.
+
+# Match case-insensitively while the pattern is entirely lowercase, and
+# case-sensitively as soon as it contains an uppercase letter: `rg todo` also
+# finds `TODO`, while `rg TODO` no longer matches `todo`.
+--smart-case
+
+# Search dotfiles and dot-directories, which is where most of this repository
+# lives. Ignore files are still honoured, so `.gitignore`d paths stay out.
+--hidden
+
+# --hidden alone would also descend into .git, which holds packed objects, logs
+# and every historical version of the file being searched. Later globs win, so
+# `rg --glob='.git/**' <pattern>` still reaches it on demand.
+--glob=!.git/
+
+# Minified assets, lock files and single-line data dumps would otherwise print
+# one enormous line per match. Replace the tail of such a line with a marker
+# instead of dropping the match, so the hit stays visible and greppable.
+--max-columns=200
+--max-columns-preview
+
+# Retry with PCRE2 when a pattern uses look-around or back-references that the
+# default Rust engine cannot compile, instead of exiting with a regex error.
+# `rg '(?<=foo)bar'` works without passing -P by hand.
+--engine=auto
+
+### Type definitions for this repository's own file names.
+
+# The installer's package manifests are one-token-per-line lists that no
+# built-in type covers; `rg -tpkgs <pattern>` searches both flavours at once.
+# `module.conf` needs no entry — the built-in `config` type already matches
+# *.cfg, *.conf, *.config and *.ini.
+--type-add=pkgs:packages.brew
+--type-add=pkgs:packages.apt
