@@ -1,8 +1,16 @@
 wget
 curl
-htop
 ca-certificates
+gnupg
+rsync
+mosh
+htop
+btop
+pv
 screen
 micro
 make
 just
+direnv
+fzf
+tealdeer
