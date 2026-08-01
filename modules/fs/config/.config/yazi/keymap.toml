@@ -64,17 +64,17 @@ desc = "Toggle showing git status"
 
 [[mgr.prepend_keymap]]
 on = "й"
-run = "quit"
+run = ["plugin autosave", "quit"]
 desc = "Quit"
 
 [[mgr.prepend_keymap]]
 on = "Й"
-run = "quit --no-cwd-file"
+run = ["plugin autosave", "quit --no-cwd-file"]
 desc = "Quit without writing the cwd file"
 
 [[mgr.prepend_keymap]]
 on = "<F10>"
-run = "quit"
+run = ["plugin autosave", "quit"]
 desc = "Quit"
 
 [[mgr.prepend_keymap]]
@@ -99,12 +99,12 @@ desc = "Go to the end of the list"
 
 [[mgr.prepend_keymap]]
 on = "р"
-run = "leave"
+run = ["leave", "plugin autosave"]
 desc = "Go to the parent directory"
 
 [[mgr.prepend_keymap]]
 on = "д"
-run = "enter"
+run = ["enter", "plugin autosave"]
 desc = "Enter directory"
 
 [[mgr.prepend_keymap]]
@@ -219,22 +219,22 @@ desc = "Search by content (rg)"
 
 [[mgr.prepend_keymap]]
 on = "z"
-run = "plugin zoxide"
+run = ["plugin zoxide", "plugin autosave"]
 desc = "Jump with zoxide"
 
 [[mgr.prepend_keymap]]
 on = "Z"
-run = "plugin fzf"
+run = ["plugin fzf", "plugin autosave"]
 desc = "Jump with fzf"
 
 [[mgr.prepend_keymap]]
 on = "я"
-run = "plugin zoxide"
+run = ["plugin zoxide", "plugin autosave"]
 desc = "Jump with zoxide"
 
 [[mgr.prepend_keymap]]
 on = "Я"
-run = "plugin fzf"
+run = ["plugin fzf", "plugin autosave"]
 desc = "Jump with fzf"
 
 [[mgr.prepend_keymap]]
@@ -275,38 +275,48 @@ desc = "Toggle hidden files"
 # goto (g -> п)
 [[mgr.prepend_keymap]]
 on = ["п", "р"]
-run = "cd ~"
+run = ["cd ~", "plugin autosave"]
 desc = "Home"
 
 [[mgr.prepend_keymap]]
 on = ["п", "с"]
-run = "cd ~/.config"
+run = ["cd ~/.config", "plugin autosave"]
 desc = "Go to ~/.config"
 
 [[mgr.prepend_keymap]]
 on = ["п", "в"]
-run = "cd ~/Downloads"
+run = ["cd ~/Downloads", "plugin autosave"]
 desc = "Go to Downloads"
 
 [[mgr.prepend_keymap]]
 on = ["g", "4"]
-run = "cd ~/www/4p"
+run = ["cd ~/www/4p", "plugin autosave"]
 desc = "Open 4p"
 
 [[mgr.prepend_keymap]]
 on = ["g", "e"]
-run = "cd ~/www/evirma/evirma"
+run = ["cd ~/www/evirma/evirma", "plugin autosave"]
 desc = "Open Evirma"
 
 [[mgr.prepend_keymap]]
 on = ["g", "c"]
-run = "cd ~/www/4p/catalog"
+run = ["cd ~/www/4p/catalog", "plugin autosave"]
 desc = "Open catalog"
 
 [[mgr.prepend_keymap]]
 on = ["g", "b"]
-run = "cd ~/www/brain"
+run = ["cd ~/www/brain", "plugin autosave"]
 desc = "Open Brain"
+
+[[mgr.prepend_keymap]]
+on = ["g", "v"]
+run = ["cd ~/.config/zsh", "plugin autosave"]
+desc = "Open zsh config"
+
+[[mgr.prepend_keymap]]
+on = ["g", "w"]
+run = ["cd ~/www", "plugin autosave"]
+desc = "Open www"
 
 [[mgr.prepend_keymap]]
 on = ["п", "е"]
@@ -320,12 +330,12 @@ desc = "Follow symlink"
 
 [[mgr.prepend_keymap]]
 on = ["g", "B"]
-run = "cd ~/Documents/Obsidian/Brain"
+run = ["cd ~/Documents/Obsidian/Brain", "plugin autosave"]
 desc = "Open Obsidian Brain"
 
 [[mgr.prepend_keymap]]
 on = ["п", "И"]
-run = "cd ~/Documents/Obsidian/Brain"
+run = ["cd ~/Documents/Obsidian/Brain", "plugin autosave"]
 desc = "Open Obsidian Brain"
 
 # linemode (m -> ь)
@@ -383,7 +393,7 @@ desc = "Copy filename without extension"
 # tabs (t -> е)
 [[mgr.prepend_keymap]]
 on = ["е", "е"]
-run = "tab_create --current"
+run = ["tab_create --current", "plugin autosave"]
 desc = "New tab"
 
 [[mgr.prepend_keymap]]
@@ -405,20 +415,129 @@ desc = "Search file by content (rga)"
 # tab switch (["]"→ х/ъ, "{"/"}"→ Х/Ъ)
 [[mgr.prepend_keymap]]
 on = "х"
-run = "tab_switch -1 --relative"
+run = ["tab_switch -1 --relative", "plugin autosave"]
 desc = "Previous tab"
 
 [[mgr.prepend_keymap]]
 on = "ъ"
-run = "tab_switch 1 --relative"
+run = ["tab_switch 1 --relative", "plugin autosave"]
 desc = "Next tab"
 
 [[mgr.prepend_keymap]]
 on = "Х"
-run = "tab_swap -1"
+run = ["tab_swap -1", "plugin autosave"]
 desc = "Swap with previous tab"
 
 [[mgr.prepend_keymap]]
 on = "Ъ"
-run = "tab_swap 1"
+run = ["tab_swap 1", "plugin autosave"]
+desc = "Swap with next tab"
+
+# autosave.yazi: persist the tab session (~/.local/state/yazi/session.json).
+# Restored on startup by init.lua; these override the defaults so that every
+# action that changes the tab set or the cwd writes the session out.
+
+[[mgr.prepend_keymap]]
+on = "q"
+run = ["plugin autosave", "quit"]
+desc = "Quit"
+
+[[mgr.prepend_keymap]]
+on = "Q"
+run = ["plugin autosave", "quit --no-cwd-file"]
+desc = "Quit without writing the cwd file"
+
+[[mgr.prepend_keymap]]
+on = "l"
+run = ["enter", "plugin autosave"]
+desc = "Enter directory"
+
+[[mgr.prepend_keymap]]
+on = "<Right>"
+run = ["enter", "plugin autosave"]
+desc = "Enter directory"
+
+[[mgr.prepend_keymap]]
+on = "h"
+run = ["leave", "plugin autosave"]
+desc = "Go to the parent directory"
+
+[[mgr.prepend_keymap]]
+on = "<Left>"
+run = ["leave", "plugin autosave"]
+desc = "Go to the parent directory"
+
+[[mgr.prepend_keymap]]
+on = "t"
+run = ["tab_create --current", "plugin autosave"]
+desc = "New tab"
+
+[[mgr.prepend_keymap]]
+on = "<C-c>"
+run = ["close", "plugin autosave"]
+desc = "Close the current tab, or quit if it is last"
+
+[[mgr.prepend_keymap]]
+on = "1"
+run = ["tab_switch 0", "plugin autosave"]
+desc = "Switch to tab 1"
+
+[[mgr.prepend_keymap]]
+on = "2"
+run = ["tab_switch 1", "plugin autosave"]
+desc = "Switch to tab 2"
+
+[[mgr.prepend_keymap]]
+on = "3"
+run = ["tab_switch 2", "plugin autosave"]
+desc = "Switch to tab 3"
+
+[[mgr.prepend_keymap]]
+on = "4"
+run = ["tab_switch 3", "plugin autosave"]
+desc = "Switch to tab 4"
+
+[[mgr.prepend_keymap]]
+on = "5"
+run = ["tab_switch 4", "plugin autosave"]
+desc = "Switch to tab 5"
+
+[[mgr.prepend_keymap]]
+on = "6"
+run = ["tab_switch 5", "plugin autosave"]
+desc = "Switch to tab 6"
+
+[[mgr.prepend_keymap]]
+on = "7"
+run = ["tab_switch 6", "plugin autosave"]
+desc = "Switch to tab 7"
+
+[[mgr.prepend_keymap]]
+on = "8"
+run = ["tab_switch 7", "plugin autosave"]
+desc = "Switch to tab 8"
+
+[[mgr.prepend_keymap]]
+on = "9"
+run = ["tab_switch 8", "plugin autosave"]
+desc = "Switch to tab 9"
+
+[[mgr.prepend_keymap]]
+on = "["
+run = ["tab_switch -1 --relative", "plugin autosave"]
+desc = "Previous tab"
+
+[[mgr.prepend_keymap]]
+on = "]"
+run = ["tab_switch 1 --relative", "plugin autosave"]
+desc = "Next tab"
+
+[[mgr.prepend_keymap]]
+on = "{"
+run = ["tab_swap -1", "plugin autosave"]
+desc = "Swap with previous tab"
+
+[[mgr.prepend_keymap]]
+on = "}"
+run = ["tab_swap 1", "plugin autosave"]
 desc = "Swap with next tab"
