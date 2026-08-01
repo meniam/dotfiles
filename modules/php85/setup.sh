@@ -124,5 +124,5 @@ fi
 
 step "PHP toolchain: $("$php_bin" --version | head -1)" "*"
 if [ "$OS" = "mac" ]; then
-  step "php resolves through ~/.config/zsh/import/25-php.zsh; restart your shell." "*"
+  step "php resolves through ~/.config/zsh/25-php.zsh; restart your shell." "*"
 fi

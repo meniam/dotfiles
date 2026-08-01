@@ -33,7 +33,7 @@ rustup is run with `--no-modify-path`. Left to itself it appends
 `~/.bash_profile` — four files this repository does not own, and the `~/.zshenv`
 entry is sourced by every non-interactive zsh as well.
 
-`config/.config/zsh/import/26-rust.zsh` puts `~/.cargo/bin` on `PATH` instead,
+`config/.config/zsh/26-rust.zsh` puts `~/.cargo/bin` on `PATH` instead,
 the same way the `ssh` and `php85` modules ship their own fragments. `.zshrc`
 sources every numbered file in that directory, so a machine without this module
 never has it. For any other shell, source `~/.cargo/env` from a machine-local

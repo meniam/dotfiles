@@ -78,7 +78,7 @@ file_type:
   compiled: { foreground: '#737aa2' }
   build: { foreground: '#1abc9c' }
   source: { foreground: '#bb9af7' }
-# Kept in sync with the LS_COLORS array in modules/zsh/config/.config/zsh/import/30-env.zsh.
+# Kept in sync with the LS_COLORS array in modules/zsh/config/.config/zsh/32-colors.zsh.
 filenames:
   Makefile: { filename: { foreground: '#555753' } }
   LICENSE: { filename: { foreground: '#555753' } }

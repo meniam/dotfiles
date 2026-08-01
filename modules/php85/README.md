@@ -59,7 +59,7 @@ formula that will exist by then.
 Composer is not taken from Homebrew for a related reason — its formula depends
 on the unversioned `php` and would put a second interpreter on the machine.
 
-`config/.config/zsh/import/25-php.zsh` puts `/opt/homebrew/opt/php@8.5/bin` at
+`config/.config/zsh/25-php.zsh` puts `/opt/homebrew/opt/php@8.5/bin` at
 the front of `PATH`, the same treatment `20-path.zsh` gives the other keg-only
 formulas, so `php` keeps resolving to 8.5 after it becomes keg-only. `setup.sh`
 and the probe do not rely on it: both go through `brew --prefix`.

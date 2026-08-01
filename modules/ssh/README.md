@@ -32,7 +32,7 @@ time.
 
 macOS wires `SSH_AUTH_SOCK` up through launchd before any shell starts, so
 there is nothing to do there. Linux starts no agent on its own, which is what
-`config/.config/zsh/import/35-ssh-agent.zsh` handles: it prefers `keychain`,
+`config/.config/zsh/35-ssh-agent.zsh` handles: it prefers `keychain`,
 which reuses a single agent machine-wide, and otherwise starts one `ssh-agent`
 per user and records its address so later shells attach instead of spawning
 another.

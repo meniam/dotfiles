@@ -13,20 +13,25 @@ fi
 # Load the numbered Zsh configuration modules for interactive shells only.
 [[ -o interactive ]] || return
 
-# Load modules from the XDG configuration directory.
-zsh_config_dir="${XDG_CONFIG_HOME:-$HOME/.config}/zsh/import"
+# Prompt settings, generated and overwritten in full by `p10k configure`. The
+# path is declared here, before the loader, so the loop can skip the file: it is
+# sourced at the end instead, because the wizard scans only ~/.zshrc and
+# `source "$POWERLEVEL9K_CONFIG_FILE"` is one of the forms it recognizes.
+# Without a recognized line every wizard run appends another one. The file
+# re-declares POWERLEVEL9K_CONFIG_FILE at its end, which is what tells the
+# wizard where to write.
+typeset -g POWERLEVEL9K_CONFIG_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/zsh/85-p10k.zsh"
+
+# Load the numbered configuration files from the XDG configuration directory.
+# Modules other than `zsh` drop their own fragments in here, which is why the
+# loader globs a directory instead of naming files.
+zsh_config_dir="${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
 
 for zsh_config_file in "$zsh_config_dir"/[0-9][0-9]-*.zsh(N); do
+  [[ "$zsh_config_file" == "$POWERLEVEL9K_CONFIG_FILE" ]] && continue
   source "$zsh_config_file"
 done
 
 unset zsh_config_dir zsh_config_file
 
-# Prompt settings, generated and overwritten in full by `p10k configure`. They are
-# sourced here rather than from 80-prompt.zsh because the wizard scans only
-# ~/.zshrc, and `source "$POWERLEVEL9K_CONFIG_FILE"` is one of the forms it
-# recognizes; without a recognized line every wizard run appends another one.
-# The file re-declares POWERLEVEL9K_CONFIG_FILE at its end, which is what tells
-# the wizard where to write.
-typeset -g POWERLEVEL9K_CONFIG_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/zsh/p10k.zsh"
 [[ ! -r "$POWERLEVEL9K_CONFIG_FILE" ]] || source "$POWERLEVEL9K_CONFIG_FILE"

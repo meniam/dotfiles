@@ -15,32 +15,41 @@ shell.
 
 ## Configuration layout
 
-GNU Stow links `~/.zshrc`, the numbered imports below, and the prompt settings in
-`~/.config/zsh/p10k.zsh`. `.zshrc` replays the Powerlevel10k instant prompt,
-returns for non-interactive shells, sources matching files in lexical order from
-`${XDG_CONFIG_HOME:-$HOME/.config}/zsh/import/`, and finally sources the prompt
-settings.
+GNU Stow links `~/.zshrc` and the numbered files below into
+`${XDG_CONFIG_HOME:-$HOME/.config}/zsh/`. `.zshrc` replays the Powerlevel10k
+instant prompt, returns for non-interactive shells, sources every matching file
+in lexical order, and finally sources the prompt settings.
 
 | File | Responsibility |
 | --- | --- |
 | `00-options.zsh` | Interactive options and the Emacs keymap. |
 | `10-history.zsh` | Shared history and cache creation under `${ZDOTDIR:-$HOME}/.cache/zsh/`. |
 | `20-path.zsh` | Deduplicated, existence-checked command search paths. |
-| `30-env.zsh` | `EDITOR`/`VISUAL`, Homebrew, Zoxide, mise, direnv, Yazi, Eza, ripgrep, Python REPL, file-colour, and fzf environment settings. |
+| `30-env.zsh` | `EDITOR`/`VISUAL`, Homebrew, Zoxide, mise, direnv, Yazi, Eza, ripgrep, Python REPL, and fzf environment settings. |
+| `32-colors.zsh` | The `LS_COLORS` palette and its BSD `LSCOLORS` counterpart. |
 | `40-completion.zsh` | Zsh completion styles, compinit cache, Just completions, and the fzf integration lookup and completion trigger. |
 | `50-plugins.zsh` | Zinit bootstrap, plugins, selection behavior, command-line clipboard support, and the fzf key bindings. |
 | `60-aliases.zsh` | Navigation, file, development, system, archive, and convenience aliases. |
 | `70-functions.zsh` | Git prompt state, Yazi directory changes, weather, tmux workspace, UUID, and Pi helpers. |
 | `80-prompt.zsh` | Fallback prompt for a shell where the theme did not load. |
+| `85-p10k.zsh` | Powerlevel10k settings, generated in full by `p10k configure`. |
 | `90-local.zsh` | Loads the optional untracked `${ZDOTDIR:-$HOME}/.zshrc.local`. |
 
-`p10k.zsh` sits outside `import/` on purpose: the loop matches only
-`[0-9][0-9]-*.zsh`, and the file is sourced from `.zshrc` instead. See
-[Prompt](#prompt) for why that source line cannot move into `80-prompt.zsh`.
+`85-p10k.zsh` is the one file the loop deliberately skips; `.zshrc` sources it
+afterwards. See [Prompt](#prompt) for why that source line cannot move into the
+loop or into `80-prompt.zsh`.
+
+Other modules add their own fragments to the same directory instead of editing
+anything here: `25-php.zsh` from `php85`, `26-rust.zsh` from `rust`, and
+`35-ssh-agent.zsh` from `ssh`. Each is installed and removed with its own
+module, so a machine without that module never sees the file.
+
+`32-colors.zsh` has to load before `40-completion.zsh`, whose `list-colors`
+zstyle reads `LS_COLORS`.
 
 Keep new settings in the file responsible for their category so ordering stays
 predictable. Machine-specific paths, hosts, credentials, and private settings
-belong in `.zshrc.local`, not in tracked imports.
+belong in `.zshrc.local`, not in tracked files.
 
 ## Plugins and completion
 
@@ -103,7 +112,7 @@ large repository.
 
 ### The settings file
 
-`~/.config/zsh/p10k.zsh` is a single tracked file, stowed from this module, and it
+`~/.config/zsh/85-p10k.zsh` is a single tracked file, stowed from this module, and it
 is what `p10k configure` overwrites: the last line of the file declares
 `POWERLEVEL9K_CONFIG_FILE` as its own path, and the wizard resolves that symlink
 before writing. A wizard run therefore edits the repository directly, and

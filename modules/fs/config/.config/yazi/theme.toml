@@ -15,7 +15,7 @@ rules = [
 	{ url = "*", is = "exec", fg = "#9ece6a" },
 
 	# Explicit filename and extension rules, kept in sync with the LS_COLORS
-	# array in modules/zsh/config/.config/zsh/import/30-env.zsh.
+	# array in modules/zsh/config/.config/zsh/32-colors.zsh.
 	# Keep these above the generic type rules so they take precedence, like eza.
 	# Exact filenames (project docs, special files) come before any *.ext rule
 	# below, since e.g. *.md would otherwise steal CLAUDE.md/README.md first.
