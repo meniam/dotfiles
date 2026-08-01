@@ -91,7 +91,7 @@ supported platform. Dependencies are installed before the selected module.
 | `nvim` | macOS, Linux | on | — | Neovim with an NvChad configuration, plugins, and supporting tools. Official Linux builds require glibc 2.34 or later. |
 | `php85` | macOS, Linux | off | — | PHP 8.5 with the common extensions and Composer, pinned against minor-version drift. Sury on Debian, the `php@8.5` formula on macOS. |
 | `python` | macOS, Linux | off | — | uv with a managed CPython interpreter, Ruff, mypy, ty, pre-commit, IPython, pip-audit, nox, and user-level uv and REPL configuration. |
-| `rust` | macOS, Linux | off | — | The minimal stable Rust toolchain through rustup, including Cargo and rustc. |
+| `rust` | macOS, Linux | off | — | The stable Rust toolchain through rustup with Clippy, rustfmt, rust-analyzer, and the cargo-binstall, nextest, audit, edit, and sccache tools. |
 | `ssh` | macOS, Linux | on | — | OpenSSH client defaults with connection multiplexing, an agent helper for Linux, includes for private per-host configuration, keychain, ssh-audit, sshuttle, and autossh. |
 | `zsh` | macOS, Linux | off | — | Zsh with a modular Zinit-based configuration, the Powerlevel10k prompt, and plugin warm-up. |
 
