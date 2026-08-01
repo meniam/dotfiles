@@ -457,6 +457,15 @@ on = "<Right>"
 run = ["enter", "plugin autosave"]
 desc = "Enter directory"
 
+# Yazi's default <Enter> is `open`, and its default rule for a folder is
+# `{ url = "*/", use = ["edit", "open", "reveal"] }`, so the first opener wins
+# and $EDITOR opens the directory instead of Yazi entering it. smart-enter
+# picks `enter` for a directory and `open` for anything else.
+[[mgr.prepend_keymap]]
+on = "<Enter>"
+run = ["plugin smart-enter", "plugin autosave"]
+desc = "Enter directory, or open the file"
+
 [[mgr.prepend_keymap]]
 on = "h"
 run = ["leave", "plugin autosave"]
@@ -468,9 +477,9 @@ run = ["leave", "plugin autosave"]
 desc = "Go to the parent directory"
 
 [[mgr.prepend_keymap]]
-on = "t"
+on = ["t", "t"]
 run = ["tab_create --current", "plugin autosave"]
-desc = "New tab"
+desc = "Create a new tab in CWD"
 
 [[mgr.prepend_keymap]]
 on = "<C-c>"
