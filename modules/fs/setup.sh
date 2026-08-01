@@ -15,6 +15,7 @@ if [ "$OS" = "linux" ] && ! { command -v yazi >/dev/null 2>&1 && yazi --version 
   bindir="$HOME/.local/bin"
   mkdir -p "$bindir"
   temporary_dir="$(mktemp -d)"
+  trap 'rm -rf "$temporary_dir"' EXIT HUP INT TERM
   archive="$temporary_dir/yazi.zip"
   url="https://github.com/sxyazi/yazi/releases/latest/download/yazi-${target}.zip"
   step "Downloading Yazi for $target" "*"
@@ -26,6 +27,24 @@ if [ "$OS" = "linux" ] && ! { command -v yazi >/dev/null 2>&1 && yazi --version 
     install -Dm755 "$source_binary" "$bindir/$binary"
   done
   rm -rf "$temporary_dir"
+  trap - EXIT HUP INT TERM
+fi
+
+# GNU parallel prints a request to cite it academically on every run until this
+# file exists, which lands in the stderr of every script that calls it.
+if command -v parallel >/dev/null 2>&1 && [ ! -f "$HOME/.parallel/will-cite" ]; then
+  step "Silencing the GNU parallel citation notice" "*"
+  mkdir -p "$HOME/.parallel"
+  : >"$HOME/.parallel/will-cite"
+fi
+
+# pydf is an APT-only package, so its configuration is meaningless on macOS.
+# Stow links the whole payload regardless, and this drops the dangling link it
+# leaves behind. Only a link into this repository is removed.
+if [ "$OS" = "mac" ] && [ -L "$HOME/.pydfrc" ]; then
+  case "$(readlink "$HOME/.pydfrc")" in
+    *"/modules/fs/config/.pydfrc") rm -f "$HOME/.pydfrc" ;;
+  esac
 fi
 
 if command -v ya >/dev/null 2>&1; then

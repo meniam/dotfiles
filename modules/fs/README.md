@@ -16,8 +16,7 @@ managing files and disk space.
 | [ripgrep](https://github.com/BurntSushi/ripgrep) | Searches file contents recursively. |
 | [fzf](https://github.com/junegunn/fzf) | Interactively filters lists; supplied by the `must-have` dependency. |
 | [peco](https://github.com/peco/peco) | Interactively filters text streams. |
-| [fasd](https://github.com/clvv/fasd) | Tracks frequently used paths on Linux. |
-| [zoxide](https://github.com/ajeetdsouza/zoxide) | Learns frequently used directories on macOS. |
+| [zoxide](https://github.com/ajeetdsouza/zoxide) | Learns frequently used directories and powers Yazi's jump keymap. |
 | [tree](https://oldmanprogrammer.net/source.php?dir=projects/tree) | Displays directory hierarchies. |
 | [file](https://darwinsys.com/file/) | Identifies file types from their contents. |
 | [bat](https://github.com/sharkdp/bat) | Displays files with syntax highlighting and Git integration. |
@@ -27,7 +26,13 @@ managing files and disk space.
 | [jq](https://jqlang.github.io/jq/) | Queries and transforms JSON. |
 | [yq](https://github.com/mikefarah/yq) | Queries and transforms YAML and related formats. |
 | [GNU Parallel](https://www.gnu.org/software/parallel/) | Runs jobs concurrently from command-line input. |
+| [hyperfine](https://github.com/sharkdp/hyperfine) | Benchmarks commands with warmups and statistics. |
+| [watchexec](https://github.com/watchexec/watchexec) | Reruns a command on file changes, killing the previous run. |
+| [Miller](https://miller.readthedocs.io/) | Queries and reshapes CSV, TSV, and JSON records. |
+| [sd](https://github.com/chmln/sd) | Replaces text with plain regex syntax instead of `sed s///`. |
+| [choose](https://github.com/theryangeary/choose) | Selects fields from a line without an `awk` program. |
 | [Yazi](https://yazi-rs.github.io/) | Navigates files with rich previews in a terminal UI. |
+| [DuckDB](https://duckdb.org/), [hexyl](https://github.com/sharkdp/hexyl), [SQLite](https://sqlite.org/), [Typst](https://typst.app/), [DjVuLibre](https://djvu.sourceforge.net/), and [Transmission](https://transmissionbt.com/) | Back the Yazi previewers for tabular data, unknown binaries, databases, `.typ`, `.djvu`, and `.torrent` files. |
 | [Midnight Commander](https://midnight-commander.org/) | Provides a dual-pane terminal file manager and editor. |
 | Zip, UnZip, 7-Zip, Zstandard, bzip2, and tar | Creates and extracts common archive formats. |
 | [Ouch](https://github.com/ouch-org/ouch) | Provides one interface for multiple archive formats. |
@@ -42,7 +47,7 @@ managing files and disk space.
 | `~/.config/bat/config` | Uses the terminal-aware `ansi` theme, enables structured output, and maps repository-specific filenames to syntaxes. |
 | `~/.config/eza/theme.yml` | Defines file-kind, permission, Git, filename, and extension colours. |
 | `~/.config/ripgrep/ripgreprc` | Enables smart case, hidden-file search, `.git` exclusion, long-line previews, automatic PCRE2 fallback, and the `pkgs` type. |
-| `~/.config/yazi/` | Configures layout, openers, keymaps, previewers, themes, and locked plugins and flavours. |
+| `~/.config/yazi/` | Configures layout, openers, keymaps, previewers, themes, and locked plugins and flavours, and vendors one plugin under `plugins/`. |
 | `~/.config/mc/ini` | Configures Midnight Commander. |
 | `~/.pydfrc` | Configures Pydf's columns, colours, and filesystem display. |
 
@@ -67,7 +72,35 @@ fzf, Yazi, Neovim, and other programs, so output-shaping options such as
 - Linux installs Ouch from APT when available and otherwise downloads its
   official static release for x86_64 or arm64.
 - RAR and UnRAR may require a non-free repository on Linux. Their absence is a
-  warning during setup, but the module probe still reports the module as
-  incomplete because both commands are part of the advertised toolset.
+  warning during setup and does not hold the probe back, since neither command
+  can be installed everywhere.
+- `setup.sh` creates `~/.parallel/will-cite`. Without it GNU Parallel prints its
+  citation request into the stderr of every script that calls it.
+- Homebrew installs GNU tar as `gtar`, because `tar` on macOS is a system
+  utility; the probe checks for `gtar` there and for `tar` on Linux.
+- `.pydfrc` configures an APT-only tool. Stow links the whole payload on both
+  platforms, so `setup.sh` removes the dangling macOS link afterwards.
+- `duckdb`, `typst`, `watchexec`, `sd`, and `choose` are absent from older
+  Debian and Ubuntu releases. The installer skips a package without an APT
+  candidate and warns, and the probe requires those five on macOS only.
 - The `media` dependency supplies FFmpeg, ImageMagick, MediaInfo, Poppler, and
   Chafa for Yazi previews. The `must-have` dependency supplies fzf.
+
+### Yazi plugins
+
+`ya pkg install` restores every revision locked in `package.toml`. Two plugins
+sit outside that mechanism:
+
+- `vscode-git-gutter`, the previewer for `text/*`, has no public upstream to
+  fetch from, so its source is vendored in
+  `config/.config/yazi/plugins/vscode-git-gutter.yazi` and Stow links it like
+  any other payload. It needs `bat` and `git`, both of which the module and its
+  dependencies already install.
+- `miller` is not locked at all: its upstream still ships the pre-0.3 `init.lua`
+  layout that `ya pkg` cannot deploy. The `mlr` binary is installed and works on
+  its own.
+
+Several locked plugins shell out to binaries this module now installs. The
+`office` previewer additionally expects `libreoffice`, and `preview-epub`
+expects `gnome-epub-thumbnailer`; neither is installed by any module, so those
+two formats fall back to the hex previewer.
