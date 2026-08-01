@@ -89,7 +89,7 @@ supported platform. Dependencies are installed before the selected module.
 | `must-have` | macOS, Linux | on | — | Cross-platform baseline tools such as curl, wget, rsync, htop, btop, Micro, Make, Just, direnv, and fzf. |
 | `node24` | macOS, Linux | off | — | Node.js 24 and npm through Homebrew or the NodeSource repository. The Linux setup supports Debian and Ubuntu. |
 | `nvim` | macOS, Linux | on | — | Neovim with an NvChad configuration, plugins, and supporting tools. Official Linux builds require glibc 2.34 or later. |
-| `php85` | Linux | off | — | PHP 8.5 from the Sury APT repository. The setup supports Debian only. |
+| `php85` | macOS, Linux | off | — | PHP 8.5 with the common extensions and Composer, pinned against minor-version drift. Sury on Debian, the `php@8.5` formula on macOS. |
 | `python` | macOS, Linux | off | — | uv with a managed CPython interpreter, Ruff, mypy, ty, pre-commit, IPython, pip-audit, nox, and user-level uv and REPL configuration. |
 | `rust` | macOS, Linux | off | — | The minimal stable Rust toolchain through rustup, including Cargo and rustc. |
 | `ssh` | macOS, Linux | on | — | OpenSSH client defaults with connection multiplexing, an agent helper for Linux, includes for private per-host configuration, keychain, ssh-audit, sshuttle, and autossh. |
@@ -105,7 +105,7 @@ with `#` are ignored.
 
 | Profile | Modules | Intended use |
 | --- | --- | --- |
-| `code` | `php85`, `node24`, `rust`, `python`, `mise` | Language toolchains. `php85` is skipped on unsupported platforms. `mise` layers per-project versions over the fixed toolchains. |
+| `code` | `php85`, `node24`, `rust`, `python`, `mise` | Language toolchains. `mise` layers per-project versions over the fixed toolchains. |
 | `docker` | `git`, `fs`, `zsh` | A container-oriented interactive shell environment. This profile does not install Docker Engine or Docker Desktop. |
 | `linux` | `linux`, `docker`, `git`, `must-have`, `media`, `fs` | Debian server and command-line environment. |
 | `mac` | `homebrew`, `must-have`, `docker`, `git`, `media`, `fs`, `nvim`, `multiplexer`, `desktop`, `zsh`, `ssh` | Full macOS workstation environment. |
