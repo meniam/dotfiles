@@ -1,0 +1,7 @@
+# OpenSSH itself is deliberately absent: macOS ships Apple's build at
+# /usr/bin/ssh, and the Homebrew formula would shadow it and drop the
+# UseKeychain patch that only Apple carries.
+keychain
+ssh-audit
+sshuttle
+autossh

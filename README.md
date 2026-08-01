@@ -77,7 +77,7 @@ supported platform. Dependencies are installed before the selected module.
 | `desktop` | macOS | on | `must-have`, `git`, `media`, `fs` | macOS command-line and desktop software, including Hammerspoon, WezTerm, Kitty, and application casks. |
 | `docker` | macOS, Linux | off | — | Docker Desktop on macOS or Docker Engine on Debian, plus the Oxker and LazyDocker terminal interfaces. The Linux setup currently supports Debian only. |
 | `fs` | macOS, Linux | off | `media`, `must-have` | Navigation, search, inspection, file-manager, archive, and disk-usage tools, including Yazi and Midnight Commander. |
-| `git` | macOS, Linux | on | — | Git, GitHub CLI, Git LFS, delta, LazyGit, Tig, shared configuration, and semantic diff tooling on macOS. |
+| `git` | macOS, Linux | on | `ssh` | Git, GitHub CLI, Git LFS, delta, LazyGit, Tig, shared configuration, and semantic diff tooling on macOS. |
 | `linux` | Linux | on | `must-have` | Debian/Ubuntu command-line tools, certificates, terminal data, and build prerequisites. |
 | `media` | macOS, Linux | off | — | FFmpeg, ImageMagick with its Ghostscript and librsvg delegates, MediaInfo, ExifTool, Poppler, qpdf, Pandoc, Chafa, Tesseract, SoX, and yt-dlp. LibreOffice is installed on macOS only. |
 | `mise` | macOS, Linux | off | — | Per-project tool versions with mise, including `.nvmrc` and `.tool-versions` support. The Linux setup uses the upstream APT repository on Debian and Ubuntu, amd64 and arm64. |
@@ -88,7 +88,7 @@ supported platform. Dependencies are installed before the selected module.
 | `php85` | Linux | off | — | PHP 8.5 from the Sury APT repository. The setup supports Debian only. |
 | `python` | macOS, Linux | off | — | uv with a managed CPython interpreter, the Ruff linter, the ty type checker, and user-level uv and REPL configuration. |
 | `rust` | macOS, Linux | off | — | The minimal stable Rust toolchain through rustup, including Cargo and rustc. |
-| `ssh` | macOS, Linux | on | — | OpenSSH client defaults with connection multiplexing, keychain support on macOS, and includes for private per-host configuration. |
+| `ssh` | macOS, Linux | on | — | OpenSSH client defaults with connection multiplexing, an agent helper for Linux, includes for private per-host configuration, keychain, ssh-audit, sshuttle, and autossh. |
 | `zsh` | macOS, Linux | off | — | Zsh with a modular Zinit-based configuration, the Powerlevel10k prompt, and plugin warm-up. |
 
 Every module contains a `README.md` with its packages, configuration, setup

@@ -6,14 +6,41 @@ Client-side defaults for OpenSSH.
 - Default: on
 - Dependencies: none
 
-The module installs no software on macOS: the system already ships Apple's
-OpenSSH at `/usr/bin/ssh`, and installing the Homebrew build would shadow it
-and drop the `UseKeychain` patch that only Apple carries. On Debian/Ubuntu it
-installs `openssh-client`, which a minimal image can be missing.
+OpenSSH itself is never installed from Homebrew: macOS already ships Apple's
+build at `/usr/bin/ssh`, and the formula would shadow it and drop the
+`UseKeychain` patch that only Apple carries. On Debian/Ubuntu the module
+installs `openssh-client`, which a minimal image can be missing. Both platforms
+also get a few tools that work alongside ssh rather than replace it.
 
-Everything else is one payload, `~/.ssh/config`, plus a `setup.sh` that creates
-the directory the multiplexing sockets live in. The setup also restricts
-`~/.ssh` and `~/.ssh/sockets` to mode `0700`.
+| Utility | Purpose |
+| --- | --- |
+| [keychain](https://www.funtoo.org/Funtoo:Keychain) | Keeps one ssh-agent shared across logins, tmux panes, and cron jobs. |
+| [ssh-audit](https://github.com/jtesta/ssh-audit) | Reports the algorithms a server accepts and flags the weak ones. |
+| [sshuttle](https://github.com/sshuttle/sshuttle) | Tunnels arbitrary traffic over a plain SSH login, with no server-side setup. |
+| [autossh](https://www.harding.motd.ca/autossh/) | Restarts a tunnel when it dies, which `mosh` does not cover. |
+
+The payload is `~/.ssh/config` plus one Zsh fragment (see below), and `setup.sh`
+creates `~/.ssh/sockets` and `~/.ssh/config.d`, restricting them and `~/.ssh`
+itself to mode `0700`.
+
+## Reaching an agent
+
+`AddKeysToAgent yes` hands a decrypted key to a running `ssh-agent` so the
+passphrase is asked once instead of on every connection. It is a silent no-op
+when no agent is reachable — nothing fails, the prompt simply comes back every
+time.
+
+macOS wires `SSH_AUTH_SOCK` up through launchd before any shell starts, so
+there is nothing to do there. Linux starts no agent on its own, which is what
+`config/.config/zsh/import/35-ssh-agent.zsh` handles: it prefers `keychain`,
+which reuses a single agent machine-wide, and otherwise starts one `ssh-agent`
+per user and records its address so later shells attach instead of spawning
+another.
+
+The fragment lives in this module rather than in `zsh` on purpose. `.zshrc`
+sources every `[0-9][0-9]-*.zsh` in that directory, so installing `ssh` is
+enough for it to take effect, and a machine without the module never has the
+file. For any other shell the equivalent belongs in a machine-local rc file.
 
 ## Include order
 
