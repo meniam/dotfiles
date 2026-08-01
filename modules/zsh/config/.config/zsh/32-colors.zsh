@@ -608,12 +608,12 @@ legacy_ls_colors=(
   '*.pfb=38;5;66'
   '*.pfm=38;5;66'
 
-
   # Disables Folders
   '*node_modules=38;5;242'
   '*vendor=38;5;242'
   '*cache=38;5;242'
   '*.git=38;5;242'
+  '*.ruff_cache=38;5;242'
   '*.github=38;5;242'
   '*.idea=38;5;242'
   '*.vscode=38;5;242'
