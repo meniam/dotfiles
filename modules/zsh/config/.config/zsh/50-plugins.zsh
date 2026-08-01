@@ -26,12 +26,23 @@ if source "$ZINIT_HOME/zinit.zsh"; then
   # Suggest commands from history while the command line is being edited.
   # Type a command prefix and press Right Arrow to accept the grey suggestion.
   # Repository: https://github.com/zsh-users/zsh-autosuggestions
+  #
+  # The appearance of the suggestion, carried over from the previous
+  # configuration. Set before the plugin loads, which is enough because it only
+  # assigns its own default when the variable is unset.
+  ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#6d7072,bg=black,underline'
   zinit light zsh-users/zsh-autosuggestions
 
   # Load syntax highlighting before history search so both highlight the command line correctly.
   # Type a command normally; valid commands, options, and paths are colored automatically.
   # Repository: https://github.com/zdharma-continuum/fast-syntax-highlighting
   zinit light zdharma-continuum/fast-syntax-highlighting
+
+  # Stop highlighting a command line longer than this, since the parser runs on
+  # every keystroke. Assigned after the plugin loads on purpose: unlike
+  # autosuggestions, it sets its own value (10000) unconditionally and would
+  # overwrite an earlier assignment.
+  ZSH_HIGHLIGHT_MAXLENGTH=300
 
   # Search history entries containing the typed text with the Up and Down arrows.
   # Type part of a previous command, then press Up or Down to cycle through matches.

@@ -86,6 +86,94 @@ uuid() {
   od -x /dev/urandom | head -1 | awk '{OFS="-"; print $2$3,$4,$5,$6,$7$8$9}'
 }
 
+# Create a directory and change into it. With several arguments every directory
+# is created and the shell moves into the last one.
+tkdir() {
+  if (( $# == 0 )); then
+    print -u2 -- 'tkdir: pass a directory name'
+    return 2
+  fi
+
+  command mkdir -p -- "$@" && builtin cd -- "${@[-1]}"
+}
+
+# List processes whose command line matches a pattern, with the match
+# highlighted. The second grep drops the pipeline's own grep from the result.
+pid() {
+  if (( $# == 0 )); then
+    print -u2 -- 'pid: pass a pattern'
+    return 2
+  fi
+
+  command ps -ax -o 'pid,command' \
+    | command grep --color=always -- "$1" \
+    | command grep -v -- ' grep '
+}
+
+# Print a random string. First argument is the length (32 by default), second is
+# a tr(1) character set. Reads from /dev/urandom until enough characters of the
+# set have appeared, so a narrow set still produces the full length.
+random() {
+  local length="${1:-32}"
+  local charset="${2:-A-Za-z0-9!#$%&()*+,-./:;<=>?@[]^_\`{|}~}"
+
+  LC_ALL=C command tr -dc -- "$charset" </dev/urandom | command head -c "$length"
+  print
+}
+
+# Print the defined aliases as an aligned two-column table, names highlighted.
+# The ### separator is an arbitrary marker for column(1): an alias body can
+# contain any character, so splitting on = or a space would break the layout.
+alias-list() {
+  local name_colour=$'\e[1;34m' reset=$'\e[0m'
+
+  alias | sort \
+    | command sed -E "s|^([^=]*)=(.*)|${name_colour}\1###${reset}\2|" \
+    | command column -s '###' -t
+}
+
+# Print the shell's command hash table the same way: resolved commands and the
+# paths they point at.
+hash-list() {
+  local name_colour=$'\e[1;34m' reset=$'\e[0m'
+
+  hash | command grep -v -e '^hashx=' | sort \
+    | command sed -E "s|^([^=]*)=(.*)|${name_colour}\1${reset}=\2|" \
+    | command column -s '=' -t
+}
+
+# Print a highlighted comment line surrounded by blank lines. Useful for marking
+# sections in the output of a long session or a recorded terminal.
+annotate() {
+  local bold=$'\e[1m' reset=$'\e[0m'
+
+  print
+  print -- "${bold}# $*${reset}"
+  print
+}
+
+# Send an HTTP request file through httpyac and show the response body as
+# highlighted JSON.
+htt() {
+  local tool
+  for tool in httpyac jq bat; do
+    if (( ! $+commands[$tool] )); then
+      print -u2 -- "htt: $tool is not installed"
+      return 127
+    fi
+  done
+
+  if (( $# == 0 )); then
+    print -u2 -- 'htt: pass an .http request file'
+    return 2
+  fi
+
+  command httpyac "$1" --json -a \
+    | command jq -r '.requests[0].response.body' \
+    | command jq \
+    | command bat --language=json
+}
+
 # Ask Pi a question about the current shell, passing the working directory and
 # the ten most recent commands as context, and render the answer as Markdown.
 # Run 'askPi why did the build fail' or use the '=' alias below.

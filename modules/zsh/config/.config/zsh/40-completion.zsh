@@ -7,6 +7,14 @@ ZSH_COMPDUMP="$zsh_cache_dir/.zcompdump"
 # The cache directory helper is no longer needed after the dump path is set.
 unset zsh_cache_dir
 
+# Ask before listing only when match count hits this threshold, regardless of
+# whether it fits on screen.
+LISTMAX=300
+
+# Drop the space a completion appends when the next character typed is one of
+# these, so a pipeline comes out as `command| ` rather than `command | `.
+ZLE_SPACE_SUFFIX_CHARS=$'&|'
+
 # Load extra completion definitions before initializing compinit.
 zsh_init_completion() {
   # List command options with descriptions and keep the menu open for selection.
@@ -22,6 +30,69 @@ zsh_init_completion() {
   zstyle ':completion:*' list-dirs-first yes
   # shellcheck disable=SC2086,SC2296
   zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+
+  # Cache the results of completers that build their candidate list from a slow
+  # source — the package lists behind `brew install` or `apt install`, the
+  # targets of a large Makefile. Without it that work repeats on every Tab.
+  # This is unrelated to ZSH_COMPDUMP above, which only records which function
+  # completes which command. The path keeps the cache files next to the dump
+  # rather than in ~/.zcompcache; it is spelled out because the helper variable
+  # is gone by the time this function runs.
+  zstyle ':completion:*' use-cache yes
+  zstyle ':completion:*' cache-path "${ZDOTDIR:-$HOME}/.cache/zsh"
+
+  # Offer `..` as a completion candidate. Plain `true` would add `.` as well,
+  # which is never what is wanted at a prompt.
+  zstyle ':completion:*' special-dirs ..
+
+  # Treat `foo//bar` as an ordinary path. By default the file completer behaves
+  # as if there were a `*` between the slashes and completes through an
+  # arbitrary intermediate directory; doubled slashes appear on their own when
+  # joining variables that already end in one.
+  zstyle ':completion:*' squeeze-slashes true
+
+  # Accept a candidate that exactly matches what was typed instead of treating
+  # it as ambiguous: with `log` and `logs` both present, Tab after `log` takes
+  # `log`. The value is a glob qualifier, not a boolean — it limits the style to
+  # words that resolve to an existing name, and `(N)` keeps a miss quiet.
+  zstyle ':completion:*' accept-exact '*(N)'
+
+  # Show completed files as a long listing with permissions, size and date.
+  # This loads the zsh/stat module, whose builtin `stat` shadows any external one.
+  zstyle ':completion:*' file-list always
+
+  # Put the cursor back on the command line after printing a completion list, so
+  # typing can continue without the list pushing the prompt away.
+  zstyle ':completion:*' last-prompt yes
+
+  # Position indicator while scrolling a menu too large for the screen.
+  zstyle ':completion:*' select-prompt '%Sat %p%s'
+
+  # Describe command options, and synthesise a description from the argument
+  # name for options that carry none. Works together with `verbose yes` above.
+  zstyle ':completion:*:options' description 'yes'
+  zstyle ':completion:*:options' auto-description 'specify: %d'
+
+  # Hide the private helpers of the completion system itself — the hundreds of
+  # _git, _docker and _fzf_* names that are never called by hand.
+  zstyle ':completion:*:functions' ignored-patterns '_*'
+  zstyle ':completion:*:parameters' ignored-patterns '_*'
+
+  # `kill <Tab>` lists this user's processes with PID, owner and command line,
+  # the PID highlighted in blue and the owner dimmed. `killall` takes a name
+  # rather than a PID, so it gets a command list instead.
+  zstyle ':completion:*:*:*:*:processes' command 'ps -u ${USER} -o pid,user,command'
+  zstyle ':completion:*:*:*:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-_]#)*=0=01;34=02=0'
+  zstyle ':completion:*:*:*:*:processes-names' command 'ps -c -u ${USER} -o command | uniq'
+  zstyle ':completion:*:killall:*' command 'ps -u $USER -o command'
+
+  # Group `man <Tab>` candidates by manual section, which matters for a name
+  # that exists in several of them: printf, open, stat.
+  zstyle ':completion:*:manuals' separate-sections true
+
+  # For cd and pushd, offer subdirectories of the current directory first and
+  # named directories after them, rather than mixing both with cdpath entries.
+  zstyle ':completion:*:complete:(cd|pushd):*' tag-order 'local-directories named-directories'
 
   # zsh-completions extends completion support for many third-party commands.
   # Type a command or argument prefix and press Tab to view available completions.

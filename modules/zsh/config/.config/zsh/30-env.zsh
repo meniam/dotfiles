@@ -1,6 +1,44 @@
 # Hide Homebrew environment-variable hints without disabling automatic updates.
 export HOMEBREW_NO_ENV_HINTS=1
 
+# UTF-8 everywhere. macOS terminals export LANG on their own, but a container,
+# `ssh -T`, cron, and `docker build` do not: without it sort order, ls, and less
+# fall back to the POSIX locale and mangle non-ASCII output.
+#
+# LC_ALL is set alongside it, as it was in the previous configuration. Note that
+# ssh forwards both (SendEnv LANG LC_*), so a server without this locale answers
+# with `setlocale: LC_ALL: cannot change locale`. Drop the LC_ALL line if that
+# warning shows up more often than the guarantee is worth.
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
+
+# less as the pager, with flags that matter for short output:
+#   -F  quit immediately when the text fits on one screen
+#   -R  pass colour escapes through instead of printing them literally
+#   -X  do not switch to the alternate screen, so the output stays in the
+#       scrollback after less exits
+export PAGER='less'
+export LESS='-FRX'
+
+# Colourise man pages. bat renders them with the same theme as everything else
+# it displays; `col -bx` first turns the overstrike sequences groff emits into
+# plain text, which bat cannot read on its own. MANROFFOPT=-c is required by
+# groff 1.23 and later, where the default output would reach col garbled; macOS
+# ignores it harmlessly.
+#
+# bat comes from the fs module, which this one does not depend on, so the
+# fallback dresses less itself: LESS_TERMCAP_md starts bold text, us starts
+# underlined text, and ue ends it. Literal escapes rather than $fg_bold[...],
+# which would need `autoload -U colors` loaded first.
+if (( $+commands[bat] )); then
+  export MANROFFOPT='-c'
+  export MANPAGER="sh -c 'col -bx | bat --language man --style plain'"
+else
+  export LESS_TERMCAP_md=$'\e[1;32m'
+  export LESS_TERMCAP_us=$'\e[36m'
+  export LESS_TERMCAP_ue=$'\e[0m'
+fi
+
 # Editor used by everything that honours EDITOR/VISUAL: Git commit messages and
 # interactive rebase, `crontab -e`, less's `v`, fzf's edit binding. Nothing set
 # it before, so Git fell through to `vi`.

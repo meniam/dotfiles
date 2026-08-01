@@ -2,21 +2,36 @@
 # Zsh keeps only the first occurrence of each directory in the path array.
 typeset -U path
 
+# Homebrew's root differs by architecture: /opt/homebrew on Apple silicon,
+# /usr/local on Intel and on Linuxbrew's default layout. Resolve it from the
+# brew binary that is actually present rather than by calling `brew --shellenv`,
+# which forks a process on every shell start. Exported because formulas and
+# scripts read it, and the paths below are built from it.
+for homebrew_candidate in /opt/homebrew /usr/local /home/linuxbrew/.linuxbrew; do
+  if [[ -x "$homebrew_candidate/bin/brew" ]]; then
+    export HOMEBREW_PREFIX="$homebrew_candidate"
+    break
+  fi
+done
+unset homebrew_candidate
+
 # Collect candidate directories before modifying the active PATH.
 typeset -a path_entries
 typeset -a existing_path_entries
 path_entries=(
   "$HOME/.bin"
+  "$HOME/bin"
   "$HOME/.local/bin"
-  "/opt/homebrew/bin"
-  "/opt/homebrew/sbin"
-  "/opt/homebrew/opt/coreutils/libexec/gnubin"
-  "/opt/homebrew/opt/gnu-sed/libexec/gnubin"
-  "/opt/homebrew/opt/grep/libexec/gnubin"
-  "/opt/homebrew/opt/python/libexec/bin"
-  "/opt/homebrew/opt/ruby/bin"
-  "/opt/homebrew/opt/postgresql@16/bin"
+  "${HOMEBREW_PREFIX:-/opt/homebrew}/bin"
+  "${HOMEBREW_PREFIX:-/opt/homebrew}/sbin"
+  "${HOMEBREW_PREFIX:-/opt/homebrew}/opt/coreutils/libexec/gnubin"
+  "${HOMEBREW_PREFIX:-/opt/homebrew}/opt/gnu-sed/libexec/gnubin"
+  "${HOMEBREW_PREFIX:-/opt/homebrew}/opt/grep/libexec/gnubin"
+  "${HOMEBREW_PREFIX:-/opt/homebrew}/opt/python/libexec/bin"
+  "${HOMEBREW_PREFIX:-/opt/homebrew}/opt/ruby/bin"
+  "${HOMEBREW_PREFIX:-/opt/homebrew}/opt/postgresql@16/bin"
   "/usr/local/bin"
+  "/usr/local/sbin"
   "/usr/sbin"
   "/usr/bin"
   "/sbin"
