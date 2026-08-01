@@ -41,30 +41,37 @@ zsh_init_completion() {
   fi
 
   # Restore the legacy FZF completion shortcut without taking over the Tab key.
-  # The package location differs between Homebrew and Debian/Ubuntu installations.
-  zsh_load_fzf_completion
+  if [[ -r "$zsh_fzf_shell_dir/completion.zsh" ]]; then
+    # shellcheck disable=SC1090
+    source "$zsh_fzf_shell_dir/completion.zsh"
+  fi
 }
 
-zsh_load_fzf_completion() {
-  local fzf_completion_file fzf_prefix
+# Directory holding fzf's Zsh integration scripts, completion.zsh and
+# key-bindings.zsh. fzf installs them outside every directory Zsh searches and
+# Homebrew and Debian/Ubuntu use different prefixes, so the candidates are tried
+# in order. The lookup runs here rather than in each consumer because
+# `brew --prefix` forks a process: the completion trigger above and the key
+# bindings loaded by 50-plugins.zsh both read the resolved value.
+zsh_fzf_shell_dir=''
+
+zsh_resolve_fzf_shell_dir() {
+  local candidate
 
   if command -v brew >/dev/null 2>&1; then
-    fzf_prefix="$(brew --prefix fzf 2>/dev/null)"
-    fzf_completion_file="$fzf_prefix/shell/completion.zsh"
-    if [[ -r "$fzf_completion_file" ]]; then
-      # shellcheck disable=SC1090
-      source "$fzf_completion_file"
+    candidate="$(brew --prefix fzf 2>/dev/null)/shell"
+    if [[ -d "$candidate" ]]; then
+      zsh_fzf_shell_dir="$candidate"
       return
     fi
   fi
 
-  for fzf_completion_file in \
-    /usr/share/doc/fzf/examples/completion.zsh \
-    /usr/share/fzf/completion.zsh; do
-    if [[ -r "$fzf_completion_file" ]]; then
-      # shellcheck disable=SC1090
-      source "$fzf_completion_file"
+  for candidate in /usr/share/doc/fzf/examples /usr/share/fzf; do
+    if [[ -d "$candidate" ]]; then
+      zsh_fzf_shell_dir="$candidate"
       return
     fi
   done
 }
+
+zsh_resolve_fzf_shell_dir

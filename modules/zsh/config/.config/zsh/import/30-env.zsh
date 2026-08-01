@@ -746,5 +746,21 @@ export FZF_DEFAULT_COMMAND="fd --type file --color=always"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_DEFAULT_OPTS="--ansi --preview-window 'right:60%' --preview 'bat --color=always --style=header,grid --line-range :300 {}'"
 
+# Options for the Alt+C widget bound in 50-plugins.zsh, which changes to a
+# directory below the current one. Directories are the candidates here, so the
+# preview lists their contents instead of running the file preview inherited
+# from FZF_DEFAULT_OPTS. eza comes from the fs module; ls covers a shell-only
+# install.
+export FZF_ALT_C_COMMAND="fd --type directory --color=always"
+export FZF_ALT_C_OPTS="--preview 'eza --tree --level=2 --color=always {} 2>/dev/null || ls -A {}'"
+
+# Options for the Ctrl+R widget bound in 50-plugins.zsh, which searches the
+# shell history. Its candidates are commands rather than paths, so the inherited
+# bat preview would report a missing file for every line; fzf applies the last
+# --preview it is given, and this one echoes the selected command without its
+# history index. The pane starts hidden because a wrapped copy of the highlighted
+# line is only worth the space for a command too long to read inline.
+export FZF_CTRL_R_OPTS="--preview 'printf %s {2..}' --preview-window 'down:3:hidden:wrap' --bind 'ctrl-/:toggle-preview'"
+
 # Keep regular Tab for Zsh completions; use ~~ followed by Tab for FZF completion.
 export FZF_COMPLETION_TRIGGER="${FZF_COMPLETION_TRIGGER:-~~}"

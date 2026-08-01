@@ -78,3 +78,19 @@ if source "$ZINIT_HOME/zinit.zsh"; then
   [[ -n "${terminfo[kcuu1]:-}" ]] && bindkey "${terminfo[kcuu1]}" history-substring-search-up
   [[ -n "${terminfo[kcud1]:-}" ]] && bindkey "${terminfo[kcud1]}" history-substring-search-down
 fi
+
+# Load fzf's interactive widgets after the plugins so that a later plugin cannot
+# take the keys back. Ctrl+R fuzzy-searches the shell history, Ctrl+T inserts
+# paths from below the current directory into the command line, and Alt+C
+# changes to one of those directories. 40-completion.zsh resolved where the
+# script lives; the widgets read the FZF_* variables set in 30-env.zsh.
+#
+# Ctrl+T replaces the Emacs transpose-chars binding, and Alt+C only arrives when
+# the terminal sends Option as a real Alt modifier, which Kitty does not do on
+# macOS until macos_option_as_alt is set.
+if [[ -n "$zsh_fzf_shell_dir" && -r "$zsh_fzf_shell_dir/key-bindings.zsh" ]]; then
+  # shellcheck disable=SC1090
+  source "$zsh_fzf_shell_dir/key-bindings.zsh"
+fi
+
+unset zsh_fzf_shell_dir

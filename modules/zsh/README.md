@@ -27,8 +27,8 @@ settings.
 | `10-history.zsh` | Shared history and cache creation under `${ZDOTDIR:-$HOME}/.cache/zsh/`. |
 | `20-path.zsh` | Deduplicated, existence-checked command search paths. |
 | `30-env.zsh` | `EDITOR`/`VISUAL`, Homebrew, Zoxide, mise, direnv, Yazi, Eza, ripgrep, Python REPL, file-colour, and fzf environment settings. |
-| `40-completion.zsh` | Zsh completion styles, compinit cache, Just completions, and the legacy fzf completion trigger. |
-| `50-plugins.zsh` | Zinit bootstrap, plugins, selection behavior, and command-line clipboard support. |
+| `40-completion.zsh` | Zsh completion styles, compinit cache, Just completions, and the fzf integration lookup and completion trigger. |
+| `50-plugins.zsh` | Zinit bootstrap, plugins, selection behavior, command-line clipboard support, and the fzf key bindings. |
 | `60-aliases.zsh` | Navigation, file, development, system, archive, and convenience aliases. |
 | `70-functions.zsh` | Git prompt state, Yazi directory changes, weather, tmux workspace, UUID, and Pi helpers. |
 | `80-prompt.zsh` | Fallback prompt for a shell where the theme did not load. |
@@ -58,6 +58,35 @@ Completion uses a cached `.zcompdump`, case-insensitive matching, grouped menu
 selection, generated Just completions, and the package-manager-specific fzf
 completion script. Regular Tab remains Zsh completion; `~~` followed by Tab is
 the configured fzf completion trigger.
+
+## fzf key bindings
+
+`40-completion.zsh` resolves the directory that ships fzf's Zsh integration —
+`$(brew --prefix fzf)/shell`, `/usr/share/doc/fzf/examples`, or
+`/usr/share/fzf` — and `50-plugins.zsh` sources `key-bindings.zsh` from it after
+the plugins, so nothing loaded later rebinds the keys:
+
+| Key | Widget | Behavior |
+| --- | --- | --- |
+| Ctrl+R | `fzf-history-widget` | Fuzzy-searches the shell history and puts the chosen command on the line. Ctrl+/ toggles a wrapped preview of it. |
+| Ctrl+T | `fzf-file-widget` | Inserts one or more paths from below the current directory at the cursor without running anything. Tab marks extra paths. |
+| Alt+C | `fzf-cd-widget` | Changes to a directory below the current one. |
+
+`30-env.zsh` supplies the discovery commands and per-widget options. Ctrl+T
+inherits the fd file search and the bat preview from `FZF_DEFAULT_OPTS`, while
+`FZF_ALT_C_*` switches to directories with an eza tree preview and
+`FZF_CTRL_R_OPTS` replaces the file preview that history lines cannot use.
+
+Two consequences on the key side:
+
+- Ctrl+T replaces the Emacs `transpose-chars` binding.
+- Alt+C reaches Zsh only from a terminal that sends Option as a real Alt
+  modifier. The `desktop` module's WezTerm configuration does; Kitty on macOS
+  does not until `macos_option_as_alt` is set, which costs the Option-composed
+  characters.
+
+Up and Down stay bound to `zsh-history-substring-search`, so the prefix search
+and the fuzzy search coexist.
 
 ## Prompt
 
@@ -135,7 +164,10 @@ prompt: user, host, working directory, and `git_prompt_info` from
 - ripgrep reads the `fs` module's configuration only when that file exists.
 - `PYTHONSTARTUP` and `PYTHON_HISTORY` are exported only when the `python`
   module's startup file exists, which moves REPL history to `~/.cache/python/`.
-- fzf defaults use fd for discovery and bat for previews.
+- fzf defaults use fd for discovery and bat for previews, and its Ctrl+R,
+  Ctrl+T, and Alt+C widgets come from the copy installed by the `must-have`
+  dependency. The Alt+C preview prefers eza from the `fs` module and falls back
+  to `ls`.
 - the `y` function runs Yazi and changes the shell to Yazi's final directory.
 - tmux, Docker, Git, filesystem, and media shortcuts become useful when their
   corresponding modules are installed; unavailable commands are not installed
