@@ -1,0 +1,13 @@
+# direnv reads this file before every .envrc evaluation.
+# Keys direnv does not know are ignored, so the file stays usable on the older
+# builds Debian and Ubuntu ship.
+
+[global]
+# An .envrc that starts a language runtime or unlocks a secret store regularly
+# needs more than the 5s default before direnv reports it as slow.
+warn_timeout = "20s"
+
+# Do not print the list of variables that changed on every directory switch.
+# The diff is noise in a project with a large .envrc and it puts variable names,
+# which are often credential names, into the scrollback. Requires direnv 2.34.
+hide_env_diff = true

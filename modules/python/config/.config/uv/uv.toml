@@ -1,0 +1,14 @@
+# User-level uv configuration. A project's own `uv.toml` or the `[tool.uv]`
+# table in its `pyproject.toml` overrides these values, so keep only
+# machine-wide defaults here.
+
+# Resolve interpreters exclusively from uv's own CPython builds and ignore
+# Homebrew, APT, and Xcode Python. Those packages are upgraded independently of
+# any project, which silently breaks virtual environments built against them.
+# The trade-off is that creating an environment for a version uv has not
+# downloaded yet requires network access.
+python-preference = "only-managed"
+
+# Download a missing interpreter version on demand instead of failing the
+# command that needs it.
+python-downloads = "automatic"

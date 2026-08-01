@@ -2,7 +2,6 @@ eza
 fd-find
 ripgrep
 peco
-fasd
 tree
 file
 bat
@@ -11,7 +10,15 @@ entr
 glow
 jq
 yq
+miller
 parallel
+zoxide
+# Not packaged for every supported release. The installer skips a package that
+# has no APT candidate and reports it, so the rest of the module still installs.
+watchexec
+sd
+choose
+hyperfine
 unzip
 zip
 zstd
@@ -23,6 +30,14 @@ mc
 # its own Depends on Debian trixie, so --no-install-recommends leaves mc
 # unable to load: "error while loading shared libraries: libcom_err.so.2".
 libcom-err2
+# Binaries the Yazi previewers configured in yazi.toml shell out to. duckdb and
+# typst reach Debian late, so they fall under the same skip-and-warn rule.
+hexyl
+sqlite3
+djvulibre-bin
+transmission-cli
+duckdb
+typst
 ncdu
 du-dust
 duf

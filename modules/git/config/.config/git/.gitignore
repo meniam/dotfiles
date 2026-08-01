@@ -43,8 +43,10 @@ Temporary Items
 # Logs
 *.log
 
-# Direnv
-.envrc
+# direnv's cache. `.envrc` itself is deliberately not ignored: it is how a
+# project shares its environment, and direnv already refuses to run one until
+# `direnv allow` is given in that directory. Keep machine-specific values in an
+# untracked `.envrc.local` and source it from the tracked file.
 .direnv/
 
 # Local overrides

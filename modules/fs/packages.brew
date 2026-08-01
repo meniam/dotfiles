@@ -6,14 +6,27 @@ tree
 bat
 stow
 entr
+watchexec
 glow
 jq
 yq
+miller
+sd
+choose
 parallel
-yazi
-sevenzip
+hyperfine
 zoxide
+yazi
 midnight-commander
+# Binaries the Yazi previewers configured in yazi.toml shell out to.
+duckdb
+hexyl
+typst
+djvulibre
+transmission-cli
+# gtimeout, which the mermaid previewer uses to cap a wedged `glow`.
+coreutils
+sevenzip
 # macOS already provides zip and unzip.
 zstd
 ouch

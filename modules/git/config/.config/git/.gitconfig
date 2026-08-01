@@ -13,6 +13,8 @@
 [include]
     path = ~/.config/git/delta.conf
 [include]
+    path = ~/.config/git/signing.conf
+[include]
     path = ~/.config/git/work.conf
 [include]
     path = ~/.config/git/personal.conf

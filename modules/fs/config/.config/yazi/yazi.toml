@@ -28,19 +28,23 @@ ueberzug_scale = 1
 ueberzug_offset = [0, 0, 0, 0]
 
 [opener]
+# `edit` is Yazi's built-in opener and runs $EDITOR, which the zsh module
+# points at Neovim. It is listed first everywhere below so a machine without a
+# graphical editor still opens files.
+#
+# `code` is only reachable when VS Code's shell command is on PATH; no module
+# installs it, so the entry stays as an optional second choice rather than the
+# default it used to be.
 vscode = [
 	{ run = 'code "$@"', desc = "VS Code", orphan = true, for = "unix" },
-]
-vim = [
-	{ run = 'vim "$@"', desc = "Vim", block = true, for = "unix" },
 ]
 
 [open]
 prepend_rules = [
-	{ url = "*.md", use = ["open", "vscode", "vim", "reveal"] },
-	{ mime = "text/html", use = ["open", "vscode", "vim", "reveal"] },
-	{ mime = "text/*", use = ["open", "vscode", "vim", "reveal"] },
-	{ mime = "application/{json,ndjson,javascript,wine-extension-ini}", use = ["open", "vscode", "reveal"] },
+	{ url = "*.md", use = ["open", "edit", "vscode", "reveal"] },
+	{ mime = "text/html", use = ["open", "edit", "vscode", "reveal"] },
+	{ mime = "text/*", use = ["open", "edit", "vscode", "reveal"] },
+	{ mime = "application/{json,ndjson,javascript,wine-extension-ini}", use = ["open", "edit", "vscode", "reveal"] },
 ]
 
 [plugin]
@@ -84,7 +88,10 @@ prepend_previewers = [
 	{ url = "*.mmd", run = "mermaid" },
 	{ url = "*.mermaid", run = "mermaid" },
 
-	# Tabular data uses DuckDB; parquet-preview, miller, and rich-preview are installed but not enabled.
+	# Tabular data uses DuckDB; parquet-preview and rich-preview are locked in
+	# package.toml as alternatives but not enabled. miller is deliberately not
+	# among them: its upstream still ships the pre-0.3 `init.lua` layout, which
+	# `ya pkg` cannot deploy. The `mlr` binary is installed and usable directly.
 	{ url = "*.csv", run = "duckdb" },
 	{ url = "*.tsv", run = "duckdb" },
 	{ url = "*.parquet", run = "duckdb" },
@@ -113,7 +120,9 @@ prepend_previewers = [
 	# Directories use eza instead of the built-in folder previewer; press e then t to switch tree/list mode.
 	{ url = "*/", run = "eza-preview" },
 
-	# Text uses a Git gutter preview after Markdown, CSV, and plain-text rules have been handled.
+	# Text uses a Git gutter preview after Markdown, CSV, and plain-text rules
+	# have been handled. This plugin is vendored under plugins/ rather than
+	# locked in package.toml — it has no public upstream to fetch it from.
 	{ mime = "text/*", run = "vscode-git-gutter" },
 ]
 

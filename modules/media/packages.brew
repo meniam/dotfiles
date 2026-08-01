@@ -1,6 +1,18 @@
 ffmpeg
 imagemagick
+# ImageMagick runs these two as external delegates rather than linking them in:
+# without ghostscript it cannot read PDF or EPS, and without librsvg it falls
+# back to its own weak SVG renderer.
+ghostscript
+librsvg
 media-info
 exiftool
 poppler
+qpdf
+pandoc
 chafa
+libheif
+webp
+tesseract
+sox
+yt-dlp

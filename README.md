@@ -77,17 +77,19 @@ supported platform. Dependencies are installed before the selected module.
 | `desktop` | macOS | on | `must-have`, `git`, `media`, `fs` | macOS command-line and desktop software, including Hammerspoon, WezTerm, Kitty, and application casks. |
 | `docker` | macOS, Linux | off | — | Docker Desktop on macOS or Docker Engine on Debian, plus the Oxker and LazyDocker terminal interfaces. The Linux setup currently supports Debian only. |
 | `fs` | macOS, Linux | off | `media`, `must-have` | Navigation, search, inspection, file-manager, archive, and disk-usage tools, including Yazi and Midnight Commander. |
-| `git` | macOS, Linux | on | — | Git, GitHub CLI, Git LFS, delta, LazyGit, shared configuration, and semantic diff tooling on macOS. |
+| `git` | macOS, Linux | on | — | Git, GitHub CLI, Git LFS, delta, LazyGit, Tig, shared configuration, and semantic diff tooling on macOS. |
 | `linux` | Linux | on | `must-have` | Debian/Ubuntu command-line tools, certificates, terminal data, and build prerequisites. |
-| `media` | macOS, Linux | off | — | FFmpeg, ImageMagick, MediaInfo, ExifTool, Poppler, and Chafa. |
+| `media` | macOS, Linux | off | — | FFmpeg, ImageMagick with its Ghostscript and librsvg delegates, MediaInfo, ExifTool, Poppler, qpdf, Pandoc, Chafa, Tesseract, SoX, and yt-dlp. LibreOffice is installed on macOS only. |
+| `mise` | macOS, Linux | off | — | Per-project tool versions with mise, including `.nvmrc` and `.tool-versions` support. The Linux setup uses the upstream APT repository on Debian and Ubuntu, amd64 and arm64. |
 | `multiplexer` | macOS, Linux | off | — | tmux with TPM-managed plugins and the Herdr agent multiplexer. |
 | `must-have` | macOS, Linux | on | — | Cross-platform baseline tools such as curl, wget, rsync, htop, btop, Micro, Make, Just, direnv, and fzf. |
 | `node24` | macOS, Linux | off | — | Node.js 24 and npm through Homebrew or the NodeSource repository. The Linux setup supports Debian and Ubuntu. |
 | `nvim` | macOS, Linux | on | — | Neovim with an NvChad configuration, plugins, and supporting tools. Official Linux builds require glibc 2.34 or later. |
 | `php85` | Linux | off | — | PHP 8.5 from the Sury APT repository. The setup supports Debian only. |
+| `python` | macOS, Linux | off | — | uv with a managed CPython interpreter, the Ruff linter, the ty type checker, and user-level uv and REPL configuration. |
 | `rust` | macOS, Linux | off | — | The minimal stable Rust toolchain through rustup, including Cargo and rustc. |
 | `ssh` | macOS, Linux | on | — | OpenSSH client defaults with connection multiplexing, keychain support on macOS, and includes for private per-host configuration. |
-| `zsh` | macOS, Linux | off | — | Zsh with a modular Zinit-based configuration and plugin warm-up. |
+| `zsh` | macOS, Linux | off | — | Zsh with a modular Zinit-based configuration, the Powerlevel10k prompt, and plugin warm-up. |
 
 Every module contains a `README.md` with its packages, configuration, setup
 behavior, and platform-specific limitations.
@@ -99,7 +101,7 @@ with `#` are ignored.
 
 | Profile | Modules | Intended use |
 | --- | --- | --- |
-| `code` | `php85`, `node24`, `rust` | Language toolchains. `php85` is skipped on unsupported platforms. |
+| `code` | `php85`, `node24`, `rust`, `python`, `mise` | Language toolchains. `php85` is skipped on unsupported platforms. `mise` layers per-project versions over the fixed toolchains. |
 | `docker` | `git`, `fs`, `zsh` | A container-oriented interactive shell environment. This profile does not install Docker Engine or Docker Desktop. |
 | `linux` | `linux`, `docker`, `git`, `must-have`, `media`, `fs` | Debian server and command-line environment. |
 | `mac` | `must-have`, `docker`, `git`, `media`, `fs`, `nvim`, `multiplexer`, `desktop`, `zsh`, `ssh` | Full macOS workstation environment. |

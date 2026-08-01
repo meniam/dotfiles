@@ -1,6 +1,22 @@
 ffmpeg
 imagemagick
+# ImageMagick runs these two as external delegates rather than linking them in:
+# without ghostscript it cannot read PDF or EPS, and without librsvg it falls
+# back to its own weak SVG renderer.
+ghostscript
+librsvg2-bin
 mediainfo
 libimage-exiftool-perl
 poppler-utils
+qpdf
+pandoc
 chafa
+# heif-convert; unlike the Homebrew build, ImageMagick 6 on Debian and Ubuntu
+# has no built-in HEIC delegate.
+libheif-examples
+webp
+tesseract-ocr
+sox
+yt-dlp
+# Cover previews for EPUB files in Yazi. No macOS equivalent exists.
+gnome-epub-thumbnailer

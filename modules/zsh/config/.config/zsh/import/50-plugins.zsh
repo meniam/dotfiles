@@ -15,6 +15,14 @@ fi
 if source "$ZINIT_HOME/zinit.zsh"; then
   zsh_init_completion
 
+  # Prompt theme. Loaded first so the instant prompt replayed by .zshrc is taken
+  # over by the real prompt as early as possible. Its settings live in
+  # ../p10k.zsh and are applied by 80-prompt.zsh; depth=1 skips the history of a
+  # repository that is only ever used at its tip.
+  # Repository: https://github.com/romkatv/powerlevel10k
+  zinit ice depth=1
+  zinit light romkatv/powerlevel10k
+
   # Suggest commands from history while the command line is being edited.
   # Type a command prefix and press Right Arrow to accept the grey suggestion.
   # Repository: https://github.com/zsh-users/zsh-autosuggestions
@@ -70,3 +78,19 @@ if source "$ZINIT_HOME/zinit.zsh"; then
   [[ -n "${terminfo[kcuu1]:-}" ]] && bindkey "${terminfo[kcuu1]}" history-substring-search-up
   [[ -n "${terminfo[kcud1]:-}" ]] && bindkey "${terminfo[kcud1]}" history-substring-search-down
 fi
+
+# Load fzf's interactive widgets after the plugins so that a later plugin cannot
+# take the keys back. Ctrl+R fuzzy-searches the shell history, Ctrl+T inserts
+# paths from below the current directory into the command line, and Alt+C
+# changes to one of those directories. 40-completion.zsh resolved where the
+# script lives; the widgets read the FZF_* variables set in 30-env.zsh.
+#
+# Ctrl+T replaces the Emacs transpose-chars binding, and Alt+C only arrives when
+# the terminal sends Option as a real Alt modifier, which Kitty does not do on
+# macOS until macos_option_as_alt is set.
+if [[ -n "$zsh_fzf_shell_dir" && -r "$zsh_fzf_shell_dir/key-bindings.zsh" ]]; then
+  # shellcheck disable=SC1090
+  source "$zsh_fzf_shell_dir/key-bindings.zsh"
+fi
+
+unset zsh_fzf_shell_dir

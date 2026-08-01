@@ -1,0 +1,15 @@
+# Settings fragment for mise, loaded before ~/.config/mise/config.toml.
+# Global tool versions belong in that file, which stays outside this repository:
+# `mise use -g` writes there and leaves this fragment alone.
+
+[settings]
+# Read the version files other managers introduced: .nvmrc, .node-version, and
+# the package.json engines field. mise ignores all of them by default and only
+# looks at mise.toml and .tool-versions, which silently gives the wrong Node
+# version in a project that never adopted mise.
+idiomatic_version_file_enable_tools = ["node"]
+
+[settings.status]
+# Print the tools a directory activates when they differ from the current ones.
+# Without it a project switch changes the toolchain with no visible sign.
+show_tools = true
