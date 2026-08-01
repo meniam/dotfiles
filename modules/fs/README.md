@@ -100,7 +100,8 @@ sit outside that mechanism:
   layout that `ya pkg` cannot deploy. The `mlr` binary is installed and works on
   its own.
 
-Several locked plugins shell out to binaries this module now installs. The
-`office` previewer additionally expects `libreoffice`, and `preview-epub`
-expects `gnome-epub-thumbnailer`; neither is installed by any module, so those
-two formats fall back to the hex previewer.
+Several locked plugins shell out to binaries this module now installs. Two more
+come from `media` and are single-platform by design: `office` needs LibreOffice,
+which is a macOS cask, and `preview-epub` needs `gnome-epub-thumbnailer`, which
+is packaged for Debian and Ubuntu only. On the platform without it the file
+falls through to the hex previewer.

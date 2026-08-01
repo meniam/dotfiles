@@ -1,0 +1,5 @@
+# Yazi's `office` previewer converts documents through LibreOffice. Casks are
+# installed on macOS only, which is exactly the intended scope: on Linux the
+# previewer reports the missing command and the file falls through to the hex
+# previewer, rather than pulling a desktop office suite onto a server.
+libreoffice
