@@ -33,6 +33,23 @@ zsh_init_completion() {
   autoload -Uz compinit
   compinit -d "$ZSH_COMPDUMP"
 
+  # Step backwards through the completion menu with Shift+Tab. Tab already walks
+  # forwards, but Zsh ships no reverse binding: neither the emacs keymap nor the
+  # menuselect keymap claims the Shift+Tab sequence, so overshooting a candidate
+  # meant cycling through the whole list again. terminfo's kcbt holds the escape
+  # sequence for the current terminal and the literal is the fallback for
+  # descriptions that omit it. The menuselect keymap comes from zsh/complist,
+  # which `menu select` above loads on first use, so request it explicitly before
+  # binding into it.
+  zmodload zsh/complist
+  zmodload zsh/terminfo
+  bindkey '^[[Z' reverse-menu-complete
+  bindkey -M menuselect '^[[Z' reverse-menu-complete
+  if [[ -n "${terminfo[kcbt]:-}" ]]; then
+    bindkey "${terminfo[kcbt]}" reverse-menu-complete
+    bindkey -M menuselect "${terminfo[kcbt]}" reverse-menu-complete
+  fi
+
   # Ask just for completions at runtime so Tab lists recipes from the current justfile.
   # The generated script delegates recipe and argument discovery to just itself.
   if command -v just >/dev/null 2>&1; then
