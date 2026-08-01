@@ -1,14 +1,14 @@
 #:schema https://yazi-rs.github.io/schemas/yazi.json
 
 [mgr]
-ratio          = [1, 4, 3]
+ratio          = [1, 3, 3]
 sort_by        = "alphabetical"
 sort_sensitive = false
 sort_reverse   = false
 sort_dir_first = true
 sort_translit  = false
 linemode       = "size"
-show_hidden    = false
+show_hidden    = true
 show_symlink   = true
 scrolloff      = 5
 mouse_events   = ["click", "scroll"]
@@ -39,12 +39,26 @@ vscode = [
 	{ run = 'code "$@"', desc = "VS Code", orphan = true, for = "unix" },
 ]
 
+# Terminal editors, offered alongside `edit` ($EDITOR) as alternatives in the
+# `open --interactive` picker.
+micro = [
+	{ run = 'micro "$@"', desc = "micro", block = true, for = "unix" },
+]
+
+mcedit = [
+	{ run = 'mcedit "$@"', desc = "mcedit", block = true, for = "unix" },
+]
+
+nvim = [
+	{ run = 'nvim "$@"', desc = "nvim", block = true, for = "unix" },
+]
+
 [open]
 prepend_rules = [
-	{ url = "*.md", use = ["open", "edit", "vscode", "reveal"] },
-	{ mime = "text/html", use = ["open", "edit", "vscode", "reveal"] },
-	{ mime = "text/*", use = ["open", "edit", "vscode", "reveal"] },
-	{ mime = "application/{json,ndjson,javascript,wine-extension-ini}", use = ["open", "edit", "vscode", "reveal"] },
+	{ url = "*.md", use = ["open", "edit", "micro", "mcedit", "nvim", "vscode", "reveal"] },
+	{ mime = "text/html", use = ["open", "edit", "micro", "mcedit", "nvim", "vscode", "reveal"] },
+	{ mime = "text/*", use = ["open", "edit", "micro", "mcedit", "nvim", "vscode", "reveal"] },
+	{ mime = "application/{json,ndjson,javascript,wine-extension-ini}", use = ["open", "edit", "micro", "mcedit", "nvim", "vscode", "reveal"] },
 ]
 
 [plugin]

@@ -1,4 +1,9 @@
 [[mgr.prepend_keymap]]
+on = ["f", "f"]
+run = "filter --smart"
+desc = "Filter files by name"
+
+[[mgr.prepend_keymap]]
 on = ["f", "r"]
 run = "plugin fr rg"
 desc = "Search file by content (rg)"
@@ -151,6 +156,17 @@ desc = "Open in VS Code"
 on = "Щ"
 run = "open --interactive"
 desc = "Open with..."
+
+# Midnight Commander's F3/F4: view and edit the hovered file.
+[[mgr.prepend_keymap]]
+on = "<F3>"
+run = 'shell "mcview \"$@\"" --block'
+desc = "View with mcview"
+
+[[mgr.prepend_keymap]]
+on = "<F4>"
+run = 'shell "mcedit \"$@\"" --block'
+desc = "Edit with mcedit"
 
 [[mgr.prepend_keymap]]
 on = "н"
