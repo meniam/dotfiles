@@ -108,6 +108,60 @@ apt_filter_available() {
   printf '%s' "${available# }"
 }
 
+# Default Homebrew prefix for the current macOS architecture. Apple silicon and
+# Intel install to different roots, and neither is on PATH before the shellenv
+# of a fresh installation is evaluated.
+homebrew_prefix() {
+  case "$(uname -m)" in
+    arm64) printf '/opt/homebrew' ;;
+    *) printf '/usr/local' ;;
+  esac
+}
+
+# Put an existing or freshly installed Homebrew on PATH. Every macOS module
+# installs its packages through brew, so this runs before the first module.
+ensure_homebrew() {
+  command -v brew >/dev/null 2>&1 && return 0
+
+  local prefix installer_dir
+  prefix="${HOMEBREW_PREFIX:-$(homebrew_prefix)}"
+
+  if [ ! -x "$prefix/bin/brew" ]; then
+    # Not step(): this takes minutes and the upstream installer asks for a
+    # password, so it must be visible without --verbose.
+    warn "Homebrew is missing; installing it into $prefix. The upstream installer can ask for your password."
+    installer_dir="$(mktemp -d)"
+
+    # The upstream script is the only supported way to bootstrap Homebrew. It is
+    # downloaded to a file and inspected instead of being piped into a shell, so
+    # a truncated transfer or an error page cannot be executed as a half script.
+    if ! curl -fsSL --connect-timeout 15 --retry 2 \
+      "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh" \
+      -o "$installer_dir/install.sh"; then
+      rm -rf "$installer_dir"
+      die "Unable to download the Homebrew installer."
+    fi
+
+    if ! head -1 "$installer_dir/install.sh" | grep -q '^#!/bin/bash' ||
+      ! grep -q 'HOMEBREW_PREFIX' "$installer_dir/install.sh"; then
+      rm -rf "$installer_dir"
+      die "The downloaded Homebrew installer does not look like the upstream script."
+    fi
+
+    # NONINTERACTIVE skips the confirmation prompt. The installer calls sudo on
+    # its own where it needs it, so it must not be run through $SUDO.
+    if ! NONINTERACTIVE=1 /bin/bash "$installer_dir/install.sh"; then
+      rm -rf "$installer_dir"
+      die "The Homebrew installer failed. Install it manually from https://brew.sh."
+    fi
+    rm -rf "$installer_dir"
+  fi
+
+  [ -x "$prefix/bin/brew" ] || die "Homebrew is not at $prefix/bin/brew after the installation."
+  eval "$("$prefix/bin/brew" shellenv)"
+  command -v brew >/dev/null 2>&1 || die "Homebrew is installed but is not on PATH."
+}
+
 brew_install() {
   [ "$#" -gt 0 ] || return 0
   local formula
@@ -146,7 +200,7 @@ ensure_base_tools() {
       apt_install git curl ca-certificates
       ;;
     mac)
-      command -v brew >/dev/null 2>&1 || die "Homebrew is required. Install it from https://brew.sh."
+      ensure_homebrew
       ;;
   esac
 }

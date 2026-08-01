@@ -11,7 +11,7 @@ Machine-specific values and secrets are intentionally excluded.
 - Interactive or explicit module selection
 - Dependency resolution with cycle and unknown-module checks
 - Profiles for macOS, Linux, language toolchains, and container environments
-- Homebrew formula and cask manifests on macOS
+- Homebrew bootstrap, formula, and cask manifests on macOS
 - APT package manifests on Debian/Ubuntu Linux
 - GNU Stow linking of module payloads into `$HOME`
 - Conflict backups under `~/.dotfiles-backups/`
@@ -20,13 +20,16 @@ Machine-specific values and secrets are intentionally excluded.
 
 ## Requirements
 
-- macOS with [Homebrew](https://brew.sh), or Debian/Ubuntu Linux with `apt-get`
+- macOS, or Debian/Ubuntu Linux with `apt-get`
 - Bash 3.2 or later
 - Network access for package managers and modules that download upstream
   releases
 - `sudo` access on Linux when system packages or files must be installed
 
-GNU Stow is installed automatically when it is not already available.
+[Homebrew](https://brew.sh) on macOS and GNU Stow on both platforms are
+installed automatically when they are not already available. The Homebrew
+bootstrap runs the upstream installer, which needs `sudo` and installs the
+Command Line Tools on a clean machine.
 
 ## Usage
 
@@ -78,6 +81,7 @@ supported platform. Dependencies are installed before the selected module.
 | `docker` | macOS, Linux | off | — | Docker Desktop on macOS or Docker Engine on Debian, plus the Oxker and LazyDocker terminal interfaces. The Linux setup currently supports Debian only. |
 | `fs` | macOS, Linux | off | `media`, `must-have` | Navigation, search, inspection, file-manager, archive, and disk-usage tools, including Yazi and Midnight Commander. |
 | `git` | macOS, Linux | on | `ssh` | Git, GitHub CLI, Git LFS, delta, LazyGit, Tig, shared configuration, and semantic diff tooling on macOS. |
+| `homebrew` | macOS | on | — | Homebrew itself, a package-metadata refresh, and the `brew-snapshot` Brewfile helper. The installer bootstraps Homebrew for every macOS run, so other modules do not depend on this one. |
 | `linux` | Linux | on | `must-have` | Debian/Ubuntu command-line tools, certificates, terminal data, and build prerequisites. |
 | `media` | macOS, Linux | off | — | FFmpeg, ImageMagick with its Ghostscript and librsvg delegates, MediaInfo, ExifTool, Poppler, qpdf, Pandoc, Chafa, Tesseract, SoX, and yt-dlp. LibreOffice is installed on macOS only. |
 | `mise` | macOS, Linux | off | — | Per-project tool versions with mise, including `.nvmrc` and `.tool-versions` support. The Linux setup uses the upstream APT repository on Debian and Ubuntu, amd64 and arm64. |
@@ -104,7 +108,7 @@ with `#` are ignored.
 | `code` | `php85`, `node24`, `rust`, `python`, `mise` | Language toolchains. `php85` is skipped on unsupported platforms. `mise` layers per-project versions over the fixed toolchains. |
 | `docker` | `git`, `fs`, `zsh` | A container-oriented interactive shell environment. This profile does not install Docker Engine or Docker Desktop. |
 | `linux` | `linux`, `docker`, `git`, `must-have`, `media`, `fs` | Debian server and command-line environment. |
-| `mac` | `must-have`, `docker`, `git`, `media`, `fs`, `nvim`, `multiplexer`, `desktop`, `zsh`, `ssh` | Full macOS workstation environment. |
+| `mac` | `homebrew`, `must-have`, `docker`, `git`, `media`, `fs`, `nvim`, `multiplexer`, `desktop`, `zsh`, `ssh` | Full macOS workstation environment. |
 
 Dependencies are added automatically. Modules unsupported on the current
 platform are reported and skipped.

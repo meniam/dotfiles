@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+# Write, inspect, and replay a Brewfile snapshot of the packages installed on
+# this machine.
+#
+# The snapshot lives outside the dotfiles repository because it describes one
+# machine. Set HOMEBREW_BUNDLE_FILE to keep it somewhere else.
+set -euo pipefail
+
+usage() {
+  cat <<'USAGE'
+Usage: brew-snapshot <command>
+
+  dump      Overwrite the Brewfile from the current installation
+  restore   Install everything the Brewfile lists
+  check     Report whether the Brewfile is already satisfied
+  list      Print the Brewfile
+  path      Print the Brewfile path
+
+The Brewfile defaults to ~/.config/homebrew/Brewfile and can be moved with
+HOMEBREW_BUNDLE_FILE.
+USAGE
+}
+
+command -v brew >/dev/null 2>&1 || {
+  printf 'brew-snapshot: Homebrew is not on PATH.\n' >&2
+  exit 1
+}
+
+brewfile="${HOMEBREW_BUNDLE_FILE:-${XDG_CONFIG_HOME:-$HOME/.config}/homebrew/Brewfile}"
+
+require_brewfile() {
+  [ -f "$brewfile" ] && return 0
+  printf 'brew-snapshot: no snapshot at %s. Run "brew-snapshot dump" first.\n' "$brewfile" >&2
+  exit 1
+}
+
+case "${1:-}" in
+  dump)
+    mkdir -p "$(dirname "$brewfile")"
+    # --describe keeps the one-line formula descriptions, which is what makes an
+    # old snapshot readable when deciding what to keep on a new machine.
+    brew bundle dump --force --describe --file "$brewfile"
+    printf 'brew-snapshot: wrote %s\n' "$brewfile" >&2
+    ;;
+  restore)
+    require_brewfile
+    brew bundle install --file "$brewfile"
+    ;;
+  check)
+    require_brewfile
+    brew bundle check --verbose --file "$brewfile"
+    ;;
+  list)
+    require_brewfile
+    cat "$brewfile"
+    ;;
+  path)
+    printf '%s\n' "$brewfile"
+    ;;
+  -h|--help|help)
+    usage
+    ;;
+  '')
+    usage >&2
+    exit 2
+    ;;
+  *)
+    printf 'brew-snapshot: unknown command: %s\n\n' "$1" >&2
+    usage >&2
+    exit 2
+    ;;
+esac
