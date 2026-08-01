@@ -49,7 +49,16 @@ fi
 
 if command -v ya >/dev/null 2>&1; then
   step "Installing locked Yazi plugins and flavors" "*"
-  ya pkg install || warn "Yazi plugins could not be installed automatically."
+  # `ya pkg install` prints raw git fetch/checkout output per plugin with no
+  # quiet flag; keep it captured and only surface it if the install fails.
+  pkg_log="$(mktemp)"
+  trap 'rm -f "$pkg_log"' EXIT HUP INT TERM
+  if ! ya pkg install >"$pkg_log" 2>&1; then
+    warn "Yazi plugins could not be installed automatically."
+    cat "$pkg_log" >&2
+  fi
+  rm -f "$pkg_log"
+  trap - EXIT HUP INT TERM
 else
   warn "The 'ya' companion binary is unavailable; plugin installation is skipped."
 fi
