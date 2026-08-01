@@ -19,3 +19,10 @@ end
 -- open_multi keeps <Enter> opening the whole selection, which is what the
 -- default `open` command does; without it only the hovered file is opened.
 require("smart-enter"):setup({ open_multi = true })
+
+-- Preview scrolling for the `f r` / `f a` fzf search (ctrl-j/ctrl-k already
+-- navigate the match list, and fzf has no ctrl-shift or cmd modifier for
+-- letter keys, so alt/ctrl-alt fill in for line/page scroll instead).
+require("fr"):setup({
+	fzf = "--bind='alt-j:preview-down,alt-k:preview-up,ctrl-alt-j:preview-page-down,ctrl-alt-k:preview-page-up'",
+})
