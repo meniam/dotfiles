@@ -21,7 +21,7 @@ rules = [
 	# below, since e.g. *.md would otherwise steal CLAUDE.md/README.md first.
 
 	# Disables Folders
-	{ url = "*.{git,github,idea,vscode,cursor}/", fg = "#6c6c6c" },
+	{ url = "*.{git,github,idea,vscode,cursor,ruff_cache}/", fg = "#6c6c6c" },
 	{ url = "**/{node_modules,vendor,cache}/", fg = "#6c6c6c" },
 
 	# Yellow folders

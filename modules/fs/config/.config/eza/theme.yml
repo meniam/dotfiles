@@ -110,6 +110,7 @@ filenames:
   vendor: { filename: { foreground: '#6c6c6c' } }
   cache: { filename: { foreground: '#6c6c6c' } }
   .git: { filename: { foreground: '#6c6c6c' } }
+  .ruff_cache: { filename: { foreground: '#6c6c6c' } }
   .github: { filename: { foreground: '#6c6c6c' } }
   .idea: { filename: { foreground: '#6c6c6c' } }
   .vscode: { filename: { foreground: '#6c6c6c' } }
