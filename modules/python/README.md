@@ -15,7 +15,12 @@ instead of by Homebrew, APT, or pip.
 | [uv](https://docs.astral.sh/uv/) | Installs interpreters, resolves and locks dependencies, and manages virtual environments and tools. |
 | `uvx` | Runs a published tool in a throwaway environment; installed next to `uv`. |
 | [Ruff](https://docs.astral.sh/ruff/) | Lints and formats Python code. |
-| [ty](https://docs.astral.sh/ty/) | Checks types. The tool is in preview upstream, so its diagnostics and options still change. |
+| [mypy](https://mypy-lang.org/) | Checks types. The settled option, and what the probe requires. |
+| [ty](https://docs.astral.sh/ty/) | Checks types much faster. In preview upstream, so its diagnostics and options still change. |
+| [pre-commit](https://pre-commit.com/) | Runs the hooks a repository declares in `.pre-commit-config.yaml`. |
+| [IPython](https://ipython.org/) | Interactive REPL with completion, `%timeit`, and block paste. |
+| [pip-audit](https://github.com/pypa/pip-audit) | Reports known vulnerabilities in a project's dependencies. |
+| [nox](https://nox.thea.codes/) | Runs a task or test matrix across interpreters, with uv as the backend. |
 | CPython | A uv-managed interpreter, downloaded during setup and used by every environment uv creates. |
 
 ## Configuration
@@ -35,9 +40,11 @@ interpreter version uv has not downloaded yet requires network access.
 
 ## Interpreter and REPL notes
 
-The module does not put a `python` or `python3` command on `PATH`. Use
-`uv run`, `uv run python`, or a project environment created by `uv venv`; the
-system `python3` remains whatever the platform provides.
+The module puts no `python` or `python3` command on `PATH`; the system `python3`
+remains whatever the platform provides. `uv python install` does link the
+interpreter under its version number, so `~/.local/bin/python3.14` exists and
+runs the managed build. For anything project-shaped prefer `uv run`,
+`uv run python`, or an environment created by `uv venv`.
 
 The `zsh` module exports `PYTHONSTARTUP` and `PYTHON_HISTORY` only when the
 stowed startup file exists, so a shell-only install without this module keeps
@@ -51,13 +58,22 @@ older interpreters ignore it and keep using `~/.python_history`.
   `astral.sh/uv/install.sh` script into `~/.local/bin` when no `uv` is already on
   `PATH`, and runs it with `INSTALLER_NO_MODIFY_PATH=1` because the `zsh` module
   owns `PATH`.
+- The installer embeds the sha256 of every artifact and verifies the binary it
+  downloads — but only through GNU `sha256sum`, which macOS does not ship. It
+  then prints `skipping sha256 checksum verification` and installs anyway, so
+  `setup.sh` puts a one-line `sha256sum` wrapper around `shasum -a 256` on
+  `PATH` for the duration of the install. Both print `<hash> *<file>`.
 - `setup.sh` then downloads a uv-managed CPython when none is installed, and
-  installs Ruff and ty with `uv tool install`. Each tool gets its own environment
-  under uv's tool directory and is linked into `~/.local/bin`.
+  installs the tools with `uv tool install`. Each gets its own environment under
+  uv's tool directory and is linked into `~/.local/bin`. A tool that fails to
+  install is a warning, not a failure: losing one should not discard the
+  interpreter and the tools already in place.
 - Repeated runs are offline: an existing uv, managed interpreter, and tool are
   detected and skipped.
-- The probe requires `uv`, `uvx`, `ruff`, and `ty` on `PATH` plus at least one
-  uv-managed interpreter. Restart the shell after the first installation if
-  `~/.local/bin` is not yet on `PATH`.
+- The probe requires `uv`, `uvx`, `ruff`, `mypy`, `pre-commit`, `ipython`,
+  `pip-audit`, and `nox` on `PATH` plus at least one uv-managed interpreter.
+  `ty` is left out on purpose — it is a preview release, and a module should not
+  read as broken because an upstream `0.0.x` tool moved. Restart the shell after
+  the first installation if `~/.local/bin` is not yet on `PATH`.
 - Upgrades are not part of setup. Use `uv self update`, `uv tool upgrade --all`,
   and `uv python upgrade` when a newer release is wanted.

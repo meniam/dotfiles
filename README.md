@@ -86,7 +86,7 @@ supported platform. Dependencies are installed before the selected module.
 | `node24` | macOS, Linux | off | — | Node.js 24 and npm through Homebrew or the NodeSource repository. The Linux setup supports Debian and Ubuntu. |
 | `nvim` | macOS, Linux | on | — | Neovim with an NvChad configuration, plugins, and supporting tools. Official Linux builds require glibc 2.34 or later. |
 | `php85` | Linux | off | — | PHP 8.5 from the Sury APT repository. The setup supports Debian only. |
-| `python` | macOS, Linux | off | — | uv with a managed CPython interpreter, the Ruff linter, the ty type checker, and user-level uv and REPL configuration. |
+| `python` | macOS, Linux | off | — | uv with a managed CPython interpreter, Ruff, mypy, ty, pre-commit, IPython, pip-audit, nox, and user-level uv and REPL configuration. |
 | `rust` | macOS, Linux | off | — | The minimal stable Rust toolchain through rustup, including Cargo and rustc. |
 | `ssh` | macOS, Linux | on | — | OpenSSH client defaults with connection multiplexing, an agent helper for Linux, includes for private per-host configuration, keychain, ssh-audit, sshuttle, and autossh. |
 | `zsh` | macOS, Linux | off | — | Zsh with a modular Zinit-based configuration, the Powerlevel10k prompt, and plugin warm-up. |
