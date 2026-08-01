@@ -5,6 +5,7 @@ local options = {
     html = { "prettier" },
     json = { "prettier" },
     markdown = { "prettier" },
+    php = { "php-cs-fixer" },
   },
 
   format_on_save = {

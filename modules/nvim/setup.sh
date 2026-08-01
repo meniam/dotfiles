@@ -70,12 +70,22 @@ fi
 log "Neovim: $($NVIM_BIN --version | head -1)"
 
 if command -v npm >/dev/null 2>&1; then
-  step "Installing optional web language servers" "*"
+  step "Installing optional language servers" "*"
   npm_sudo=""
   [ "$OS" = "linux" ] && npm_sudo="$SUDO"
   # shellcheck disable=SC2086
-  $npm_sudo npm install -g vscode-langservers-extracted @tailwindcss/language-server >/dev/null 2>&1 \
-    || warn "Optional web language servers could not be installed."
+  $npm_sudo npm install -g vscode-langservers-extracted @tailwindcss/language-server intelephense >/dev/null 2>&1 \
+    || warn "Optional language servers could not be installed."
+fi
+
+if command -v php >/dev/null 2>&1; then
+  step "Installing php-cs-fixer" "*"
+  mkdir -p "$HOME/.local/bin"
+  if download_file "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/releases/latest/download/php-cs-fixer.phar" "$HOME/.local/bin/php-cs-fixer"; then
+    chmod +x "$HOME/.local/bin/php-cs-fixer"
+  else
+    warn "php-cs-fixer could not be installed."
+  fi
 fi
 
 step "Synchronizing Neovim plugins" "*"
