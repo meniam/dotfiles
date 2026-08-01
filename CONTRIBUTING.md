@@ -38,19 +38,18 @@ claim support for an environment that has not been handled by the code.
 
 ## Branch workflow
 
-`main` is the stable branch and `dev` is the integration branch for ongoing
-work.
+`main` is the stable branch and the base for all work.
 
-1. Update `dev` and create a focused branch from it.
+1. Update `main` and create a focused branch from it.
 2. Use a lowercase, hyphen-separated branch name such as
    `feat/<description>`, `fix/<description>`, `docs/<description>`, or
    `chore/<description>`.
 3. Keep one purpose per branch and avoid unrelated cleanup.
-4. Open the pull request against `dev` unless a maintainer requests another
+4. Open the pull request against `main` unless a maintainer requests another
    target.
 5. Delete the branch after it is merged.
 
-Changes promoted from `dev` to `main` should already be reviewed and validated.
+Changes merged into `main` should already be reviewed and validated.
 
 ## Modules
 
