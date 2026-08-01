@@ -12,7 +12,8 @@ jq
 yq
 miller
 sd
-choose
+# Homebrew names the Rust `choose` formula choose-rust; the binary is `choose`.
+choose-rust
 parallel
 hyperfine
 zoxide
