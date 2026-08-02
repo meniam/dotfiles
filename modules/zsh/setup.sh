@@ -48,8 +48,15 @@ else
   set -- zsh -ic exit
 fi
 
-# 180s rather than 120s: the run also clones Powerlevel10k and fetches the
-# gitstatusd binary the theme uses for Git status.
+# A terminal type has to come with the terminal. An installer started over SSH
+# without a TTY inherits no TERM, and the Zinit run then dies right after the
+# Powerlevel10k clone — three of the seven plugins arrive and the rest are left
+# for the first interactive shell. The value only has to name a terminal the
+# terminfo database knows; the pseudo-terminal itself accepts anything.
+export TERM="${TERM:-xterm-256color}"
+
+# 180s rather than 120s: the run also clones Powerlevel10k, whose repository is
+# the largest of the set.
 prime_log="$(mktemp)"
 trap 'rm -f "$prime_log"' EXIT HUP INT TERM
 # The pseudo-terminal echoes the shell's own startup back into the log, so it

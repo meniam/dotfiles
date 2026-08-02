@@ -9,12 +9,19 @@ with Zinit-managed plugins.
 
 The package manifests install Git and Zsh. `setup.sh` starts an interactive
 command shell on a pseudo-terminal of its own through `script(1)`, with a
-three-minute timeout, to bootstrap Zinit and warm the plugin cache, including
-the Powerlevel10k clone and its `gitstatusd` binary. The pseudo-terminal is what
-lets Zsh enable `zle`, which Powerlevel10k needs to start `gitstatusd`; priming
-on a plain pipe reports that it cannot change the `zle` option and that
-gitstatus failed to initialize. Its output is shown only when the run fails, and
-a timeout leaves plugin installation for the first normal shell.
+three-minute timeout, to bootstrap Zinit and clone every plugin, Powerlevel10k
+included. Two details of that shell matter:
+
+- The pseudo-terminal is what lets Zsh enable `zle`, which Powerlevel10k needs
+  to start `gitstatusd`. Priming on a plain pipe reports that it cannot change
+  the `zle` option and that gitstatus failed to initialize.
+- `TERM` is defaulted to `xterm-256color` when the installer inherits none, as
+  it does over SSH without a TTY. Without it the run stops after the
+  Powerlevel10k clone and leaves the remaining plugins to the first shell.
+
+The output of the priming run is shown only when it fails, and a timeout leaves
+plugin installation for the first normal shell. The `gitstatusd` binary is not
+part of it: Powerlevel10k fetches that when a prompt is first drawn.
 
 ## Configuration layout
 
