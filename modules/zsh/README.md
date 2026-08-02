@@ -8,10 +8,13 @@ with Zinit-managed plugins.
 - Dependencies: none
 
 The package manifests install Git and Zsh. `setup.sh` starts an interactive
-command shell without allocating a TTY, with a three-minute timeout, to bootstrap
-Zinit and warm the plugin cache, including the Powerlevel10k clone and its
-`gitstatusd` binary. A timeout leaves plugin installation for the first normal
-shell.
+command shell on a pseudo-terminal of its own through `script(1)`, with a
+three-minute timeout, to bootstrap Zinit and warm the plugin cache, including
+the Powerlevel10k clone and its `gitstatusd` binary. The pseudo-terminal is what
+lets Zsh enable `zle`, which Powerlevel10k needs to start `gitstatusd`; priming
+on a plain pipe reports that it cannot change the `zle` option and that
+gitstatus failed to initialize. Its output is shown only when the run fails, and
+a timeout leaves plugin installation for the first normal shell.
 
 ## Configuration layout
 
