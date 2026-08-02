@@ -55,6 +55,7 @@ nvim = [
 
 [open]
 prepend_rules = [
+	{ url = "*/", use = ["open", "edit", "vscode", "reveal"] },
 	{ url = "*.md", use = ["open", "edit", "micro", "mcedit", "nvim", "vscode", "reveal"] },
 	{ mime = "text/html", use = ["open", "edit", "micro", "mcedit", "nvim", "vscode", "reveal"] },
 	{ mime = "text/*", use = ["open", "edit", "micro", "mcedit", "nvim", "vscode", "reveal"] },
