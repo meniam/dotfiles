@@ -1,22 +1,22 @@
 gui:
-    showIcons: true
-    nerdFontsVersion: "3"
-    showFileTree: true
-    showBottomLine: true
-    showCommandLog: false
-    scrollOffMargin: 5
-    sidePanelWidth: 0.4
+  showIcons: true
+  nerdFontsVersion: '3'
+  showFileTree: true
+  showBottomLine: true
+  showCommandLog: false
+  scrollOffMargin: 5
+  sidePanelWidth: 0.25
 git:
-    pagers:
-        - colorArg: always
-          pager: delta --dark --paging=never --side-by-side --hunk-header-style=omit --syntax-theme="Dracula"
+  pagers:
+    - colorArg: always
+      pager: delta --no-gitconfig --dark --paging=never --hunk-header-style=omit --syntax-theme="Dracula" --minus-style="white darkred" --plus-style="white darkgreen" --navigate --line-numbers --hyperlinks --keep-plus-minus-markers --tabs=4 --wrap-max-lines=2 --file-style="yellow bold" --file-decoration-style="yellow ul" --hunk-header-decoration-style="magenta box" --line-numbers-left-style="dim white" --line-numbers-right-style="dim white" --line-numbers-minus-style=red --line-numbers-plus-style=green --line-numbers-zero-style="dim white" --map-styles="bold magenta => magenta dim italic, bold cyan => cyan dim italic"
 os:
-    editPreset: vscode
+  editPreset: vscode
 refresher:
-    refreshInterval: 3
-    fetchInterval: 60
+  refreshInterval: 3
+  fetchInterval: 60
 update:
-    method: never
+  method: never
 keybinding:
-    universal:
-        quit: "q"
+  universal:
+    quit: 'q'
