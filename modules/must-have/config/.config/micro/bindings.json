@@ -1,0 +1,9 @@
+{
+    "Escape": "Deselect|RemoveAllMultiCursors|UnhighlightSearch|lua:initlua.quitOnSecondEscape",
+    "Enter": "lua:filemanager.try_open_at_cursor|InsertNewline",
+    "Alt-t": "command:tree",
+    "Alt-o": "command:fzf",
+    "Alt-r": "command-edit:replace ",
+    "Alt-u": "command:upper",
+    "Alt-l": "command:lower"
+}

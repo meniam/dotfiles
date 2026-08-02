@@ -37,7 +37,7 @@ in lexical order, and finally sources the prompt settings.
 | `00-options.zsh` | Interactive options and the Emacs keymap. |
 | `10-history.zsh` | Shared history and cache creation under `${ZDOTDIR:-$HOME}/.cache/zsh/`. |
 | `20-path.zsh` | Deduplicated, existence-checked command search paths. |
-| `30-env.zsh` | `EDITOR`/`VISUAL`, Homebrew, Zoxide, mise, direnv, Yazi, Eza, ripgrep, Python REPL, and fzf environment settings. |
+| `30-env.zsh` | `EDITOR`/`VISUAL`, Homebrew, Zoxide, mise, direnv, Yazi, Eza, ripgrep, Micro, Python REPL, and fzf environment settings. |
 | `32-colors.zsh` | The `LS_COLORS` palette and its BSD `LSCOLORS` counterpart. |
 | `40-completion.zsh` | Zsh completion styles, compinit cache, Just completions, and the fzf integration lookup and completion trigger. |
 | `50-plugins.zsh` | Zinit bootstrap, plugins, selection behavior, command-line clipboard support, and the fzf key bindings. |
@@ -310,6 +310,9 @@ prompt: user, host, working directory, and `git_prompt_info` from
   the mise value.
 - Eza reads the theme from the `fs` module through `EZA_CONFIG_DIR`.
 - ripgrep reads the `fs` module's configuration only when that file exists.
+- `MICRO_TRUECOLOR` is exported on a terminal that advertises true colour, which
+  is what the `must-have` module's Catppuccin colorscheme for Micro needs to
+  render at full depth.
 - `PYTHONSTARTUP` and `PYTHON_HISTORY` are exported only when the `python`
   module's startup file exists, which moves REPL history to `~/.cache/python/`.
 - fzf defaults use fd for discovery and bat for previews, and its Ctrl+R,

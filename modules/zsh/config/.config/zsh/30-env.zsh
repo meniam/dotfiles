@@ -55,6 +55,14 @@ for zsh_editor_candidate in nvim vim vi; do
 done
 unset zsh_editor_candidate
 
+# Micro renders 24-bit colour only when this is set; without it the Catppuccin
+# scheme the must-have module stows is quantized to the 256-colour palette. It
+# is gated on the terminal advertising true colour, because on a terminal that
+# does not the same flag makes Micro emit colours it cannot show.
+if [[ "${COLORTERM:-}" == (truecolor|24bit) ]]; then
+  export MICRO_TRUECOLOR=1
+fi
+
 # Initialize Zoxide's directory-jumping command and record directory changes.
 # Type 'z <query>' to jump to a frequently used directory matching the query.
 if (( $+commands[zoxide] )); then

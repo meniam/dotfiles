@@ -1,21 +1,58 @@
 {
-    "colorscheme": "gotham",
+    "colorscheme": "catppuccin-macchiato",
+    "clipboard": "terminal",
     "tabsize": 4,
     "tabstospaces": true,
+    "autoindent": true,
     "autosave": 0,
+    "backup": true,
+    "mkparents": true,
     "savecursor": true,
     "saveundo": true,
+    "savehistory": true,
+    "parsecursor": true,
+    "reload": "prompt",
     "scrollmargin": 5,
     "scrollspeed": 2,
-    "clipboard": "terminal",
+    "scrollbar": true,
     "cursorline": true,
     "ruler": true,
-    "softwrap": false,
-    "statusline": true,
     "diffgutter": true,
-    "rmtrailingws": false,
+    "statusline": true,
+    "softwrap": false,
     "hlsearch": true,
     "ignorecase": true,
     "smartpaste": true,
-    "matchbrace": true
+    "matchbrace": true,
+    "hltaberrors": true,
+    "hltrailingws": true,
+    "rmtrailingws": false,
+    "eofnewline": true,
+    "ft:markdown": {
+        "softwrap": true,
+        "wordwrap": true,
+        "hltrailingws": false
+    },
+    "ft:git-commit": {
+        "colorcolumn": 73,
+        "softwrap": true,
+        "wordwrap": true
+    },
+    "ft:makefile": {
+        "tabstospaces": false,
+        "hltaberrors": false
+    },
+    "ft:go": {
+        "tabstospaces": false,
+        "hltaberrors": false
+    },
+    "ft:yaml": {
+        "tabsize": 2
+    },
+    "*.patch": {
+        "hltrailingws": false
+    },
+    "*.diff": {
+        "hltrailingws": false
+    }
 }
