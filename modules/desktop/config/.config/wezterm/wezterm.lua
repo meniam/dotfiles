@@ -291,11 +291,14 @@ config.keys = {
   { key = "LeftArrow", mods = "OPT|SHIFT", action = wezterm.action.SendString("\x1b[1;4D") },
   { key = "RightArrow", mods = "OPT|SHIFT", action = wezterm.action.SendString("\x1b[1;4C") },
 
-  -- Start / end of line selection (CMD+SHIFT extends selection to line start/end)
-  { key = "LeftArrow", mods = "CMD|SHIFT", action = wezterm.action.SendString("\x1b[97;6u") },
-  { key = "RightArrow", mods = "CMD|SHIFT", action = wezterm.action.SendString("\x1b[101;6u") },
-  { key = "LeftArrow", mods = "CTRL|SHIFT", action = wezterm.action.SendString("\x1b[97;6u") },
-  { key = "RightArrow", mods = "CTRL|SHIFT", action = wezterm.action.SendString("\x1b[101;6u") },
+  -- Start / end of line selection (CMD+SHIFT extends selection to line start/end).
+  -- Shift+Home and Shift+End rather than the CSI-u encoding of Shift+Ctrl+A/E:
+  -- zsh-shift-select binds both, but CSI-u is the Kitty keyboard protocol, which
+  -- tcell does not decode, so micro and every other tcell application ignored it.
+  { key = "LeftArrow", mods = "CMD|SHIFT", action = wezterm.action.SendString("\x1b[1;2H") },
+  { key = "RightArrow", mods = "CMD|SHIFT", action = wezterm.action.SendString("\x1b[1;2F") },
+  { key = "LeftArrow", mods = "CTRL|SHIFT", action = wezterm.action.SendString("\x1b[1;2H") },
+  { key = "RightArrow", mods = "CTRL|SHIFT", action = wezterm.action.SendString("\x1b[1;2F") },
 
   -- fzf/yazi preview scrolling: send the same bytes as alt-j/alt-k so
   -- ctrl+cmd+j/k trigger the preview-down/preview-up binds already set up

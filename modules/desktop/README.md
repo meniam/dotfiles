@@ -56,6 +56,15 @@ The Kitty and WezTerm keymaps include macOS shortcuts and Cyrillic-layout
 counterparts. The Kitty split helper uses remote control through
 `unix:/tmp/kitty` and prefers `jq`, falling back to Python for JSON parsing.
 
+Cmd+Shift and Ctrl+Shift with the arrow keys send the Shift+Home and Shift+End
+sequences `\x1b[1;2H` and `\x1b[1;2F`. They used to send `\x1b[97;6u` and
+`\x1b[101;6u`, the CSI-u encoding of Shift+Ctrl+A and Shift+Ctrl+E, which
+`zsh-shift-select` binds explicitly; that made the shortcut work on the command
+line only. CSI-u belongs to the Kitty keyboard protocol, and tcell does not
+decode it, so terminal applications built on tcell — micro among them — saw
+nothing at all. `zsh-shift-select` binds Shift+Home and Shift+End as well, so
+the command line keeps the behavior it had.
+
 ## System defaults
 
 macOS preferences belong to `cfprefsd`, which owns the plists under
