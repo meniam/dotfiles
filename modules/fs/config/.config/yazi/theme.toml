@@ -31,21 +31,29 @@ rules = [
 	# Green folders
 	{ url = "**/{doc,docs}/", fg = "#00ff5f", bold = true },
 
+	# White
+	{ url = "*.{config,var,log,logs,session,sessions}/", fg = "#e4e4e4", bold = true },
+	{ url = "**/{config,var,log,logs,session,sessions,data,storage,storages}/", fg = "#e4e4e4", bold = true },
+
 	# Yellow folders
-	{ url = "*.docker/", fg = "#d7af5f" },
-	{ url = "**/{config,webpack-configs,configs,plan,plans,translation,translations}/", fg = "#d7af5f" },
+	{ url = "*.{docker,plan,plans}/", fg = "#d7af5f" },
+	{ url = "**/{docker,webpack-configs,configs,plan,plans,translation,translations}/", fg = "#d7af5f" },
 
 	# AGENTS
-	{ url = "*.{agents,claude,pi}/", fg = "#ff87d7", bold = true },
+	{ url = "*.{agents,claude,codex,pi}/", fg = "#ff87d7", bold = true },
+	{ url = "**/skills/", fg = "#ff87d7", bold = true },
 
 	# src folders
-	{ url = "**/src/", fg = "#00d787", bold = true },
+	{ url = "**/{src,dist,target}/", fg = "#00d787", bold = true },
 
 	# special files
-	{ url = "**/{composer.json,docker-compose.yaml,compose.yaml,package.json,phpstan.neon}", fg = "#d75f00" },
+	{ url = "**/{composer.json,docker-compose.yaml,compose.yaml,docker-compose.yml,compose.yml,package.json,phpstan.neon,justfile,Makefile,phpunit.xml,postcss.config.js,tailwind.config.js,webpack.config.js,psalm.xml}", fg = "#d75f00" },
+
+	# special folders
+	{ url = "**/{public,web,uploads,assets}/", fg = "#005fff", bold = true },
 
 	# AGENTS docs (CLAUDE.md/AGENTS.md are files, not folders, unlike the rest of the AGENTS group above)
-	{ url = "**/{CLAUDE.md,AGENTS.md}", fg = "#ff87d7", bold = true },
+	{ url = "**/{CLAUDE.md,AGENTS.md,.mcp.json}", fg = "#ff87d7", bold = true },
 
 	# Important Docs
 	{ url = "**/{CHANGELOG,CHANGELOG.md,AUTHORS,CHANGES,CODEOWNERS,CONTRIBUTING,CONTRIBUTING.md,CONTRIBUTORS,COPYING,COPYRIGHT,README,README.md,README.rst}", fg = "#ffd700", bold = true },
@@ -55,12 +63,15 @@ rules = [
 	{ url = "*.{sh,BAT,bat,bash,zsh,fish,sed,vim,kak,nu}", fg = "#00d75f", bold = true },
 
 	# Backup / misc / trash
-	{ url = "*.{bak,dat,backup,old,out,sample,dist,socket,cache,pid,sock,swap,tmp,lock,swp,gitignore,syncignore,DS_Store,gitattributes,gitmodules,containerignore,CFUserTextEncoding,SKIP,aria2,dll,dylib,elc,eln,mdump,o,orig,part,pyc,rlib,scan,stackdump,zcompdump,zwc,un~,BUP,localized}", fg = "#555753" },
-	{ url = "**/{Makefile,LICENSE,justfile,_history,-lock.json,LICENSE.md,INSTALL,HISTORY,NOTICE,PATENTS,VERSION,Dockerfile,Containerfile,lock,lockfile,core,rc}", fg = "#555753" },
+	{ url = "*.{bak,dat,backup,old,out,sample,dist,socket,cache,pid,sock,swap,tmp,lock,swp,gitignore,syncignore,DS_Store,gitattributes,gitmodules,containerignore,CFUserTextEncoding,SKIP,aria2,dll,dylib,elc,eln,mdump,o,orig,part,pyc,rlib,scan,stackdump,zcompdump,zwc,un~,BUP,localized,cspell,aspell}", fg = "#555753" },
+	{ url = "*.dist.*", fg = "#555753" },
+	{ url = "*exclude*", fg = "#555753" },
+	{ url = "*.bak.*", fg = "#555753" },
+	{ url = "**/{LICENSE,_history,-lock.json,LICENSE.md,INSTALL,HISTORY,NOTICE,PATENTS,VERSION,Dockerfile,Containerfile,lock,lockfile,core,rc,bak,backup,backups,debug,rector-assert.php,skills-lock.json,phpstan-nb.neon,phpstan-baseline.neon,composer-unused.php,migrations,composer,package-lock.json}", fg = "#555753" },
 
 	# Crypto
 	{ url = "*.{pem,key,pub,p12,p7s,gpg,pgp,asc,sig,signature,enc,bfe}", fg = "#d75f5f" },
-	{ url = "**/{id_dsa,id_ecdsa,id_ed25519,id_rsa,authorized_keys,known_hosts}", fg = "#d75f5f" },
+	{ url = "**/{id_dsa,id_ecdsa,id_ed25519,id_rsa,authorized_keys,known_hosts,jwt,sert,cert}", fg = "#d75f5f" },
 
 	# Code
 	{ url = "*.{php,phpstub,js,ts,py}", fg = "#00d787" },
@@ -116,9 +127,11 @@ rules = [
 	{ url = "*.{css,scss,less,sass,sassc}", fg = "#8787ff", bold = true },
 
 	# Images
+	{ url = "**/{images,media,photos,img,thumb,thumbs,thumb_storage,imgs}/", fg = "#d75fd7" },
 	{ url = "*.{jpg,jpeg,gif,bmp,pbm,pgm,ppm,tga,xbm,xpm,tif,tiff,png,svg,svgz,mng,pcx,xcf,xwd,yuv,cgm,emf,webp,avif,JPG,TIFF,cdr,dicom,flif,icns,ico,jxl,psd,pxd,pxm,ai,drw,eps,epsf,ps}", fg = "#d75fd7" },
 
 	# Video
+	{ url = "**/video/", fg = "#ad7fa8", bold = true },
 	{ url = "*.{mov,mpg,mpeg,m2v,mkv,ogm,mp4,m4v,mp4v,vob,qt,nuv,wmv,asf,rm,rmvb,flc,avi,fli,flv,gl,dl,axv,anx,ogv,ogx,IFO,MOV,divx,f4v,3g2,3gp,VOB,webm}", fg = "#ad7fa8", bold = true },
 
 	# Audio

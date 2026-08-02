@@ -80,9 +80,11 @@ file_type:
   source: { foreground: '#bb9af7' }
 # Kept in sync with the LS_COLORS array in modules/zsh/config/.config/zsh/32-colors.zsh.
 filenames:
-  Makefile: { filename: { foreground: '#555753' } }
   LICENSE: { filename: { foreground: '#555753' } }
-  justfile: { filename: { foreground: '#555753' } }
+  bak: { filename: { foreground: '#555753' } }
+  backup: { filename: { foreground: '#555753' } }
+  backups: { filename: { foreground: '#555753' } }
+  debug: { filename: { foreground: '#555753' } }
   _history: { filename: { foreground: '#555753' } }
   -lock.json: { filename: { foreground: '#555753' } }
   LICENSE.md: { filename: { foreground: '#555753' } }
@@ -97,14 +99,26 @@ filenames:
   lockfile: { filename: { foreground: '#555753' } }
   core: { filename: { foreground: '#555753' } }
   rc: { filename: { foreground: '#555753' } }
+  rector-assert.php: { filename: { foreground: '#555753' } }
+  skills-lock.json: { filename: { foreground: '#555753' } }
+  phpstan-nb.neon: { filename: { foreground: '#555753' } }
+  phpstan-baseline.neon: { filename: { foreground: '#555753' } }
+  composer-unused.php: { filename: { foreground: '#555753' } }
+  migrations: { filename: { foreground: '#555753' } }
+  composer: { filename: { foreground: '#555753' } }
+  package-lock.json: { filename: { foreground: '#555753' } }
+  exclude: { filename: { foreground: '#555753' } }
   id_dsa: { filename: { foreground: '#d75f5f' } }
   id_ecdsa: { filename: { foreground: '#d75f5f' } }
   id_ed25519: { filename: { foreground: '#d75f5f' } }
   id_rsa: { filename: { foreground: '#d75f5f' } }
   authorized_keys: { filename: { foreground: '#d75f5f' } }
   known_hosts: { filename: { foreground: '#d75f5f' } }
+  jwt: { filename: { foreground: '#d75f5f' } }
+  sert: { filename: { foreground: '#d75f5f' } }
+  cert: { filename: { foreground: '#d75f5f' } }
   cfg: { filename: { foreground: '#87af87' } }
-  config: { filename: { foreground: '#d7af5f' } }
+  config: { filename: { foreground: '#e4e4e4' } }
   conf: { filename: { foreground: '#87af87' } }
   node_modules: { filename: { foreground: '#6c6c6c' } }
   vendor: { filename: { foreground: '#6c6c6c' } }
@@ -119,24 +133,54 @@ filenames:
   bin: { filename: { foreground: '#ffd75f' } }
   doc: { filename: { foreground: '#00ff5f' } }
   docs: { filename: { foreground: '#00ff5f' } }
+  .config: { filename: { foreground: '#e4e4e4' } }
+  var: { filename: { foreground: '#e4e4e4' } }
+  log: { filename: { foreground: '#e4e4e4' } }
+  logs: { filename: { foreground: '#e4e4e4' } }
+  session: { filename: { foreground: '#e4e4e4' } }
+  sessions: { filename: { foreground: '#e4e4e4' } }
+  data: { filename: { foreground: '#e4e4e4' } }
+  storage: { filename: { foreground: '#e4e4e4' } }
+  storages: { filename: { foreground: '#e4e4e4' } }
   .docker: { filename: { foreground: '#d7af5f' } }
+  docker: { filename: { foreground: '#d7af5f' } }
   webpack-configs: { filename: { foreground: '#d7af5f' } }
   configs: { filename: { foreground: '#d7af5f' } }
   plan: { filename: { foreground: '#d7af5f' } }
+  .plan: { filename: { foreground: '#d7af5f' } }
   plans: { filename: { foreground: '#d7af5f' } }
+  .plans: { filename: { foreground: '#d7af5f' } }
   translation: { filename: { foreground: '#d7af5f' } }
   translations: { filename: { foreground: '#d7af5f' } }
   .agents: { filename: { foreground: '#ff87d7' } }
   .claude: { filename: { foreground: '#ff87d7' } }
+  .codex: { filename: { foreground: '#ff87d7' } }
   .pi: { filename: { foreground: '#ff87d7' } }
   CLAUDE.md: { filename: { foreground: '#ff87d7' } }
   AGENTS.md: { filename: { foreground: '#ff87d7' } }
+  .mcp.json: { filename: { foreground: '#ff87d7' } }
+  skills: { filename: { foreground: '#ff87d7' } }
   src: { filename: { foreground: '#00d787' } }
+  dist: { filename: { foreground: '#00d787' } }
+  target: { filename: { foreground: '#00d787' } }
   composer.json: { filename: { foreground: '#d75f00' } }
   docker-compose.yaml: { filename: { foreground: '#d75f00' } }
   compose.yaml: { filename: { foreground: '#d75f00' } }
+  docker-compose.yml: { filename: { foreground: '#d75f00' } }
+  compose.yml: { filename: { foreground: '#d75f00' } }
   package.json: { filename: { foreground: '#d75f00' } }
   phpstan.neon: { filename: { foreground: '#d75f00' } }
+  justfile: { filename: { foreground: '#d75f00' } }
+  Makefile: { filename: { foreground: '#d75f00' } }
+  phpunit.xml: { filename: { foreground: '#d75f00' } }
+  postcss.config.js: { filename: { foreground: '#d75f00' } }
+  tailwind.config.js: { filename: { foreground: '#d75f00' } }
+  webpack.config.js: { filename: { foreground: '#d75f00' } }
+  psalm.xml: { filename: { foreground: '#d75f00' } }
+  public: { filename: { foreground: '#005fff' } }
+  web: { filename: { foreground: '#005fff' } }
+  uploads: { filename: { foreground: '#005fff' } }
+  assets: { filename: { foreground: '#005fff' } }
   CHANGELOG: { filename: { foreground: '#ffd700' } }
   CHANGELOG.md: { filename: { foreground: '#ffd700' } }
   AUTHORS: { filename: { foreground: '#ffd700' } }
@@ -151,6 +195,15 @@ filenames:
   README: { filename: { foreground: '#ffd700' } }
   README.md: { filename: { foreground: '#ffd700' } }
   README.rst: { filename: { foreground: '#ffd700' } }
+  images: { filename: { foreground: '#d75fd7' } }
+  media: { filename: { foreground: '#d75fd7' } }
+  photos: { filename: { foreground: '#d75fd7' } }
+  img: { filename: { foreground: '#d75fd7' } }
+  thumb: { filename: { foreground: '#d75fd7' } }
+  thumbs: { filename: { foreground: '#d75fd7' } }
+  thumb_storage: { filename: { foreground: '#d75fd7' } }
+  imgs: { filename: { foreground: '#d75fd7' } }
+  video: { filename: { foreground: '#ad7fa8' } }
 
 extensions:
   sh: { filename: { foreground: '#00d75f' } }
@@ -170,6 +223,8 @@ extensions:
   out: { filename: { foreground: '#555753' } }
   sample: { filename: { foreground: '#555753' } }
   dist: { filename: { foreground: '#555753' } }
+  cspell: { filename: { foreground: '#555753' } }
+  aspell: { filename: { foreground: '#555753' } }
   socket: { filename: { foreground: '#555753' } }
   cache: { filename: { foreground: '#555753' } }
   pid: { filename: { foreground: '#555753' } }
