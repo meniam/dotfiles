@@ -50,7 +50,10 @@ with_timeout() {
   local seconds="$1"
   shift
   if command -v timeout >/dev/null 2>&1; then
-    timeout "$seconds" "$@"
+    # -k: a process that has been stopped by a signal never acts on the
+    # SIGTERM sent at the deadline, so the timeout would wait forever on it.
+    # SIGKILL ten seconds later ends it whatever state it is in.
+    timeout -k 10 "$seconds" "$@"
   else
     "$@"
   fi
