@@ -240,6 +240,15 @@ tool-version and cloud contexts, and a clock. Git state comes from `gitstatusd`,
 daemon the theme downloads on first use, which is what keeps the status cheap in a
 large repository.
 
+That first-use download unpacks the binary under `$TMPDIR` and moves it into
+`${XDG_CACHE_HOME:-$HOME/.cache}/gitstatus/`, so the move crosses filesystems
+wherever `/tmp` is its own mount — a `tmpfs` on Debian 13, for instance. It still
+works with the coreutils `mv`, which falls back to a copy, but not with the `mv`
+that `zmodload zsh/files` defines: that one only calls `rename(2)` and fails with
+"invalid cross-device link", and Powerlevel10k reports the result as
+`gitstatus failed to initialize`. `10-history.zsh` therefore loads the one builtin
+it wants as `zf_mkdir` instead of the whole module.
+
 ### The settings file
 
 `~/.config/zsh/85-p10k.zsh` is a single tracked file, stowed from this module, and it

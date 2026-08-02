@@ -1,9 +1,14 @@
 # Store Zsh history in the cache directory defined for this module.
 zsh_cache_dir="${ZDOTDIR:-$HOME}/.cache/zsh"
 
-# Load Zsh's file builtins so cache setup works even with an incomplete PATH.
-zmodload zsh/files
-mkdir -p "$zsh_cache_dir"
+# Load Zsh's mkdir builtin so cache setup works even with an incomplete PATH.
+# Only the prefixed builtin: a plain `zmodload zsh/files` also defines mv, rm,
+# ln and chown, which then shadow the coreutils versions for the whole session.
+# The builtin mv only calls rename(2), so it fails with "invalid cross-device
+# link" where GNU mv copies — which breaks the gitstatusd download on any host
+# whose /tmp is a separate filesystem, and reports it as a broken prompt.
+zmodload -F zsh/files b:zf_mkdir
+zf_mkdir -p "$zsh_cache_dir"
 
 # Keep the legacy history capacity in memory and on disk.
 HISTFILE="$zsh_cache_dir/.zhistory"

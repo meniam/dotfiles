@@ -53,6 +53,7 @@ Both Powerlevel10k lines in `.zshrc` are written in the literal form `p10k confi
 ## General Rules
 
 - Store Zsh cache and history files in `${ZDOTDIR:-$HOME}/.cache/zsh/`.
+- Load Zsh modules with `zmodload -F module b:builtin`, naming the builtins wanted. A bare `zmodload zsh/files` shadows `mv`, `rm`, `ln`, `chown` and friends for the rest of the session, and the builtins are not drop-in replacements: `mv` only calls `rename(2)`, so it cannot move a file to another filesystem.
 - Keep shared configuration portable across macOS and Debian/Ubuntu; guard platform-specific commands or paths when needed.
 - Do not add credentials, tokens, personal hostnames, or machine-specific values to tracked files; use the local override file instead.
 
