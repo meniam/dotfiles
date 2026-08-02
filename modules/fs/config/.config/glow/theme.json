@@ -22,7 +22,7 @@
 		"prefix": " ",
 		"suffix": " ",
 		"color": "231",
-		"background_color": "23",
+		"background_color": "53",
 		"bold": true
 	},
 	"h2": {
@@ -87,8 +87,8 @@
 		"format": "Image: {{.text}} →"
 	},
 	"code": {
-		"prefix": "`",
-		"suffix": "`",
+		"prefix": " ",
+		"suffix": " ",
 		"color": "220",
 		"bold": true,
 		"background_color": "#1f252d"
