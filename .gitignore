@@ -4,7 +4,6 @@
 /gist
 /docs
 .vscode/*
-!.vscode/settings.json
 .backups
 .DS_Store
 .ruff_cache
