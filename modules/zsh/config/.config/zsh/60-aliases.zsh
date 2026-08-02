@@ -87,3 +87,9 @@ alias hs='cd /Users/eugene/www/myazin/hs'
 alias hsv='cd /Users/eugene/www/myazin/hs && code .'
 
 alias bmd='bat -l md'
+
+# glow 2.1.2 reads ~/Library/Preferences/glow/glow.yml (or ~/.config/glow/glow.yml
+# on Linux) but applies neither `style` nor `width` from it: the default of the
+# matching flag wins, and GLOW_STYLE and GLAMOUR_STYLE are ignored too. So the
+# theme has to be passed on every call.
+alias glow='glow --style "${XDG_CONFIG_HOME:-$HOME/.config}/glow/theme.json"'
