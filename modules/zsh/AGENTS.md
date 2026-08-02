@@ -21,7 +21,8 @@ The module is stowed into the user's home directory with this layout:
 └── 90-local.zsh        # Untracked machine-specific overrides
 
 ~/.local/bin/
-└── dc                  # Docker Compose front end, usable outside interactive Zsh
+├── dc                  # Docker Compose front end, usable outside interactive Zsh
+└── ss                  # SSH host picker over ~/.ssh/config, same
 
 ~/.local/share/dc/docs/
 └── <command>.md        # One page per dc command, shown in its fzf preview

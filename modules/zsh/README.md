@@ -42,7 +42,7 @@ in lexical order, and finally sources the prompt settings.
 | `40-completion.zsh` | Zsh completion styles, compinit cache, Just completions, and the fzf integration lookup and completion trigger. |
 | `50-plugins.zsh` | Zinit bootstrap, plugins, selection behavior, command-line clipboard support, and the fzf key bindings. |
 | `60-aliases.zsh` | Navigation, file, development, system, archive, and convenience aliases. |
-| `70-functions.zsh` | Git prompt state, Yazi directory changes, weather, tmux workspace, UUID, Pi helpers, and the SSH host picker. |
+| `70-functions.zsh` | Git prompt state, Yazi directory changes, weather, tmux workspace, UUID, and Pi helpers. |
 | `80-prompt.zsh` | Fallback prompt for a shell where the theme did not load. |
 | `85-p10k.zsh` | Powerlevel10k settings, generated in full by `p10k configure`. |
 | `90-local.zsh` | Loads the optional untracked `${ZDOTDIR:-$HOME}/.zshrc.local`. |
@@ -59,8 +59,10 @@ module, so a machine without that module never sees the file.
 `32-colors.zsh` has to load before `40-completion.zsh`, whose `list-colors`
 zstyle reads `LS_COLORS`.
 
-The module also stows the `dc` script into `~/.local/bin/`, a directory
-`20-path.zsh` puts on `PATH`. See [Compose shortcut](#compose-shortcut).
+The module also stows the `dc` and `ss` scripts into `~/.local/bin/`, a
+directory `20-path.zsh` puts on `PATH`. See
+[Compose shortcut](#compose-shortcut) and
+[SSH host picker](#ssh-host-picker).
 
 Keep new settings in the file responsible for their category so ordering stays
 predictable. Machine-specific paths, hosts, credentials, and private settings
@@ -81,9 +83,7 @@ loads:
 Completion uses a cached `.zcompdump`, case-insensitive matching, grouped menu
 selection, generated Just completions, and the package-manager-specific fzf
 completion script. Regular Tab remains Zsh completion; `~~` followed by Tab is
-the configured fzf completion trigger. One exception: typing `ss` first
-intercepts both Tab and Enter for the [SSH host picker](#ssh-host-picker)
-below instead.
+the configured fzf completion trigger.
 
 ## fzf key bindings
 
@@ -116,11 +116,21 @@ and the fuzzy search coexist.
 
 ## SSH host picker
 
-Typing `ss`, `ss ` (trailing space), or `ss <query>` and then pressing Tab or
-Enter opens an fzf picker of SSH hosts instead of running a literal `ss`
-command, completing normally, or submitting the line; `<query>` prefills fzf's
-search. Selecting a host runs `ssh <host>`; canceling leaves the buffer as
-typed.
+`~/.local/bin/ss` connects to a host from `~/.ssh/config`. It is a script
+rather than a shell widget so that it also works from a script, another shell,
+or a `tmux` command, and so that the line stays an ordinary command in the
+history.
+
+| Invocation | Runs |
+| --- | --- |
+| `ss` | An fzf picker of the configured hosts, then `ssh <host>` |
+| `ss <query>` | The same picker with its search prefilled |
+| `ss <host> [args]` | `ssh <host> [args]` without a picker |
+
+A first argument that names a configured host, alias included, connects
+directly; anything else is a search query. Without a terminal or without `fzf`
+the picker is refused with a message instead of hanging, so only the direct
+form works there.
 
 Hosts come from `~/.ssh/config` and its Include'd `config.local` and
 `config.d/*.conf` — the `ssh` module's layout for private, untracked per-host
@@ -128,11 +138,15 @@ configuration — skipping wildcard patterns such as `Host *`. A `Host` line
 with several names is shown as `main-name (alias, alias)`; connecting strips
 the parenthesized part and uses `main-name`.
 
-`ssh-fzf-connect` wraps Tab: anything other than the trigger falls through to
-`fzf-completion` (bound in `completion.zsh`), so the `~~` fuzzy-completion
-trigger still works. `ssh-fzf-accept-line` wraps Enter (bound to `^M`) the
-same way, falling through to the real `.accept-line` widget. Both widgets
-require `fzf` to be on `PATH` and no-op to their normal behavior otherwise.
+The preview pane shows the highlighted host's config block, rendered with
+`bat` when it is installed, and drops the trailing blank lines and comments,
+which belong to the next host. It replaces the `bat` file preview inherited
+from `FZF_DEFAULT_OPTS`, which reports every host name as a missing file, and
+it re-enters the script as `ss --preview-host <line>` rather than carrying an
+awk program inside an fzf option string.
+
+On Linux this shadows iproute2's `ss` for as long as `~/.local/bin` comes
+first on `PATH`; the socket statistics tool stays reachable as `/usr/sbin/ss`.
 
 ## Compose shortcut
 
