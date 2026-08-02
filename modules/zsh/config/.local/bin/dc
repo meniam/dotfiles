@@ -1,0 +1,291 @@
+#!/usr/bin/env bash
+# dc - short front end for the Docker Compose commands typed most often.
+#
+# Called with no arguments it opens an fzf picker of those commands, with the
+# documentation under ~/.local/share/dc/docs shown beside the list, and then a
+# picker of the services in the current project.
+#
+# Anything Compose can do beyond these five is typed as `docker compose ...`;
+# this is deliberately not a wrapper around the whole CLI.
+#
+# Compose v2 is a `docker` subcommand; the standalone `docker-compose` binary is
+# only used when the plugin is missing.
+set -euo pipefail
+
+program="${0##*/}"
+docs="${XDG_DATA_HOME:-$HOME/.local/share}/dc/docs"
+
+# The service preview re-enters this script, so it needs a path fzf's shell can
+# run. $0 is already a path unless the script was found on PATH.
+self="$0"
+case "$self" in
+  */*) ;;
+  *) self="$(command -v -- "$self")" ;;
+esac
+
+# The whole-project entry of the service picker. Square brackets are not legal
+# in a Compose service name, so it cannot collide with a real service.
+all_services='[ALL]'
+
+die() {
+  printf '%s: %s\n' "$program" "$1" >&2
+  exit 1
+}
+
+usage() {
+  cat <<'USAGE'
+Usage: dc [command] [service...]
+
+  up [service...]        Start in the background, recreating the containers
+  down [service...]      Stop and remove the containers
+  rebuild [service...]   Build without cache, pulling fresh base images, then up
+  logs [service...]      Follow the logs
+  shell <service>        Open a shell inside one running service
+
+With no command, an fzf picker offers the five above with their
+documentation, followed by a picker of this project's services.
+USAGE
+}
+
+# --------------------------------------------------------------------------
+# Compose command
+# --------------------------------------------------------------------------
+
+compose=""
+if command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
+  compose="docker compose"
+elif command -v docker-compose >/dev/null 2>&1; then
+  compose="docker-compose"
+else
+  die "Docker Compose is not available. Install Docker with the Compose plugin."
+fi
+
+run() {
+  printf '%s: %s %s\n' "$program" "$compose" "$*" >&2
+  # Word splitting on $compose is intentional: it is either one word or two.
+  # shellcheck disable=SC2086
+  $compose "$@"
+}
+
+# --------------------------------------------------------------------------
+# Picker
+#
+# The first field of a menu line is the command; the rest is the one-line
+# summary and is never parsed back. The full description lives in
+# $docs/<command>.md and is rendered in fzf's preview pane.
+# --------------------------------------------------------------------------
+
+menu() {
+  cat <<'MENU'
+up        Start in the background, recreating the containers
+down      Stop and remove the containers
+rebuild   Rebuild the images from scratch, then start
+logs      Follow the logs
+shell     Open a shell inside one running service
+MENU
+}
+
+# fzf runs the preview through sh, so the paths have to be baked into the
+# string here rather than left as variables.
+preview_command() {
+  [ -d "$docs" ] || return 0
+
+  if command -v glow >/dev/null 2>&1; then
+    # glow 2.1.2 reads neither its configuration file nor GLOW_STYLE, so the
+    # theme the fs module stows has to be passed per call.
+    theme="${XDG_CONFIG_HOME:-$HOME/.config}/glow/theme.json"
+    style=""
+    [ ! -f "$theme" ] || style="--style '$theme'"
+    # fzf reads the preview through a pipe, which drops glow's colour profile
+    # to bold-only; CLICOLOR_FORCE puts the full palette back. fzf expands
+    # FZF_PREVIEW_COLUMNS and {1}, so they stay unexpanded here.
+    # shellcheck disable=SC2016
+    # </dev/null because glow prefers stdin over its path argument whenever
+    # stdin is not a terminal, and would render nothing at all if fzf handed
+    # the preview an empty pipe.
+    printf 'CLICOLOR_FORCE=1 glow %s --width $FZF_PREVIEW_COLUMNS %s/{1}.md </dev/null' "$style" "$docs"
+  else
+    printf 'cat %s/{1}.md' "$docs"
+  fi
+}
+
+# Cancelling a picker leaves the whole command cancelled, so its exit status
+# has to be caught before `set -e` turns it into an error message. fzf exits
+# 130 when it is aborted and 1 when nothing matched.
+#
+# Ctrl-Q is bound to abort here because fzf only ships Esc and Ctrl-C.
+run_fzf() {
+  status=0
+  chosen="$(fzf --bind=ctrl-q:abort "$@")" || status=$?
+  case "$status" in
+    0) printf '%s' "$chosen" ;;
+    1 | 130) exit 130 ;;
+    *) die "fzf exited with status $status." ;;
+  esac
+}
+
+pick_command() {
+  preview="$(preview_command)"
+  set -- --height=60% --reverse --no-multi --prompt='dc > '
+  [ -z "$preview" ] || set -- "$@" --preview="$preview" --preview-window='right,60%,wrap'
+  menu | run_fzf "$@" | awk '{ print $1 }'
+}
+
+# Preview for the service picker, run by fzf as `dc --preview-service <name>
+# <file>`. The file is the project configuration Compose resolved once, before
+# the picker opened: running `docker compose config` per keystroke would make
+# moving through the list as slow as Compose is on a large project.
+preview_service() {
+  name="$1"
+  resolved="$2"
+
+  if [ "$name" = "$all_services" ]; then
+    body="$(cat "$resolved")"
+  else
+    # `config` normalizes the document, so a service is always a two-space key
+    # whose body is indented by four or more. The name is compared as a string
+    # rather than a pattern, because it may contain regex characters, and the
+    # section ends at the next line that is neither blank nor part of the body
+    # — the following service, or a top-level key such as `networks:`.
+    body="$(awk -v service="$name" '
+      $0 == "  " service ":" { inside = 1; print; next }
+      inside && !/^    / && !/^[[:space:]]*$/ { inside = 0 }
+      inside { print }
+    ' "$resolved")"
+  fi
+
+  if [ -z "$body" ]; then
+    printf 'No resolved configuration for %s.\n' "$name"
+    return 0
+  fi
+
+  if command -v bat >/dev/null 2>&1; then
+    printf '%s\n' "$body" |
+      bat --color=always --language=yaml --style=plain --paging=never
+  else
+    printf '%s\n' "$body"
+  fi
+}
+
+pick_services() {
+  # `config --services` lists what the Compose file declares, which is what
+  # these commands accept; `ps --services` would only list what is running.
+  services="$($compose config --services 2>/dev/null || true)"
+  [ -n "$services" ] || return 0
+
+  # One resolution of the project for the whole picker session. The subshell
+  # this function runs in takes the file with it.
+  resolved="$(mktemp "${TMPDIR:-/tmp}/dc-config.XXXXXX")"
+  trap 'rm -f "$resolved"' EXIT HUP INT TERM
+  $compose config >"$resolved" 2>/dev/null || : >"$resolved"
+
+  if [ "$1" = "shell" ]; then
+    # A shell runs in exactly one container, so there is no whole-project entry
+    # and no multiple selection.
+    set -- --no-multi --prompt='shell in > '
+  else
+    # Running against the whole project is an explicit entry rather than an
+    # empty selection: it sits first, so it is what the cursor starts on and
+    # Enter runs, and choosing it stays a deliberate keystroke.
+    services="$(printf '%s\n%s\n' "$all_services" "$services")"
+    set -- --multi --prompt="$1 (Tab marks several) > "
+  fi
+
+  # The preview replaces the bat file preview inherited from FZF_DEFAULT_OPTS,
+  # which would report a missing file for every service name. fzf quotes {1}
+  # itself, so the name reaches the script as one argument.
+  printf '%s\n' "$services" |
+    run_fzf --height=60% --reverse \
+      --preview="'$self' --preview-service {1} '$resolved'" \
+      --preview-window='right,60%' "$@"
+}
+
+interactive() {
+  command -v fzf >/dev/null 2>&1 || die "fzf is not on PATH. Run 'dc --help' for the commands."
+  { [ -t 0 ] && [ -t 2 ]; } || die "no terminal for the picker. Pass a command instead."
+
+  # A picker runs in a command substitution, so its exit ends that subshell
+  # rather than the script; the status has to be carried out by hand. 130 is
+  # the aborted picker, anything else non-zero is a failure that already
+  # explained itself.
+  status=0
+  selected="$(pick_command)" || status=$?
+  [ "$status" -eq 0 ] || exit "$status"
+
+  services="$(pick_services "$selected")" || status=$?
+  [ "$status" -eq 0 ] || exit "$status"
+
+  # The whole-project entry stands for "no service argument", and it wins over
+  # anything else marked with it.
+  if printf '%s\n' "$services" | grep -qxF "$all_services"; then
+    services=""
+  fi
+
+  # Intentional word splitting: one service per line, and a Compose service
+  # name cannot contain whitespace.
+  # shellcheck disable=SC2086
+  set -- "$selected" $services
+  dispatch "$@"
+}
+
+# --------------------------------------------------------------------------
+# Commands
+# --------------------------------------------------------------------------
+
+dispatch() {
+  case "$1" in
+    up)
+      shift
+      # --force-recreate replaces containers whose configuration Compose
+      # considers unchanged, which is the point of typing this instead of plain
+      # `up -d`.
+      run up -d --force-recreate "$@"
+      ;;
+    down)
+      shift
+      run down "$@"
+      ;;
+    rebuild)
+      shift
+      # --no-cache defeats a stale layer cache and --pull refreshes the base
+      # image, so the result matches a build on a machine that never saw this
+      # project. The containers are then replaced by the freshly built images.
+      run build --pull --no-cache "$@"
+      run up -d --force-recreate "$@"
+      ;;
+    logs)
+      shift
+      run logs -f "$@"
+      ;;
+    shell)
+      shift
+      [ $# -eq 1 ] || die "shell takes exactly one service."
+      # Not every image ships bash, and neither the picker nor the caller can
+      # know which does, so the choice is made inside the container.
+      run exec "$1" sh -c 'command -v bash >/dev/null 2>&1 && exec bash || exec sh'
+      ;;
+    *)
+      usage >&2
+      die "unknown command: $1"
+      ;;
+  esac
+}
+
+case "${1:-}" in
+  "")
+    interactive
+    ;;
+  -h | --help | help)
+    usage
+    ;;
+  --preview-service)
+    # Internal: the service picker's preview calls the script back rather than
+    # baking the whole awk program into an fzf option string.
+    shift
+    [ $# -eq 2 ] || die "--preview-service takes a service and a file."
+    preview_service "$1" "$2"
+    ;;
+  *)
+    dispatch "$@"
+    ;;
+esac

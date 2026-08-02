@@ -47,6 +47,9 @@ module, so a machine without that module never sees the file.
 `32-colors.zsh` has to load before `40-completion.zsh`, whose `list-colors`
 zstyle reads `LS_COLORS`.
 
+The module also stows the `dc` script into `~/.local/bin/`, a directory
+`20-path.zsh` puts on `PATH`. See [Compose shortcut](#compose-shortcut).
+
 Keep new settings in the file responsible for their category so ordering stays
 predictable. Machine-specific paths, hosts, credentials, and private settings
 belong in `.zshrc.local`, not in tracked files.
@@ -118,6 +121,77 @@ the parenthesized part and uses `main-name`.
 trigger still works. `ssh-fzf-accept-line` wraps Enter (bound to `^M`) the
 same way, falling through to the real `.accept-line` widget. Both widgets
 require `fzf` to be on `PATH` and no-op to their normal behavior otherwise.
+
+## Compose shortcut
+
+`~/.local/bin/dc` shortens the Docker Compose commands typed most often. It is
+a script rather than an alias because an alias cannot expand a subcommand into
+different flags, and because it stays usable from scripts and other shells.
+
+| Invocation | Runs |
+| --- | --- |
+| `dc` | An fzf picker of the commands below, then one of this project's services |
+| `dc up [service...]` | `docker compose up -d --force-recreate [service...]` |
+| `dc down [service...]` | `docker compose down [service...]` |
+| `dc rebuild [service...]` | `docker compose build --pull --no-cache [service...]`, then the `up` above |
+| `dc logs [service...]` | `docker compose logs -f [service...]` |
+| `dc shell <service>` | `docker compose exec <service> bash`, falling back to `sh` |
+
+`rebuild` combines a cacheless build with a refreshed base image, so the result
+matches a build on a machine that never saw the project, and then replaces the
+running containers with the images it just built. `shell` asks for `bash` and
+falls back to `sh` inside the container, since many images ship only the
+latter.
+
+That list is the whole command set. Anything else is an error rather than a
+pass-through to Compose, so `dc` stays a small, memorable set of shortcuts and
+the rest of the CLI is typed as `docker compose ...`.
+
+`dc` with no command opens an fzf picker of the five, with the matching
+`~/.local/share/dc/docs/<command>.md` rendered beside the list by glow — one
+page per command explaining what it does, what it leaves alone, and when to
+reach for something else. Without glow the page is shown unrendered; without
+the directory the preview pane is omitted.
+
+The preview call carries two workarounds. `CLICOLOR_FORCE=1` restores the
+palette glow drops to bold-only when its output is a pipe, which a preview
+always is, and `</dev/null` keeps glow from preferring an empty stdin over the
+file it was given. The theme is the `fs` module's `~/.config/glow/theme.json`,
+passed per call because glow 2.1.2 reads neither its configuration file nor
+`GLOW_STYLE`.
+
+Choosing a command opens a second picker filled from
+`docker compose config --services`, so it lists what the Compose file declares
+rather than what happens to be running. Its first entry is `[ALL]`, which runs
+the command against the whole project; it is where the cursor starts, so
+running everything is one Enter, and it is still an explicit choice rather than
+the result of selecting nothing. Tab marks several services. `shell` is the
+exception: it takes exactly one service, so its picker is single-selection and
+has no `[ALL]` entry. Square brackets cannot occur in a Compose service name,
+so the entry cannot collide with a real one.
+
+The service picker previews the configuration Compose resolved for the service
+under the cursor — the merged result of every Compose file, override, and
+variable, not the source text — highlighted by bat when it is installed.
+`[ALL]` previews the whole project. The project is resolved once when the
+picker opens and cached in a temporary file, because running
+`docker compose config` per keystroke would make moving through the list as
+slow as Compose is on a large project. The preview re-enters the script as
+`dc --preview-service <name> <file>`, which also replaces the bat file preview
+inherited from `FZF_DEFAULT_OPTS` — that one treats each service name as a
+path and reports a missing file.
+
+Esc, Ctrl+C, and Ctrl+Q abort either picker and cancel the whole command,
+leaving exit status 130 and nothing run.
+
+Both pickers require `fzf` and a terminal — without either, `dc` with no
+arguments explains itself instead of guessing.
+
+The script prefers the `docker compose` plugin and falls back to a standalone
+`docker-compose` binary, exiting with an error when neither exists. Docker
+itself is not installed by this module; the `docker` module does that on the
+machines that need it, and `dc` works the same way against a Docker installed
+by any other means.
 
 ## Prompt
 
@@ -200,9 +274,10 @@ prompt: user, host, working directory, and `git_prompt_info` from
   dependency. The Alt+C preview prefers eza from the `fs` module and falls back
   to `ls`.
 - the `y` function runs Yazi and changes the shell to Yazi's final directory.
-- tmux, Docker, Git, filesystem, and media shortcuts become useful when their
-  corresponding modules are installed; unavailable commands are not installed
-  by this module automatically.
+- tmux, Docker, Git, filesystem, and media shortcuts, including the `dc`
+  [Compose shortcut](#compose-shortcut), become useful when their corresponding
+  modules are installed; unavailable commands are not installed by this module
+  automatically.
 - The [SSH host picker](#ssh-host-picker) lists hosts from `~/.ssh/config`;
   the `ssh` module's `config.local` and `config.d/*.conf` Includes are what
   make it show anything beyond the tracked config's catch-all `Host *`.
