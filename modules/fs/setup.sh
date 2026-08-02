@@ -4,7 +4,21 @@ set -euo pipefail
 . "$DOTFILES_DIR/lib/common.sh"
 detect_os
 
-if [ "$OS" = "linux" ] && ! { command -v yazi >/dev/null 2>&1 && yazi --version >/dev/null 2>&1; }; then
+# The sanity check runs against an empty config directory on purpose. Yazi
+# loads the configuration before it prints its version, and a theme.toml naming
+# a flavor that `ya pkg install` has not fetched yet stops it on a "Press
+# <Enter> to continue with preset settings..." prompt: an endless wait wherever
+# stdin is a terminal, and a non-zero exit that would order a fresh download of
+# a perfectly working binary wherever it is not.
+yazi_is_usable=false
+if command -v yazi >/dev/null 2>&1; then
+  yazi_probe_home="$(mktemp -d)"
+  YAZI_CONFIG_HOME="$yazi_probe_home" yazi --version >/dev/null 2>&1 </dev/null &&
+    yazi_is_usable=true
+  rm -rf "$yazi_probe_home"
+fi
+
+if [ "$OS" = "linux" ] && [ "$yazi_is_usable" = false ]; then
   case "$(uname -m)" in
     x86_64|amd64) target="x86_64-unknown-linux-musl" ;;
     aarch64|arm64) target="aarch64-unknown-linux-musl" ;;
@@ -53,7 +67,7 @@ if command -v ya >/dev/null 2>&1; then
   # quiet flag; keep it captured and only surface it if the install fails.
   pkg_log="$(mktemp)"
   trap 'rm -f "$pkg_log"' EXIT HUP INT TERM
-  if ! ya pkg install >"$pkg_log" 2>&1; then
+  if ! ya pkg install >"$pkg_log" 2>&1 </dev/null; then
     warn "Yazi plugins could not be installed automatically."
     cat "$pkg_log" >&2
   fi
