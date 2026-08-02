@@ -464,6 +464,11 @@ run = ["plugin autosave", "quit --no-cwd-file"]
 desc = "Quit without writing the cwd file"
 
 [[mgr.prepend_keymap]]
+on = "<C-q>"
+run = ["plugin autosave", "quit"]
+desc = "Quit"
+
+[[mgr.prepend_keymap]]
 on = "l"
 run = ["enter", "plugin autosave"]
 desc = "Enter directory"
