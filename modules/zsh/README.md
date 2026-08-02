@@ -15,9 +15,11 @@ included. Two details of that shell matter:
 - The pseudo-terminal is what lets Zsh enable `zle`, which Powerlevel10k needs
   to start `gitstatusd`. Priming on a plain pipe reports that it cannot change
   the `zle` option and that gitstatus failed to initialize.
-- `TERM` is defaulted to `xterm-256color` when the installer inherits none, as
-  it does over SSH without a TTY. Without it the run stops after the
-  Powerlevel10k clone and leaves the remaining plugins to the first shell.
+- `TERM` is replaced with `xterm-256color` when it is empty, `dumb`, or
+  `unknown` — which is what an installer started over SSH without a TTY gets,
+  since Bash substitutes `dumb` for the missing value. On `dumb` the run stops
+  after the Powerlevel10k clone and leaves the remaining plugins to the first
+  shell.
 
 The output of the priming run is shown only when it fails, and a timeout leaves
 plugin installation for the first normal shell. The `gitstatusd` binary is not

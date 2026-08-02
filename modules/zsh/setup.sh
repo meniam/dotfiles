@@ -49,11 +49,15 @@ else
 fi
 
 # A terminal type has to come with the terminal. An installer started over SSH
-# without a TTY inherits no TERM, and the Zinit run then dies right after the
-# Powerlevel10k clone — three of the seven plugins arrive and the rest are left
-# for the first interactive shell. The value only has to name a terminal the
-# terminfo database knows; the pseudo-terminal itself accepts anything.
-export TERM="${TERM:-xterm-256color}"
+# without a TTY inherits no TERM and Bash hands this script `dumb` instead, on
+# which the Zinit run dies right after the Powerlevel10k clone: three of the
+# seven plugins arrive and the rest are left for the first interactive shell,
+# which is the stall the priming exists to avoid. The value only has to name a
+# terminal terminfo knows; the pseudo-terminal itself accepts anything.
+case "${TERM:-}" in
+  "" | dumb | unknown) TERM="xterm-256color" ;;
+esac
+export TERM
 
 # 180s rather than 120s: the run also clones Powerlevel10k, whose repository is
 # the largest of the set.
