@@ -24,6 +24,7 @@ alias lla='ls --color=auto -laphc'
 
 # Let eza's bundled theme control file colors instead of inherited LS_COLORS rules.
 alias ll='env -u LS_COLORS -u EZA_COLORS eza --tree --level=1 --long --group --icons=always --group-directories-first'
+alias lll='env -u LS_COLORS -u EZA_COLORS eza --tree --level=1 --long --group --icons=always --group-directories-first --all'
 alias ll1='env -u LS_COLORS -u EZA_COLORS eza --tree --level=1 --long --group --icons=always --group-directories-first'
 alias ll2='env -u LS_COLORS -u EZA_COLORS eza --tree --level=2 --long --group --icons=always --group-directories-first'
 alias du='du -h'
@@ -44,6 +45,8 @@ alias tc='tmux new-session -s'
 alias tl='tmux list-sessions'
 alias dc='docker-compose'
 alias lzd='lazydocker'
+alias lzg='lazygit'
+alias rd='revdiff --theme=basic'
 alias pgt='pg_top -h localhost -U postgres'
 alias pga='pg_activity -h localhost -U postgres'
 
