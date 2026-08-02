@@ -110,7 +110,7 @@ unset python_startup_file
 # Configure FZF to search with fd and display bat previews.
 export FZF_DEFAULT_COMMAND="fd --type file --color=always"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_DEFAULT_OPTS="--ansi --preview-window 'right:60%' --preview 'bat --color=always --style=header,grid --line-range :300 {}'"
+export FZF_DEFAULT_OPTS="--ansi --preview-window 'right:60%' --preview 'bat --color=always --style=header,grid --line-range :300 {}' --bind='alt-j:preview-down,alt-k:preview-up,ctrl-alt-j:preview-page-down,ctrl-alt-k:preview-page-up'"
 
 # Options for the Alt+C widget bound in 50-plugins.zsh, which changes to a
 # directory below the current one. Directories are the candidates here, so the
