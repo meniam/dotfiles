@@ -1,5 +1,6 @@
 gist
 docs
+.backups
 .ruff_cache
 theme-builder.html
 modules/git/config/.config/git/work.conf

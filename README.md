@@ -14,7 +14,7 @@ Machine-specific values and secrets are intentionally excluded.
 - Homebrew bootstrap, formula, and cask manifests on macOS
 - APT package manifests on Debian/Ubuntu Linux
 - GNU Stow linking of module payloads into `$HOME`
-- Conflict backups under `~/.dotfiles-backups/`
+- Conflict backups under `.backups/` in the repository
 - Optional idempotent setup scripts and installation probes per module
 - Read-only list, selection, and status commands
 
@@ -175,7 +175,7 @@ modules/nvim/config/.config/nvim -> ~/.config/nvim
 ```
 
 Before Stow runs, a conflicting regular file or foreign symbolic link is moved
-to a timestamped directory under `~/.dotfiles-backups/`. Links already owned by
+to a timestamped directory under `.backups/` in the repository. Links already owned by
 this repository are restowed. Targets beneath a symlinked parent directory are
 left untouched to avoid modifying files outside the expected home path.
 

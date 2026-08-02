@@ -293,8 +293,8 @@ stow_module() {
   [ -n "${HOME:-}" ] || die "HOME is not set; refusing to touch dotfiles."
 
   local backup_root relative target backup target_dir repo_root destination
-  backup_root="$HOME/.dotfiles-backups/$(date +%Y%m%d-%H%M%S)-$$"
   repo_root="$(cd -P "${DOTFILES_DIR:-$module_dir/../..}" && pwd -P)"
+  backup_root="$repo_root/.backups/$(date +%Y%m%d-%H%M%S)-$$"
   while IFS= read -r relative; do
     relative="${relative#./}"
     target="$HOME/$relative"
