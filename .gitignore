@@ -1,5 +1,8 @@
-gist
-docs
+# Anchored to the repository root: an unanchored pattern also matches a
+# directory of the same name inside a module payload, which silently kept
+# modules/zsh/config/.local/share/dc/docs out of the repository.
+/gist
+/docs
 .vscode/*
 !.vscode/settings.json
 .backups
