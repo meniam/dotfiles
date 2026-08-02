@@ -19,7 +19,7 @@ managing files and disk space.
 | [zoxide](https://github.com/ajeetdsouza/zoxide) | Learns frequently used directories and powers Yazi's jump keymap. |
 | [tree](https://oldmanprogrammer.net/source.php?dir=projects/tree) | Displays directory hierarchies. |
 | [file](https://darwinsys.com/file/) | Identifies file types from their contents. |
-| [bat](https://github.com/sharkdp/bat) | Displays files with syntax highlighting and Git integration. |
+| [bat](https://github.com/sharkdp/bat) | Displays files with syntax highlighting and Git integration. The bundled Catppuccin themes arrived in 0.26.0, so on Linux `setup.sh` replaces an older APT build with the release binary. |
 | [GNU Stow](https://www.gnu.org/software/stow/) | Manages sets of symbolic links, including this repository's payloads. |
 | [entr](https://eradman.com/entrproject/) | Runs a command when watched files change. |
 | [Glow](https://github.com/charmbracelet/glow) | Renders Markdown in the terminal. |

@@ -170,8 +170,9 @@ install_release_binary() {
 }
 
 # duckdb, typst, watchexec, sd, and choose reach Debian and Ubuntu late, so the
-# installer skips them wherever APT has no candidate. Upstream publishes each of
-# them as a static binary, so take the release the way Yazi and Ouch already do.
+# installer skips them wherever APT has no candidate, and the bat those releases
+# do package predates the themes this module configures. Upstream publishes each
+# of them as a static binary, so take the release the way Yazi and Ouch already do.
 if [ "$OS" = "linux" ]; then
   case "$(uname -m)" in
     x86_64|amd64)
@@ -193,7 +194,7 @@ if [ "$OS" = "linux" ]; then
   esac
 
   if [ -z "$musl_target" ]; then
-    warn "No upstream release covers $(uname -m); duckdb, typst, watchexec, sd, and choose stay unavailable."
+    warn "No upstream release covers $(uname -m); duckdb, typst, watchexec, sd, and choose stay unavailable, and bat keeps whatever APT packaged."
   else
     # tar shells out to `xz`, which a minimal installation may not carry, and
     # both watchexec and typst publish their Linux builds as .tar.xz only.
@@ -243,6 +244,34 @@ if [ "$OS" = "linux" ]; then
       install_release_binary \
         "https://github.com/theryangeary/choose/releases/latest/download/$choose_asset" choose ||
         warn "'choose' could not be installed from its upstream release."
+    fi
+
+    # bat carries the Catppuccin themes config/.config/bat/config selects only
+    # from 0.26.0 onwards. Debian and Ubuntu still package an older release,
+    # which prints "Unknown theme 'Catppuccin Mocha', using default" on every
+    # run, so replace it with the upstream binary whenever it is too old. That
+    # also installs it under its real name rather than the `batcat` APT is
+    # forced to use, which is why an existing `batcat` counts as the version
+    # to check.
+    bat_version=""
+    for bat_binary in bat batcat; do
+      command -v "$bat_binary" >/dev/null 2>&1 || continue
+      bat_version="$("$bat_binary" --version 2>/dev/null | cut -d' ' -f2)"
+      [ -n "$bat_version" ] && break
+    done
+
+    if [ -z "$bat_version" ] ||
+      [ "$(printf '%s\n0.26.0\n' "$bat_version" | sort -V | head -n1)" != "0.26.0" ]; then
+      # The artifact is named after the release, so resolve the tag first.
+      tag="$(github_latest_tag sharkdp/bat)" || tag=""
+      if [ -z "$tag" ]; then
+        warn "The latest bat release could not be resolved; bat keeps the packaged version and its default theme."
+      else
+        step "Downloading bat $tag for $musl_target" "*"
+        install_release_binary \
+          "https://github.com/sharkdp/bat/releases/download/$tag/bat-$tag-$musl_target.tar.gz" bat ||
+          warn "'bat' could not be installed from its upstream release; the Catppuccin Mocha theme stays unavailable."
+      fi
     fi
   fi
 
