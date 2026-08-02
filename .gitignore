@@ -1,6 +1,9 @@
 gist
 docs
+.vscode/*
+!.vscode/settings.json
 .backups
+.DS_Store
 .ruff_cache
 theme-builder.html
 modules/git/config/.config/git/work.conf

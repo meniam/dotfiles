@@ -1,0 +1,12 @@
+{
+  // VS Code guesses the language of an extensionless file from its content, and
+  // a file made of `#` comment lines is guessed to be Markdown. These payloads
+  // keep their real syntax instead. Files with a shebang are already detected
+  // correctly and need no entry here.
+  "files.associations": {
+    "**/.config/bat/config": "properties",
+    "**/.config/ripgrep/ripgreprc": "properties",
+    "**/.local/bin/*": "shellscript",
+    "**/modules/*/module.conf": "shellscript"
+  }
+}
