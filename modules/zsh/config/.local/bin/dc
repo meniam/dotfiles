@@ -97,13 +97,21 @@ preview_command() {
     style=""
     [ ! -f "$theme" ] || style="--style '$theme'"
     # fzf reads the preview through a pipe, which drops glow's colour profile
-    # to bold-only; CLICOLOR_FORCE puts the full palette back. fzf expands
-    # FZF_PREVIEW_COLUMNS and {1}, so they stay unexpanded here.
+    # to bold-only; CLICOLOR_FORCE puts the full palette back. The preview runs
+    # under sh, which expands FZF_PREVIEW_COLUMNS and the arithmetic; fzf
+    # substitutes {1}. Both stay unexpanded here.
     # shellcheck disable=SC2016
     # </dev/null because glow prefers stdin over its path argument whenever
     # stdin is not a terminal, and would render nothing at all if fzf handed
     # the preview an empty pipe.
-    printf 'CLICOLOR_FORCE=1 glow %s --width $FZF_PREVIEW_COLUMNS %s/{1}.md </dev/null' "$style" "$docs"
+    #
+    # Every rendered line is padded with spaces to the full width, so a line
+    # one column too wide wraps and every line of the page is followed by a
+    # near-empty second one. Whether --width is that full width or the text
+    # width inside the two-column document margin depends on the glow build:
+    # 2.1.2 renders FZF_PREVIEW_COLUMNS - 2 columns, Debian's 2.0.0 renders
+    # FZF_PREVIEW_COLUMNS + 2. Asking for the pane less the margin fits both.
+    printf 'CLICOLOR_FORCE=1 glow %s --width $(( ${FZF_PREVIEW_COLUMNS:-80} - 2 )) %s/{1}.md </dev/null' "$style" "$docs"
   else
     printf 'cat %s/{1}.md' "$docs"
   fi
@@ -127,7 +135,9 @@ run_fzf() {
 pick_command() {
   preview="$(preview_command)"
   set -- --height=60% --reverse --no-multi --prompt='dc > '
-  [ -z "$preview" ] || set -- "$@" --preview="$preview" --preview-window='right,60%,wrap'
+  # No `wrap`: glow has already wrapped the page to the pane, so anything past
+  # the edge is its line padding, and wrapping that would double every line.
+  [ -z "$preview" ] || set -- "$@" --preview="$preview" --preview-window='right,60%'
   menu | run_fzf "$@" | awk '{ print $1 }'
 }
 

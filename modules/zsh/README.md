@@ -165,12 +165,20 @@ page per command explaining what it does, what it leaves alone, and when to
 reach for something else. Without glow the page is shown unrendered; without
 the directory the preview pane is omitted.
 
-The preview call carries two workarounds. `CLICOLOR_FORCE=1` restores the
+The preview call carries three workarounds. `CLICOLOR_FORCE=1` restores the
 palette glow drops to bold-only when its output is a pipe, which a preview
 always is, and `</dev/null` keeps glow from preferring an empty stdin over the
 file it was given. The theme is the `fs` module's `~/.config/glow/theme.json`,
 passed per call because glow 2.1.2 reads neither its configuration file nor
 `GLOW_STYLE`.
+
+The third is the width. glow pads every rendered line with spaces out to the
+full width, so one column too many wraps each line and leaves the page
+double-spaced, and the meaning of `--width` differs between builds: 2.1.2
+renders two columns less than asked, Debian's 2.0.0 two more. `--width` is
+therefore the pane less the two-column document margin, which fits both, and
+the preview window is left unwrapped so leftover padding is cut rather than
+folded onto a line of its own.
 
 Choosing a command opens a second picker filled from
 `docker compose config --services`, so it lists what the Compose file declares
