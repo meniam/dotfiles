@@ -143,7 +143,16 @@ fzf, Yazi, Neovim, and other programs, so output-shaping options such as
   platforms, so `setup.sh` removes the dangling macOS link afterwards.
 - `duckdb`, `typst`, `watchexec`, `sd`, `choose`, and `rich-cli` are absent from
   older Debian and Ubuntu releases. The installer skips a package without an APT
-  candidate and warns, and the probe requires those six on macOS only.
+  candidate and warns, and `setup.sh` then fills the gap on Linux: `duckdb`,
+  `typst`, `watchexec`, `sd`, and `choose` come from their upstream x86_64 or
+  arm64 release into `~/.local/bin`, and `rich-cli` is installed as a uv tool.
+  Each fallback is best-effort and warns instead of failing the module.
+- `watchexec` and `typst` publish their Linux builds as `.tar.xz` only, so the
+  module installs `xz-utils`; `watchexec` and `sd` name the artifact after the
+  release, so their tag is resolved through the `/releases/latest` redirect.
+- The probe requires those five binaries on both platforms. `rich` is required
+  on macOS and on any machine that has `uv`, since the Linux fallback needs the
+  `python` module's uv; without uv the previewers degrade instead.
 - The `media` dependency supplies FFmpeg, ImageMagick, MediaInfo, Poppler, and
   Chafa for Yazi previews. The `must-have` dependency supplies fzf.
 
@@ -171,9 +180,9 @@ sit outside that mechanism:
 `rich-preview` is locked like the rest and previews `.json` and `.rst` through
 `rich-cli`. The other formats it supports keep their dedicated previewers:
 Markdown goes to `myazin-mermaid-glow`, CSV and TSV to `duckdb`, and notebooks
-to `nbpreview`. Where `rich` is missing the plugin falls back to Yazi's built-in
-code previewer, so a release without an APT candidate degrades rather than
-breaks.
+to `nbpreview`. Where `rich` is missing — a release with no APT candidate and no
+uv to install it with — the plugin falls back to Yazi's built-in code previewer,
+so the setup degrades rather than breaks.
 
 Several locked plugins shell out to binaries this module now installs. Two more
 come from `media` and are single-platform by design: `office` needs LibreOffice,

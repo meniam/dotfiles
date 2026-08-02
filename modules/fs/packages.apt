@@ -14,7 +14,8 @@ miller
 parallel
 zoxide
 # Not packaged for every supported release. The installer skips a package that
-# has no APT candidate and reports it, so the rest of the module still installs.
+# has no APT candidate and reports it, and setup.sh then takes the upstream
+# release binary, so the rest of the module still installs either way.
 watchexec
 sd
 choose
@@ -22,6 +23,8 @@ hyperfine
 unzip
 zip
 zstd
+# tar shells out to `xz` for the .tar.xz releases setup.sh falls back to.
+xz-utils
 bzip2
 tar
 p7zip-full

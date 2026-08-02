@@ -123,6 +123,142 @@ if ! command -v mermaid-ascii >/dev/null 2>&1; then
   fi
 fi
 
+# Tag of the newest release of a GitHub repository, read from the redirect of
+# /releases/latest instead of from the API, which rate-limits an unauthenticated
+# caller to sixty requests an hour per address.
+github_latest_tag() {
+  local resolved
+  resolved="$(curl -fsSLI -o /dev/null -w '%{url_effective}' --connect-timeout 15 --retry 2 \
+    "https://github.com/$1/releases/latest")" || return 1
+  case "$resolved" in
+    */releases/tag/*) printf '%s' "${resolved##*/}" ;;
+    *) return 1 ;;
+  esac
+}
+
+# Fetch an upstream release artifact and put the executable it carries into
+# ~/.local/bin. Failure is returned rather than fatal: every caller installs a
+# tool APT could not provide, and losing one must not discard the whole module.
+install_release_binary() {
+  local url="$1" binary="$2" work archive source_binary status=0
+  work="$(mktemp -d)" || return 1
+  archive="$work/${url##*/}"
+
+  if curl -fL --connect-timeout 15 --retry 2 "$url" -o "$archive"; then
+    case "$archive" in
+      *.tar.xz) tar -xJf "$archive" -C "$work" || status=1 ;;
+      *.tar.gz) tar -xzf "$archive" -C "$work" || status=1 ;;
+      *.zip) unzip -qo "$archive" -d "$work" || status=1 ;;
+      # A release that publishes the bare executable: the download is the binary.
+      *) mv "$archive" "$work/$binary" || status=1 ;;
+    esac
+  else
+    status=1
+  fi
+
+  if [ "$status" -eq 0 ]; then
+    source_binary="$(find "$work" -type f -name "$binary" 2>/dev/null | head -1)"
+    if [ -n "$source_binary" ]; then
+      install -Dm755 "$source_binary" "$HOME/.local/bin/$binary" || status=1
+    else
+      status=1
+    fi
+  fi
+
+  rm -rf "$work"
+  return "$status"
+}
+
+# duckdb, typst, watchexec, sd, and choose reach Debian and Ubuntu late, so the
+# installer skips them wherever APT has no candidate. Upstream publishes each of
+# them as a static binary, so take the release the way Yazi and Ouch already do.
+if [ "$OS" = "linux" ]; then
+  case "$(uname -m)" in
+    x86_64|amd64)
+      musl_target="x86_64-unknown-linux-musl"
+      duckdb_target="amd64"
+      choose_asset="choose-x86_64-unknown-linux-musl"
+      ;;
+    aarch64|arm64)
+      musl_target="aarch64-unknown-linux-musl"
+      duckdb_target="arm64"
+      # Upstream builds `choose` against musl for x86_64 only.
+      choose_asset="choose-aarch64-unknown-linux-gnu"
+      ;;
+    *)
+      musl_target=""
+      duckdb_target=""
+      choose_asset=""
+      ;;
+  esac
+
+  if [ -z "$musl_target" ]; then
+    warn "No upstream release covers $(uname -m); duckdb, typst, watchexec, sd, and choose stay unavailable."
+  else
+    # tar shells out to `xz`, which a minimal installation may not carry, and
+    # both watchexec and typst publish their Linux builds as .tar.xz only.
+    if ! command -v xz >/dev/null 2>&1; then
+      warn "xz is missing; watchexec and typst cannot be unpacked from their upstream releases."
+    else
+      for release_tool in watchexec:watchexec/watchexec sd:chmln/sd; do
+        binary="${release_tool%%:*}"
+        repository="${release_tool#*:}"
+        command -v "$binary" >/dev/null 2>&1 && continue
+
+        # Both name the artifact after the release, so the tag has to be known
+        # before the download URL can be built.
+        tag="$(github_latest_tag "$repository")" || tag=""
+        if [ -z "$tag" ]; then
+          warn "The latest $binary release could not be resolved; $binary stays unavailable."
+          continue
+        fi
+
+        case "$binary" in
+          watchexec) asset="watchexec-${tag#v}-$musl_target.tar.xz" ;;
+          sd) asset="sd-$tag-$musl_target.tar.gz" ;;
+        esac
+
+        step "Downloading $binary $tag for $musl_target" "*"
+        install_release_binary "https://github.com/$repository/releases/download/$tag/$asset" "$binary" ||
+          warn "'$binary' could not be installed from its upstream release."
+      done
+
+      if ! command -v typst >/dev/null 2>&1; then
+        step "Downloading Typst for $musl_target" "*"
+        install_release_binary \
+          "https://github.com/typst/typst/releases/latest/download/typst-$musl_target.tar.xz" typst ||
+          warn "'typst' could not be installed from its upstream release; .typ files preview as source."
+      fi
+    fi
+
+    if ! command -v duckdb >/dev/null 2>&1; then
+      step "Downloading DuckDB for linux-$duckdb_target" "*"
+      install_release_binary \
+        "https://github.com/duckdb/duckdb/releases/latest/download/duckdb_cli-linux-$duckdb_target.zip" duckdb ||
+        warn "'duckdb' could not be installed from its upstream release; CSV and TSV previews fall back to plain text."
+    fi
+
+    if ! command -v choose >/dev/null 2>&1; then
+      step "Downloading choose for $(uname -m)" "*"
+      install_release_binary \
+        "https://github.com/theryangeary/choose/releases/latest/download/$choose_asset" choose ||
+        warn "'choose' could not be installed from its upstream release."
+    fi
+  fi
+
+  # rich-cli is a Python package rather than a released binary, so it comes from
+  # a uv tool environment where the python module has installed uv.
+  if ! command -v rich >/dev/null 2>&1; then
+    if command -v uv >/dev/null 2>&1; then
+      step "Installing rich-cli as a uv tool" "*"
+      uv tool install rich-cli ||
+        warn "uv could not install rich-cli; JSON and reStructuredText preview through Yazi's code previewer."
+    else
+      warn "rich-cli has no APT candidate and uv is missing; install the python module and rerun this one."
+    fi
+  fi
+fi
+
 if [ "$OS" = "linux" ] && ! command -v ouch >/dev/null 2>&1; then
   if apt_has_candidate ouch; then
     step "Installing Ouch from configured APT sources" "*"
