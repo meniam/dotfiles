@@ -17,9 +17,13 @@ Git and GitHub command-line tooling with a modular global configuration.
 | [LazyGit](https://github.com/jesseduffield/lazygit) | Provides an interactive terminal interface for Git. |
 | [Tig](https://jonas.github.io/tig/) | Browses history, blame, and stashes in a keyboard-driven pager. |
 | [sem](https://ataraxy-labs.github.io/sem/) | Provides entity-level semantic diff through `git sdiff` on macOS. |
+| [revdiff](https://github.com/umputun/revdiff) | Reviews diffs, files, and documents with inline annotations in a TUI, through the Zsh module's `rd` alias. |
 
 `sem-cli` is only present in the Homebrew manifest. The `sdiff` alias checks
 for the command and prints an error when it is unavailable.
+
+`revdiff` is also only present in the Homebrew manifest, from the third-party
+`umputun/apps` tap, and only on macOS.
 
 ## Configuration layout
 
@@ -32,6 +36,16 @@ GNU Stow links the following entry points and support files:
 | `~/.config/git/.gitignore` | Supplies global ignore rules through `core.excludesFile`. |
 | `~/.config/git/.gitattributes` | Supplies global text and binary attributes through `core.attributesFile`. |
 | `~/.config/lazygit/config.yml` | Configures LazyGit's UI, refresh behavior, editor, and delta pager. |
+
+### LazyGit configuration path on macOS
+
+Go's `os.UserConfigDir` hardcodes `~/Library/Application Support` on macOS and
+ignores `XDG_CONFIG_HOME`, so LazyGit never looks at the Stow-linked
+`~/.config/lazygit/config.yml` there. `setup.sh` mirrors it by symlinking
+`~/Library/Application Support/lazygit/config.yml` to the stowed file after
+every install run. The fix is skipped on Linux (LazyGit does read
+`~/.config/lazygit` there) and leaves a pre-existing non-empty file at that
+path alone, warning instead of overwriting it.
 
 The tracked Git configuration is split by concern:
 

@@ -30,7 +30,7 @@ in lexical order, and finally sources the prompt settings.
 | `40-completion.zsh` | Zsh completion styles, compinit cache, Just completions, and the fzf integration lookup and completion trigger. |
 | `50-plugins.zsh` | Zinit bootstrap, plugins, selection behavior, command-line clipboard support, and the fzf key bindings. |
 | `60-aliases.zsh` | Navigation, file, development, system, archive, and convenience aliases. |
-| `70-functions.zsh` | Git prompt state, Yazi directory changes, weather, tmux workspace, UUID, and Pi helpers. |
+| `70-functions.zsh` | Git prompt state, Yazi directory changes, weather, tmux workspace, UUID, Pi helpers, and the SSH host picker. |
 | `80-prompt.zsh` | Fallback prompt for a shell where the theme did not load. |
 | `85-p10k.zsh` | Powerlevel10k settings, generated in full by `p10k configure`. |
 | `90-local.zsh` | Loads the optional untracked `${ZDOTDIR:-$HOME}/.zshrc.local`. |
@@ -66,7 +66,9 @@ loads:
 Completion uses a cached `.zcompdump`, case-insensitive matching, grouped menu
 selection, generated Just completions, and the package-manager-specific fzf
 completion script. Regular Tab remains Zsh completion; `~~` followed by Tab is
-the configured fzf completion trigger.
+the configured fzf completion trigger. One exception: typing `ss` first
+intercepts both Tab and Enter for the [SSH host picker](#ssh-host-picker)
+below instead.
 
 ## fzf key bindings
 
@@ -96,6 +98,26 @@ Two consequences on the key side:
 
 Up and Down stay bound to `zsh-history-substring-search`, so the prefix search
 and the fuzzy search coexist.
+
+## SSH host picker
+
+Typing `ss`, `ss ` (trailing space), or `ss <query>` and then pressing Tab or
+Enter opens an fzf picker of SSH hosts instead of running a literal `ss`
+command, completing normally, or submitting the line; `<query>` prefills fzf's
+search. Selecting a host runs `ssh <host>`; canceling leaves the buffer as
+typed.
+
+Hosts come from `~/.ssh/config` and its Include'd `config.local` and
+`config.d/*.conf` — the `ssh` module's layout for private, untracked per-host
+configuration — skipping wildcard patterns such as `Host *`. A `Host` line
+with several names is shown as `main-name (alias, alias)`; connecting strips
+the parenthesized part and uses `main-name`.
+
+`ssh-fzf-connect` wraps Tab: anything other than the trigger falls through to
+`fzf-completion` (bound in `completion.zsh`), so the `~~` fuzzy-completion
+trigger still works. `ssh-fzf-accept-line` wraps Enter (bound to `^M`) the
+same way, falling through to the real `.accept-line` widget. Both widgets
+require `fzf` to be on `PATH` and no-op to their normal behavior otherwise.
 
 ## Prompt
 
@@ -181,6 +203,9 @@ prompt: user, host, working directory, and `git_prompt_info` from
 - tmux, Docker, Git, filesystem, and media shortcuts become useful when their
   corresponding modules are installed; unavailable commands are not installed
   by this module automatically.
+- The [SSH host picker](#ssh-host-picker) lists hosts from `~/.ssh/config`;
+  the `ssh` module's `config.local` and `config.d/*.conf` Includes are what
+  make it show anything beyond the tracked config's catch-all `Host *`.
 
 The `askPi` helper sends the current working directory, up to ten recent shell
 commands, and the supplied question to the external `pi` command, then renders

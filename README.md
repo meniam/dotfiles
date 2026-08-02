@@ -80,7 +80,7 @@ supported platform. Dependencies are installed before the selected module.
 | `desktop` | macOS | on | `must-have`, `git`, `media`, `fs` | macOS command-line and desktop software, including Hammerspoon, WezTerm, Kitty, and application casks. |
 | `docker` | macOS, Linux | off | — | Docker Desktop on macOS or Docker Engine on Debian, plus the Oxker and LazyDocker terminal interfaces. The Linux setup currently supports Debian only. |
 | `fs` | macOS, Linux | off | `media`, `must-have` | Navigation, search, inspection, file-manager, archive, and disk-usage tools, including Yazi and Midnight Commander. |
-| `git` | macOS, Linux | on | `ssh` | Git, GitHub CLI, Git LFS, delta, LazyGit, Tig, shared configuration, and semantic diff tooling on macOS. |
+| `git` | macOS, Linux | on | `ssh` | Git, GitHub CLI, Git LFS, delta, LazyGit, Tig, shared configuration, semantic diff tooling on macOS, and a TUI diff reviewer (revdiff) on macOS. |
 | `homebrew` | macOS | on | — | Homebrew itself, a package-metadata refresh, and the `brew-snapshot` Brewfile helper. The installer bootstraps Homebrew for every macOS run, so other modules do not depend on this one. |
 | `linux` | Linux | on | `must-have` | Debian/Ubuntu command-line tools, certificates, terminal data, and build prerequisites. |
 | `media` | macOS, Linux | off | — | FFmpeg, ImageMagick with its Ghostscript and librsvg delegates, MediaInfo, ExifTool, Poppler, qpdf, Pandoc, Chafa, Tesseract, SoX, and yt-dlp. LibreOffice is installed on macOS only. |
