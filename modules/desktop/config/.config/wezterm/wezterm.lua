@@ -297,6 +297,13 @@ config.keys = {
   { key = "LeftArrow", mods = "CTRL|SHIFT", action = wezterm.action.SendString("\x1b[97;6u") },
   { key = "RightArrow", mods = "CTRL|SHIFT", action = wezterm.action.SendString("\x1b[101;6u") },
 
+  -- fzf/yazi preview scrolling: send the same bytes as alt-j/alt-k so
+  -- ctrl+cmd+j/k trigger the preview-down/preview-up binds already set up
+  -- for fzf (30-env.zsh) and yazi's fr plugin (init.lua) without duplicating
+  -- the bind in each consumer.
+  { key = "j", mods = "CTRL|CMD", action = wezterm.action.SendString("\x1bj") },
+  { key = "k", mods = "CTRL|CMD", action = wezterm.action.SendString("\x1bk") },
+
   -- Word navigation
   { key = "LeftArrow", mods = "OPT", action = wezterm.action.SendString("\x1bb") },
   { key = "RightArrow", mods = "OPT", action = wezterm.action.SendString("\x1bf") },
