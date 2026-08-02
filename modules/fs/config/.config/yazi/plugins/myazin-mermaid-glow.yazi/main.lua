@@ -16,14 +16,41 @@ local M = {}
 -- Defaults. M:setup(opts) merges user overrides on top, so init.lua can do:
 --
 --   require("myazin-mermaid-glow"):setup({ style = "auto", ascii = true })
+-- The theme the shell's `glow` alias uses, so a preview and a terminal render
+-- look alike. It is the default rather than a `setup()` call in init.lua because
+-- a previewer runs in Yazi's async isolate, which does not necessarily see the
+-- configuration applied in the sync one. glow runs with Yazi's cwd, so the path
+-- has to be absolute; style_arg() falls back to a built-in name if it is missing.
+--
+-- Both candidates are tried rather than only the first that is set, so an
+-- XDG_CONFIG_HOME pointing somewhere without a theme still finds the usual one.
+local function default_style()
+	local xdg, home = os.getenv("XDG_CONFIG_HOME"), os.getenv("HOME")
+	local candidates = {}
+	if xdg and xdg ~= "" then
+		candidates[#candidates + 1] = xdg .. "/glow/theme.json"
+	end
+	if home and home ~= "" then
+		candidates[#candidates + 1] = home .. "/.config/glow/theme.json"
+	end
+	for _, path in ipairs(candidates) do
+		local f = io.open(path, "r")
+		if f then
+			f:close()
+			return path
+		end
+	end
+	return "dark"
+end
+
 local config = {
-	style = "dark", -- glow --style: a built-in name or a path to a JSON theme
+	style = default_style(), -- glow --style: a built-in name or a path to a JSON theme
 	ascii = false, -- mermaid-ascii --ascii: plain ASCII instead of box drawing
 	padding_x = nil, -- mermaid-ascii --paddingX; nil keeps its own default
 	padding_y = nil, -- mermaid-ascii --paddingY; nil keeps its own default
 	glow_timeout = 15, -- wall-clock cap for glow, seconds
 	mermaid_timeout = 10, -- wall-clock cap for one mermaid-ascii render, seconds
-	read_limit_mb = 8, -- refuse to preview files larger than this
+	read_limit_mb = 16, -- refuse to preview files larger than this
 }
 
 function M:setup(opts)
@@ -293,12 +320,6 @@ local function is_mermaid_open(info)
 	return word ~= nil and word:lower() == "mermaid"
 end
 
-local function append_indented(out, indent, text)
-	for _, line in ipairs(lines_of(text)) do
-		out[#out + 1] = (line == "") and "" or (indent .. line)
-	end
-end
-
 -- Emit the diagram source unchanged so a fence we could not render still shows
 -- its content, prefixed with the reason when there is one worth reporting.
 local function append_source(out, indent, body, reason)
@@ -313,12 +334,37 @@ local function append_source(out, indent, body, reason)
 	out[#out + 1] = indent .. "```"
 end
 
--- Replace every mermaid fence with rendered art wrapped in a plain fence, so
--- glow prints it verbatim in a code block instead of trying to highlight the
--- box-drawing characters as mermaid source.
+-- Handing the art to glow does not work. A code block is wrapped to --width,
+-- which folds a wide diagram onto the next row and interleaves it with itself.
+-- And chroma guesses a lexer from the content of a fence with no language, then
+-- paints whatever it cannot tokenise with the theme's `error` style, which in
+-- glow's own `dark` is white on red — box drawing becomes solid slabs. So each
+-- fence becomes a marker word that survives glow untouched, and splice() puts
+-- the art back afterwards.
+local SLOT_PREFIX = "MMGSLOT"
+
 local function preprocess(content, render)
-	local out = {}
+	local out, slots = {}, {}
 	local body, indent = nil, nil
+	local count = 0
+
+	-- A document that already contains the marker would have that line eaten by
+	-- the splice, so salt the prefix when the bytes say it might.
+	local prefix = SLOT_PREFIX
+	if content:find(prefix, 1, true) then
+		prefix = prefix .. hash(content)
+	end
+
+	local function append_slot(art)
+		count = count + 1
+		local token = string.format("%s%04dZ", prefix, count)
+		slots[token] = lines_of(art)
+		-- Its own paragraph, so glow neither merges the marker into neighbouring
+		-- prose nor reflows it; the indent keeps a nested diagram in its list item.
+		out[#out + 1] = ""
+		out[#out + 1] = indent .. token
+		out[#out + 1] = ""
+	end
 
 	for _, line in ipairs(lines_of(content)) do
 		if body then
@@ -326,9 +372,7 @@ local function preprocess(content, render)
 			if ind and info == "" then
 				local art, reason = render(table.concat(body, "\n"))
 				if art then
-					out[#out + 1] = indent .. "```"
-					append_indented(out, indent, art)
-					out[#out + 1] = indent .. "```"
+					append_slot(art)
 				else
 					append_source(out, indent, body, reason)
 				end
@@ -351,6 +395,80 @@ local function preprocess(content, render)
 	if body then
 		append_source(out, indent, body, nil)
 	end
+	return table.concat(out, "\n"), slots
+end
+
+local function strip_ansi(s)
+	return (s:gsub("\27%[[%d;?]*[%a]", ""))
+end
+
+-- Columns a line occupies. Box drawing is single-width, so counting codepoints
+-- is right here and much cheaper than a real wcwidth table.
+local function display_width(s)
+	return (utf8 and utf8.len(s)) or #s
+end
+
+-- Leftmost marker in a line, if any. Markers are plain ASCII words, so a
+-- literal find over the still-coloured line is enough.
+local function find_slot(line, slots)
+	local at, found
+	for token in pairs(slots) do
+		local i = line:find(token, 1, true)
+		if i and (not at or i < at) then
+			at, found = i, token
+		end
+	end
+	return at, found
+end
+
+-- Art wider than the pane is clipped by the widget rather than wrapped, so say
+-- so: mermaid-ascii lays relationship labels out horizontally and an ER diagram
+-- easily runs three times the width of a pane, with no flag to compress it.
+local function append_art(out, lead, art, width)
+	local widest = 0
+	for _, line in ipairs(art) do
+		out[#out + 1] = (line == "") and "" or (lead .. line)
+		widest = math.max(widest, #lead + display_width(line))
+	end
+	if width > 0 and widest > width then
+		out[#out + 1] = string.format("%s… %d columns wide, %d shown", lead, widest, width)
+	end
+end
+
+-- Put the art back where its marker landed, keeping the left margin glow gave
+-- the line so the diagram lines up with the prose around it. A marker is its
+-- own paragraph in the input, but glow flattens a list item onto a single line,
+-- so one can also turn up mid-line between the text it was written between —
+-- hence splitting the line rather than only accepting a marker sitting alone.
+local function splice(text, slots, width)
+	if next(slots) == nil then
+		return text
+	end
+
+	local out = {}
+	for _, line in ipairs(lines_of(text)) do
+		local at, token = find_slot(line, slots)
+		if not at then
+			out[#out + 1] = line
+		else
+			local lead = strip_ansi(line):match("^(%s*)") or ""
+			local rest = line
+			while at do
+				local before = rest:sub(1, at - 1)
+				if trim(strip_ansi(before)) ~= "" then
+					-- Reset, so the art does not inherit the colour of the prose it
+					-- was cut out of.
+					out[#out + 1] = before .. "\27[0m"
+				end
+				append_art(out, lead, slots[token], width)
+				rest = rest:sub(at + #token)
+				at, token = find_slot(rest, slots)
+			end
+			if trim(strip_ansi(rest)) ~= "" then
+				out[#out + 1] = lead .. "\27[0m" .. trim(rest)
+			end
+		end
+	end
 	return table.concat(out, "\n")
 end
 
@@ -361,10 +479,21 @@ end
 -- glow decides its colour profile from isatty(stdout). Capturing stdout makes
 -- it a pipe, which silently downgrades the output to bold-only with no colour
 -- at all; CLICOLOR_FORCE tells termenv to keep the full ANSI palette anyway.
+-- A style that names a file glow cannot find is fatal to it, which would turn
+-- every Markdown preview into an error message. Fall back to a built-in name
+-- when the theme has not been stowed yet, or was moved.
+local function style_arg()
+	local style = tostring(config.style)
+	if style:find("/", 1, true) and not file_exists(style) then
+		return "dark"
+	end
+	return style
+end
+
 local function run_glow(path, width)
 	local out, err = run("glow", {
 		"--style",
-		tostring(config.style),
+		style_arg(),
 		"--width",
 		tostring(width),
 		path,
@@ -403,8 +532,10 @@ end
 -- it would cost a `command -v` on every scroll tick, and the only cost of
 -- leaving it out is that entries cached before the binary was installed stay
 -- stale until they age out or the file changes.
+-- The style is keyed as the one actually used rather than as configured, so
+-- entries rendered while the theme file was missing are not served afterwards.
 local function cache_key(path, size, content, width)
-	return hash(table.concat({ path, tostring(size), content, tostring(width), tostring(config.style) }, "\0"))
+	return hash(table.concat({ path, tostring(size), content, tostring(width), style_arg() }, "\0"))
 end
 
 local function render_markdown(path, size, content, width)
@@ -414,9 +545,9 @@ local function render_markdown(path, size, content, width)
 		return cached, nil
 	end
 
-	local document = content
+	local document, slots = content, {}
 	if has_mermaid_ascii() then
-		document = preprocess(content, render_diagram)
+		document, slots = preprocess(content, render_diagram)
 	end
 
 	-- glow reads a file rather than stdin here for the same reason as
@@ -431,6 +562,7 @@ local function render_markdown(path, size, content, width)
 	if not text then
 		return nil, err
 	end
+	text = splice(text, slots, width)
 	-- A failed or timed-out run must not be cached, or the next peek would
 	-- serve the broken output forever instead of retrying.
 	store(cache_file, text)
@@ -519,8 +651,11 @@ function M:peek(job)
 			return fail(job, "myazin-mermaid-glow: " .. tostring(reason))
 		end
 		-- Wrapping would fold the box drawing onto the next row and destroy the
-		-- diagram; clipping a too-wide diagram is the lesser problem.
-		return show(job, art, ui.Wrap.NO)
+		-- diagram; clipping a too-wide diagram is the lesser problem, and
+		-- append_art notes when that happened.
+		local lines = {}
+		append_art(lines, "", lines_of(art), job.area.w)
+		return show(job, table.concat(lines, "\n"), ui.Wrap.NO)
 	end
 
 	local text, err = render_markdown(path, size, content, job.area.w)

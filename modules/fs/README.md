@@ -33,7 +33,8 @@ managing files and disk space.
 | [choose](https://github.com/theryangeary/choose) | Selects fields from a line without an `awk` program. |
 | [Yazi](https://yazi-rs.github.io/) | Navigates files with rich previews in a terminal UI. |
 | [DuckDB](https://duckdb.org/), [hexyl](https://github.com/sharkdp/hexyl), [SQLite](https://sqlite.org/), [Typst](https://typst.app/), [DjVuLibre](https://djvu.sourceforge.net/), and [Transmission](https://transmissionbt.com/) | Back the Yazi previewers for tabular data, unknown binaries, databases, `.typ`, `.djvu`, and `.torrent` files. |
-| [mermaid-ascii](https://github.com/AlexanderGrooff/mermaid-ascii) | Renders Mermaid diagrams as ASCII art for the Markdown previewer. Neither Homebrew nor APT packages it, so `setup.sh` fetches the release binary into `~/.local/bin`. |
+| [rich-cli](https://github.com/Textualize/rich-cli) | Renders JSON and reStructuredText for the Yazi previewer, and formats files, Markdown, and syntax on the command line. |
+| [mermaid-ascii](https://github.com/AlexanderGrooff/mermaid-ascii) | Renders Mermaid diagrams as ASCII art for the Markdown previewer and for `glowm`. Neither Homebrew nor APT packages it, so `setup.sh` fetches the release binary into `~/.local/bin`. |
 | [Midnight Commander](https://midnight-commander.org/) | Provides a dual-pane terminal file manager and editor. |
 | Zip, UnZip, 7-Zip, Zstandard, bzip2, and tar | Creates and extracts common archive formats. |
 | [Ouch](https://github.com/ouch-org/ouch) | Provides one interface for multiple archive formats. |
@@ -45,16 +46,75 @@ managing files and disk space.
 
 | Target | Purpose |
 | --- | --- |
-| `~/.config/bat/config` | Uses the terminal-aware `ansi` theme, enables structured output, and maps repository-specific filenames to syntaxes. |
+| `~/.config/bat/config` | Uses the `Catppuccin Mocha` theme, enables structured output, and maps repository-specific filenames to syntaxes. |
 | `~/.config/eza/theme.yml` | Defines file-kind, permission, Git, filename, and extension colours. |
 | `~/.config/ripgrep/ripgreprc` | Enables smart case, hidden-file search, `.git` exclusion, long-line previews, automatic PCRE2 fallback, and the `pkgs` type. |
 | `~/.config/yazi/` | Configures layout, openers, keymaps, previewers, themes, and locked plugins and flavours, and vendors two plugins under `plugins/`. |
 | `~/.config/mc/ini` | Configures Midnight Commander. |
+| `~/.config/glow/theme.json` | Glow's Markdown theme: upstream `dark` with the chroma `error` background dropped. |
+| `~/.local/bin/glowm` | Renders Markdown with `glow`, drawing every ```` ```mermaid ```` fence as ASCII art. |
 | `~/.pydfrc` | Configures Pydf's columns, colours, and filesystem display. |
 
 `bat` chooses syntax from a filename, so piped input may need an explicit
 language such as `bat -l md` or a synthetic filename such as
 `bat --file-name=answer.md`.
+
+`glow` has a configuration file — `~/Library/Preferences/glow/glow.yml` on macOS,
+`~/.config/glow/glow.yml` on Linux, both created by `glow config` — but version
+2.1.2 applies neither `style` nor `width` from it: the default of the matching
+flag wins, and `GLOW_STYLE` and `GLAMOUR_STYLE` are ignored as well. The theme
+therefore has to be passed per call, which the `zsh` module's `glow` alias does.
+The `myazin-mermaid-glow` previewer passes its own `--style` and does not read
+either file.
+
+Upstream `dark` styles the chroma `error` token as white on `#F05B5B`. Chroma
+guesses a lexer from the content of a fence that has no language, so anything it
+then fails to tokenise — ASCII diagrams above all — comes out as solid salmon
+blocks; the same ER diagram scores 196 painted spans under `dark` and none here.
+The theme keeps the red as a foreground colour instead.
+
+Backgrounds in this file behave less predictably than foregrounds, in two ways
+worth knowing before editing them:
+
+- Anything outside the `chroma` block — `code.background_color` among them — is
+  written through termenv, which picks its palette from the terminal. In a real
+  terminal that is the full 24-bit profile and a hex lands exactly. When stdout
+  is a pipe and `CLICOLOR_FORCE` is what enables colour, which is precisely how
+  the Yazi previewer runs `glow`, termenv drops to the 16 ANSI colours: `#1f252d`
+  and `236` both arrive as plain black, and a slightly lighter `#2a313a` snaps to
+  cyan. So an inline-code background is a terminal-only effect. ANSI has no alpha
+  either, so an eight-digit `#rrggbbaa` is parsed as the six-digit colour and the
+  terminal's own window transparency does not apply to an explicit background.
+- Neither `code_block.background_color` nor the chroma `background` entry paints
+  a code block: glamour 0.10.0 emits no background for it, so the `background`
+  value here is inert and kept only to match upstream's shape. What does work is
+  a `background_color` on the individual chroma token types — chroma writes its
+  own 256-colour codes and they survive the previewer — but it paints behind the
+  tokens rather than the block, leaving each line's trailing padding unfilled.
+
+### glowm
+
+`glowm` is the command-line counterpart of the `myazin-mermaid-glow` previewer
+below, stowed into `~/.local/bin` and using the same pipeline: each
+```` ```mermaid ```` fence becomes a marker word, and the art from
+`mermaid-ascii` is spliced over that marker in glow's output. Handing the art to
+glow instead would wrap a wide diagram onto the next row and paint the theme's
+code-block background behind the box drawing.
+
+```bash
+glowm README.md          # a file
+glowm -p README.md       # through $PAGER, which keeps the colour with less -R
+glowm --ascii README.md  # plain ASCII instead of box drawing
+cat README.md | glowm    # stdin
+```
+
+Unrecognised flags go to glow untouched, and `--style` defaults to the stowed
+theme for the same reason the `zsh` alias sets it, since an alias does not reach
+a script. It takes one file or stdin rather than glow's directories and URLs,
+and `--pager` is handled here because glow would otherwise page its own output
+before the diagrams are spliced in. Without `mermaid-ascii` it warns once and
+leaves the fences as source; a diagram that fails to render keeps its source and
+is prefixed with the reason.
 
 ripgrep has no default configuration path. The `zsh` module exports
 `RIPGREP_CONFIG_PATH` only when the stowed file exists; without that environment
@@ -81,9 +141,9 @@ fzf, Yazi, Neovim, and other programs, so output-shaping options such as
   utility; the probe checks for `gtar` there and for `tar` on Linux.
 - `.pydfrc` configures an APT-only tool. Stow links the whole payload on both
   platforms, so `setup.sh` removes the dangling macOS link afterwards.
-- `duckdb`, `typst`, `watchexec`, `sd`, and `choose` are absent from older
-  Debian and Ubuntu releases. The installer skips a package without an APT
-  candidate and warns, and the probe requires those five on macOS only.
+- `duckdb`, `typst`, `watchexec`, `sd`, `choose`, and `rich-cli` are absent from
+  older Debian and Ubuntu releases. The installer skips a package without an APT
+  candidate and warns, and the probe requires those six on macOS only.
 - The `media` dependency supplies FFmpeg, ImageMagick, MediaInfo, Poppler, and
   Chafa for Yazi previews. The `must-have` dependency supplies fzf.
 
@@ -107,6 +167,13 @@ sit outside that mechanism:
 - `miller` is not locked at all: its upstream still ships the pre-0.3 `init.lua`
   layout that `ya pkg` cannot deploy. The `mlr` binary is installed and works on
   its own.
+
+`rich-preview` is locked like the rest and previews `.json` and `.rst` through
+`rich-cli`. The other formats it supports keep their dedicated previewers:
+Markdown goes to `myazin-mermaid-glow`, CSV and TSV to `duckdb`, and notebooks
+to `nbpreview`. Where `rich` is missing the plugin falls back to Yazi's built-in
+code previewer, so a release without an APT candidate degrades rather than
+breaks.
 
 Several locked plugins shell out to binaries this module now installs. Two more
 come from `media` and are single-platform by design: `office` needs LibreOffice,

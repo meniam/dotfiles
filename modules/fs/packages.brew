@@ -22,6 +22,8 @@ midnight-commander
 # Binaries the Yazi previewers configured in yazi.toml shell out to.
 duckdb
 hexyl
+# rich-cli installs the `rich` binary the rich-preview plugin calls.
+rich-cli
 typst
 djvulibre
 transmission-cli

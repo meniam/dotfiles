@@ -68,7 +68,9 @@ prepend_preloaders = [
 	{ mime = "{audio,video,image}/*", run = "mediainfo" },
 	{ mime = "application/subrip", run = "mediainfo" },
 
-	{ url = "*.{csv,tsv,json,parquet,txt,xlsx}", run = "duckdb", multi = false },
+	# `.json` is deliberately absent: no previewer rule below routes JSON to
+	# DuckDB, so preloading it only spawns a query whose cache nothing reads.
+	{ url = "*.{csv,tsv,parquet,txt,xlsx}", run = "duckdb", multi = false },
 
 	{ mime = "application/{vnd.openxmlformats-officedocument.*,openxmlformats-officedocument.*,vnd.oasis.opendocument.*,oasis.opendocument.*,ms-*,msword}", run = "office" },
 	{ url = "*.docx", run = "office" },
@@ -106,8 +108,16 @@ prepend_previewers = [
 	{ url = "*.mmd", run = "myazin-mermaid-glow" },
 	{ url = "*.mermaid", run = "myazin-mermaid-glow" },
 
-	# Tabular data uses DuckDB; parquet-preview and rich-preview are locked in
-	# package.toml as alternatives but not enabled. miller is deliberately not
+	# JSON and reStructuredText go through rich-preview, which renders them with
+	# `rich-cli`'s syntax highlighting, tables, and panel border. The other
+	# formats rich handles — Markdown, CSV, and notebooks — keep the dedicated
+	# previewers configured around this block. Without `rich` on PATH the plugin
+	# falls back to Yazi's built-in code previewer on its own.
+	{ url = "*.json", run = "rich-preview" },
+	{ url = "*.rst", run = "rich-preview" },
+
+	# Tabular data uses DuckDB; parquet-preview is locked in package.toml as an
+	# alternative but is not enabled. miller is deliberately not
 	# among them: its upstream still ships the pre-0.3 `init.lua` layout, which
 	# `ya pkg` cannot deploy. The `mlr` binary is installed and usable directly.
 	{ url = "*.csv", run = "duckdb" },

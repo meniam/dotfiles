@@ -1,0 +1,401 @@
+#!/usr/bin/env bash
+# glowm - render Markdown through glow with ```mermaid fences drawn as ASCII.
+#
+# Each mermaid fence is replaced with a marker word before the document reaches
+# glow, and the art from mermaid-ascii is spliced back over that marker in
+# glow's output. Handing the art to glow directly does not work: a code block
+# is wrapped to --width, which folds a wide diagram onto the next row and
+# interleaves it with itself, and most themes paint a background behind it,
+# which turns every box-drawing character into a solid slab of colour.
+#
+# This is the command-line counterpart of the myazin-mermaid-glow Yazi
+# previewer vendored in the same module, and it uses the same pipeline.
+#
+# Requirements:
+#   glow          - required
+#   mermaid-ascii - optional; without it the fences stay as source
+#
+# Usage:
+#   glowm README.md
+#   glowm -p README.md          # pager
+#   glowm --ascii README.md     # plain ASCII instead of box drawing
+#   cat README.md | glowm
+set -euo pipefail
+
+program="${0##*/}"
+
+die() {
+  printf '%s: %s\n' "$program" "$1" >&2
+  exit 1
+}
+
+warn() {
+  printf '%s: %s\n' "$program" "$1" >&2
+}
+
+command -v glow >/dev/null 2>&1 ||
+  die "glow is not on PATH. Install it with 'brew install glow' or from your package manager."
+
+# --------------------------------------------------------------------------
+# Arguments
+#
+# Everything unrecognised is forwarded to glow. The flags that take a separate
+# value have to be listed, or their value would be mistaken for the input file.
+# --------------------------------------------------------------------------
+
+glow_args=()
+pager=0
+mermaid_ascii=0
+have_width=0
+have_style=0
+input=""
+have_input=0
+only_files=0
+
+while [ $# -gt 0 ]; do
+  if [ "$only_files" -eq 1 ]; then
+    [ "$have_input" -eq 0 ] || die "only one input is supported."
+    input="$1"
+    have_input=1
+    shift
+    continue
+  fi
+
+  case "$1" in
+    --)
+      only_files=1
+      shift
+      ;;
+    -p | --pager)
+      # glow would spawn the pager over its own output, before the art is
+      # spliced in, so run it here instead.
+      pager=1
+      shift
+      ;;
+    --ascii)
+      # Consumed by mermaid-ascii, not by glow.
+      mermaid_ascii=1
+      shift
+      ;;
+    -w | --width)
+      [ $# -ge 2 ] || die "$1 requires a value."
+      have_width=1
+      glow_args+=("$1" "$2")
+      shift 2
+      ;;
+    --width=*)
+      have_width=1
+      glow_args+=("$1")
+      shift
+      ;;
+    -s | --style)
+      [ $# -ge 2 ] || die "$1 requires a value."
+      have_style=1
+      glow_args+=("$1" "$2")
+      shift 2
+      ;;
+    --style=*)
+      have_style=1
+      glow_args+=("$1")
+      shift
+      ;;
+    --config)
+      [ $# -ge 2 ] || die "$1 requires a value."
+      glow_args+=("$1" "$2")
+      shift 2
+      ;;
+    -)
+      input="-"
+      have_input=1
+      shift
+      ;;
+    -*)
+      glow_args+=("$1")
+      shift
+      ;;
+    *)
+      [ "$have_input" -eq 0 ] || die "only one input is supported."
+      input="$1"
+      have_input=1
+      shift
+      ;;
+  esac
+done
+
+work="$(mktemp -d "${TMPDIR:-/tmp}/glowm.XXXXXX")"
+trap 'rm -rf "$work"' EXIT HUP INT TERM
+
+document="$work/input.md"
+if [ "$have_input" -eq 0 ] || [ "$input" = "-" ]; then
+  if [ "$have_input" -eq 0 ] && [ -t 0 ]; then
+    die "no input file, and stdin is a terminal."
+  fi
+  cat >"$document"
+elif [ -f "$input" ]; then
+  cat "$input" >"$document"
+else
+  die "file not found: $input"
+fi
+
+# Capturing glow's output makes its stdout a pipe, which drops the colour
+# profile to bold-only; force the full palette back on when the result is going
+# to a terminal, and leave it off when it is being redirected into a file.
+if [ -t 1 ] || [ "$pager" -eq 1 ]; then
+  colour=1
+  columns="$(tput cols 2>/dev/null || echo 0)"
+else
+  colour=0
+  columns=0
+fi
+
+# glow reads the terminal width from its own stdout, which is a pipe here, so it
+# would fall back to 80 columns. Reinstate the width it would have picked.
+if [ "$have_width" -eq 0 ] && [ "$columns" -gt 0 ]; then
+  width="$columns"
+  [ "$width" -le 120 ] || width=120
+  glow_args+=("--width" "$width")
+fi
+
+# glow 2.1.2 applies neither its configuration file nor GLOW_STYLE, so the
+# stowed theme has to be passed per call the way the zsh alias does. The alias
+# itself is no help here: aliases do not reach a script.
+theme="${XDG_CONFIG_HOME:-$HOME/.config}/glow/theme.json"
+if [ "$have_style" -eq 0 ] && [ -f "$theme" ]; then
+  glow_args+=("--style" "$theme")
+fi
+
+# --------------------------------------------------------------------------
+# Mermaid rendering
+# --------------------------------------------------------------------------
+
+prepared="$document"
+manifest="$work/manifest"
+: >"$manifest"
+
+if command -v mermaid-ascii >/dev/null 2>&1; then
+  # A document that already contains the marker would have that line eaten by
+  # the splice, so extend the prefix until it is absent from the input.
+  prefix="MMGSLOT"
+  while grep -q "$prefix" "$document"; do
+    prefix="${prefix}X"
+  done
+
+  # Pass one: write every diagram source to its own file and count them.
+  awk -v outdir="$work" '
+    BEGIN { n = 0; inside = 0 }
+    inside && /^[ \t]*```+[ \t]*$/ { close(source); inside = 0; next }
+    inside { print > source; next }
+    /^[ \t]*```+[ \t]*[Mm][Ee][Rr][Mm][Aa][Ii][Dd][ \t]*$/ {
+      n++
+      source = sprintf("%s/%04d.mmd", outdir, n)
+      printf "" > source
+      inside = 1
+      next
+    }
+    END {
+      # An unterminated fence is a broken document, not a diagram. Leave it out
+      # of the count so pass two puts it back untouched.
+      if (inside) { close(source); n-- }
+      printf "%d\n", n > (outdir "/count")
+    }
+  ' "$document"
+
+  count="$(cat "$work/count")"
+
+  # A wedged child would otherwise hold the whole pipeline open.
+  timeout_cmd=""
+  if command -v gtimeout >/dev/null 2>&1; then
+    timeout_cmd="gtimeout"
+  elif command -v timeout >/dev/null 2>&1; then
+    timeout_cmd="timeout"
+  fi
+
+  mermaid_args=()
+  [ "$mermaid_ascii" -eq 0 ] || mermaid_args+=("--ascii")
+
+  : >"$work/failed"
+  index=1
+  while [ "$index" -le "$count" ]; do
+    stem="$(printf '%s/%04d' "$work" "$index")"
+    if [ -n "$timeout_cmd" ]; then
+      set -- "$timeout_cmd" 10 mermaid-ascii
+    else
+      set -- mermaid-ascii
+    fi
+    set -- "$@" ${mermaid_args[@]+"${mermaid_args[@]}"} -f "$stem.mmd"
+
+    if "$@" <"$stem.mmd" >"$stem.art" 2>"$stem.err" && [ -s "$stem.art" ]; then
+      printf '%s%04dZ %s.art\n' "$prefix" "$index" "$stem" >>"$manifest"
+    else
+      # logrus writes fatals as `time="..." level=fatal msg="..."`; the msg
+      # field is the only part worth showing.
+      reason="$(sed -n 's/.*msg="\([^"]*\)".*/\1/p' "$stem.err" | head -1)"
+      [ -n "$reason" ] || reason="$(grep -v '^[[:space:]]*$' "$stem.err" | head -1)"
+      [ -n "$reason" ] || reason="mermaid-ascii produced no output"
+      printf '%s\n' "$reason" >"$stem.reason"
+      printf '%d\n' "$index" >>"$work/failed"
+    fi
+    index=$((index + 1))
+  done
+
+  # Pass two: swap each rendered fence for its marker and leave the rest alone.
+  awk -v outdir="$work" -v prefix="$prefix" -v failfile="$work/failed" '
+    BEGIN {
+      n = 0
+      inside = 0
+      while ((getline line < failfile) > 0) failed[line + 0] = 1
+      close(failfile)
+    }
+
+    # Emit the diagram source unchanged so a fence that could not be rendered
+    # still shows its content, prefixed with the reason.
+    function keep_source(  i, reason) {
+      reason = ""
+      if ((getline reason < (sprintf("%s/%04d.reason", outdir, n))) > 0) {
+        print indent "> mermaid-ascii: " reason
+        print ""
+      }
+      close(sprintf("%s/%04d.reason", outdir, n))
+      print indent "```mermaid"
+      for (i = 1; i <= count; i++) print body[i]
+      print indent "```"
+    }
+
+    inside && /^[ \t]*```+[ \t]*$/ {
+      inside = 0
+      if (failed[n]) {
+        keep_source()
+      } else {
+        # Its own paragraph, so glow neither merges the marker into the
+        # surrounding prose nor reflows it; the indent keeps a diagram nested
+        # in a list item inside that item.
+        printf "\n%s%s%04dZ\n\n", indent, prefix, n
+      }
+      next
+    }
+    inside { body[++count] = $0; next }
+
+    /^[ \t]*```+[ \t]*[Mm][Ee][Rr][Mm][Aa][Ii][Dd][ \t]*$/ {
+      match($0, /^[ \t]*/)
+      indent = substr($0, 1, RLENGTH)
+      n++
+      count = 0
+      inside = 1
+      next
+    }
+
+    { print }
+
+    END {
+      if (inside) {
+        # The unterminated tail, put back the way it was written.
+        print indent "```mermaid"
+        for (i = 1; i <= count; i++) print body[i]
+      }
+    }
+  ' "$document" >"$work/prepared.md"
+
+  prepared="$work/prepared.md"
+else
+  warn "mermaid-ascii is not installed; mermaid fences are shown as source."
+fi
+
+# --------------------------------------------------------------------------
+# glow, then the splice
+# --------------------------------------------------------------------------
+
+# The document goes in on stdin rather than as a path: glow prefers stdin over
+# its argument whenever stdin is not a terminal, so a path would be ignored for
+# `cat file | glowm`, and glow would block on the inherited pipe instead.
+if [ "$colour" -eq 1 ]; then
+  CLICOLOR_FORCE=1 glow ${glow_args[@]+"${glow_args[@]}"} <"$prepared" >"$work/glow.out"
+else
+  glow ${glow_args[@]+"${glow_args[@]}"} <"$prepared" >"$work/glow.out"
+fi
+
+if [ -s "$manifest" ]; then
+  awk -v manifest="$manifest" -v width="$columns" '
+    BEGIN {
+      escape = sprintf("%c", 27)
+      ansi = escape "\\[[0-9;?]*[A-Za-z]"
+      slots = 0
+      while ((getline line < manifest) > 0) {
+        split(line, field, " ")
+        token[++slots] = field[1]
+        art[field[1]] = field[2]
+      }
+      close(manifest)
+    }
+
+    function strip(s,  t) { t = s; gsub(ansi, "", t); return t }
+    function trim(s) { sub(/^[ \t]+/, "", s); sub(/[ \t]+$/, "", s); return s }
+
+    # Columns a line occupies. Box drawing is single-width, so dropping the
+    # UTF-8 continuation bytes counts codepoints, which is right here and much
+    # cheaper than a real wcwidth table. An awk that already works in
+    # characters matches nothing and keeps its own count.
+    function display_width(s,  t) { t = s; gsub(/[\200-\277]/, "", t); return length(t) }
+
+    # Leftmost marker in a line, if any. Markers are plain ASCII words, so a
+    # literal search over the still-coloured line is enough.
+    function find_slot(s,  i, at, j) {
+      at = 0
+      hit = ""
+      for (i = 1; i <= slots; i++) {
+        j = index(s, token[i])
+        if (j > 0 && (at == 0 || j < at)) { at = j; hit = token[i] }
+      }
+      return at
+    }
+
+    # Art wider than the terminal is clipped rather than wrapped, so say so:
+    # mermaid-ascii lays relationship labels out horizontally and an ER diagram
+    # easily runs several times the width of a window, with no flag to compress it.
+    function put_art(file, lead,  line, widest, w) {
+      widest = 0
+      while ((getline line < file) > 0) {
+        if (line == "") { print ""; continue }
+        print lead line
+        w = display_width(lead line)
+        if (w > widest) widest = w
+      }
+      close(file)
+      if (width > 0 && widest > width)
+        printf "%s… %d columns wide, %d shown\n", lead, widest, width
+    }
+
+    {
+      rest = $0
+      at = find_slot(rest)
+      if (at == 0) { print; next }
+
+      # Keep the left margin glow gave the line so the diagram lines up with
+      # the prose around it. A marker is its own paragraph in the input, but
+      # glow flattens a list item onto a single line, so one can also turn up
+      # mid-line between the text it was written between.
+      bare = strip(rest)
+      match(bare, /^[ \t]*/)
+      lead = substr(bare, 1, RLENGTH)
+
+      while (at > 0) {
+        before = substr(rest, 1, at - 1)
+        # Reset, so the art does not inherit the colour of the prose it was
+        # cut out of.
+        if (trim(strip(before)) != "") print before escape "[0m"
+        put_art(art[hit], lead)
+        rest = substr(rest, at + length(hit))
+        at = find_slot(rest)
+      }
+      if (trim(strip(rest)) != "") print lead escape "[0m" trim(rest)
+    }
+  ' "$work/glow.out" >"$work/output"
+else
+  mv "$work/glow.out" "$work/output"
+fi
+
+if [ "$pager" -eq 1 ]; then
+  # ANSI has to survive the pager, and less only keeps it with -R.
+  ${PAGER:-less -R} "$work/output"
+else
+  cat "$work/output"
+fi

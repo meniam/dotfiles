@@ -30,14 +30,16 @@ mc
 # its own Depends on Debian trixie, so --no-install-recommends leaves mc
 # unable to load: "error while loading shared libraries: libcom_err.so.2".
 libcom-err2
-# Binaries the Yazi previewers configured in yazi.toml shell out to. duckdb and
-# typst reach Debian late, so they fall under the same skip-and-warn rule.
+# Binaries the Yazi previewers configured in yazi.toml shell out to. duckdb,
+# typst, and rich-cli reach Debian late, so they fall under the same
+# skip-and-warn rule.
 hexyl
 sqlite3
 djvulibre-bin
 transmission-cli
 duckdb
 typst
+rich-cli
 ncdu
 du-dust
 duf

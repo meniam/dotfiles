@@ -8,13 +8,12 @@
 # name (the header shows `STDIN`) and is rendered as plain text, so colourise
 # piped Markdown with `bat -l md` or `bat --file-name=answer.md`.
 
-# Same theme-agnostic rule as the Git module's color.conf and delta.conf:
-# `ansi` paints with the terminal's own 16 colours instead of a hardcoded
-# palette, so output stays readable when the terminal flips between light and
-# dark. Swap for a named theme (`Nord`, `Catppuccin Mocha`, ... — see
-# `bat --list-themes`) to get richer colours at the cost of pinning the output
-# to one terminal background.
---theme="ansi"
+# A named theme paints with a fixed palette, which gives richer colours than
+# the terminal's own sixteen at the cost of pinning the output to a dark
+# background: on a light terminal it keeps its dark syntax colours. `ansi` is
+# the theme-agnostic alternative, and the one the Git module still uses in
+# color.conf and delta.conf; `bat --list-themes` shows the rest.
+--theme="Catppuccin Mocha"
 
 # Line numbers, a filename header and the surrounding grid, plus `changes` so
 # the Git gutter marks added and modified lines while a tracked file is read.
