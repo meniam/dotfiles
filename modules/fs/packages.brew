@@ -25,7 +25,7 @@ hexyl
 typst
 djvulibre
 transmission-cli
-# gtimeout, which the mermaid previewer uses to cap a wedged `glow`.
+# gtimeout, which myazin-mermaid-glow uses to cap a wedged `glow` or diagram render.
 coreutils
 sevenzip
 # macOS already provides zip and unzip.

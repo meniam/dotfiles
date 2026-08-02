@@ -33,6 +33,7 @@ managing files and disk space.
 | [choose](https://github.com/theryangeary/choose) | Selects fields from a line without an `awk` program. |
 | [Yazi](https://yazi-rs.github.io/) | Navigates files with rich previews in a terminal UI. |
 | [DuckDB](https://duckdb.org/), [hexyl](https://github.com/sharkdp/hexyl), [SQLite](https://sqlite.org/), [Typst](https://typst.app/), [DjVuLibre](https://djvu.sourceforge.net/), and [Transmission](https://transmissionbt.com/) | Back the Yazi previewers for tabular data, unknown binaries, databases, `.typ`, `.djvu`, and `.torrent` files. |
+| [mermaid-ascii](https://github.com/AlexanderGrooff/mermaid-ascii) | Renders Mermaid diagrams as ASCII art for the Markdown previewer. Neither Homebrew nor APT packages it, so `setup.sh` fetches the release binary into `~/.local/bin`. |
 | [Midnight Commander](https://midnight-commander.org/) | Provides a dual-pane terminal file manager and editor. |
 | Zip, UnZip, 7-Zip, Zstandard, bzip2, and tar | Creates and extracts common archive formats. |
 | [Ouch](https://github.com/ouch-org/ouch) | Provides one interface for multiple archive formats. |
@@ -47,7 +48,7 @@ managing files and disk space.
 | `~/.config/bat/config` | Uses the terminal-aware `ansi` theme, enables structured output, and maps repository-specific filenames to syntaxes. |
 | `~/.config/eza/theme.yml` | Defines file-kind, permission, Git, filename, and extension colours. |
 | `~/.config/ripgrep/ripgreprc` | Enables smart case, hidden-file search, `.git` exclusion, long-line previews, automatic PCRE2 fallback, and the `pkgs` type. |
-| `~/.config/yazi/` | Configures layout, openers, keymaps, previewers, themes, and locked plugins and flavours, and vendors one plugin under `plugins/`. |
+| `~/.config/yazi/` | Configures layout, openers, keymaps, previewers, themes, and locked plugins and flavours, and vendors two plugins under `plugins/`. |
 | `~/.config/mc/ini` | Configures Midnight Commander. |
 | `~/.pydfrc` | Configures Pydf's columns, colours, and filesystem display. |
 
@@ -88,7 +89,7 @@ fzf, Yazi, Neovim, and other programs, so output-shaping options such as
 
 ### Yazi plugins
 
-`ya pkg install` restores every revision locked in `package.toml`. Two plugins
+`ya pkg install` restores every revision locked in `package.toml`. Three plugins
 sit outside that mechanism:
 
 - `vscode-git-gutter`, the previewer for `text/*`, has no public upstream to
@@ -96,6 +97,13 @@ sit outside that mechanism:
   `config/.config/yazi/plugins/vscode-git-gutter.yazi` and Stow links it like
   any other payload. It needs `bat` and `git`, both of which the module and its
   dependencies already install.
+- `myazin-mermaid-glow`, the previewer for `.md`, `.mmd`, and `.mermaid`, is
+  written for this repository and vendored the same way. It swaps every
+  ```` ```mermaid ```` fence for ASCII art from `mermaid-ascii` and pipes the
+  document through `glow`, so diagrams need no image protocol and scroll with
+  the surrounding prose. `glow` is required; `mermaid-ascii` is optional and
+  the fences stay as source without it. Its own README documents the
+  configuration and the cache.
 - `miller` is not locked at all: its upstream still ships the pre-0.3 `init.lua`
   layout that `ya pkg` cannot deploy. The `mlr` binary is installed and works on
   its own.

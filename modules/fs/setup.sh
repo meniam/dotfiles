@@ -63,6 +63,52 @@ else
   warn "The 'ya' companion binary is unavailable; plugin installation is skipped."
 fi
 
+# mermaid-ascii turns the ```mermaid fences in a Markdown file into ASCII art
+# for the vendored myazin-mermaid-glow previewer. Neither Homebrew nor APT
+# packages it, and building it from source would pull in a Go toolchain nothing
+# else here needs, so take the upstream release binary the way Yazi and Ouch do.
+# It is optional: without it the previewer leaves the fences as source.
+if ! command -v mermaid-ascii >/dev/null 2>&1; then
+  case "$OS" in
+    mac) release_os="Darwin" ;;
+    *) release_os="Linux" ;;
+  esac
+  case "$(uname -m)" in
+    x86_64|amd64) release_arch="x86_64" ;;
+    aarch64|arm64) release_arch="arm64" ;;
+    *) release_arch="" ;;
+  esac
+
+  if [ -z "$release_arch" ]; then
+    warn "mermaid-ascii is not published for $(uname -m); mermaid diagrams will preview as source."
+  else
+    temporary_dir="$(mktemp -d)"
+    trap 'rm -rf "$temporary_dir"' EXIT HUP INT TERM
+    archive="$temporary_dir/mermaid-ascii.tar.gz"
+    url="https://github.com/AlexanderGrooff/mermaid-ascii/releases/latest/download/mermaid-ascii_${release_os}_${release_arch}.tar.gz"
+
+    step "Downloading mermaid-ascii for ${release_os}/${release_arch}" "*"
+    if ! curl -fL --connect-timeout 15 --retry 2 "$url" -o "$archive"; then
+      warn "mermaid-ascii could not be downloaded; mermaid diagrams will preview as source."
+    elif ! tar -xzf "$archive" -C "$temporary_dir"; then
+      warn "The mermaid-ascii archive could not be unpacked; mermaid diagrams will preview as source."
+    else
+      source_binary="$(find "$temporary_dir" -type f -name mermaid-ascii -perm -u+x 2>/dev/null | head -1)"
+      if [ -z "$source_binary" ]; then
+        warn "The mermaid-ascii release does not contain the expected binary."
+      else
+        # BSD install(1) on macOS has no -D, so create the directory separately
+        # instead of reusing the `install -Dm755` calls above, which are Linux only.
+        mkdir -p "$HOME/.local/bin"
+        mv "$source_binary" "$HOME/.local/bin/mermaid-ascii"
+        chmod 755 "$HOME/.local/bin/mermaid-ascii"
+      fi
+    fi
+    rm -rf "$temporary_dir"
+    trap - EXIT HUP INT TERM
+  fi
+fi
+
 if [ "$OS" = "linux" ] && ! command -v ouch >/dev/null 2>&1; then
   if apt_has_candidate ouch; then
     step "Installing Ouch from configured APT sources" "*"

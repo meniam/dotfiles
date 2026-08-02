@@ -98,10 +98,13 @@ prepend_previewers = [
 	{ mime = "{audio,video,image}/*", run = "mediainfo" },
 	{ mime = "application/subrip", run = "mediainfo" },
 
-	# Markdown and Mermaid use the active Markdown previewer; glow and mdcat are not enabled.
-	{ url = "*.md", run = "mermaid" },
-	{ url = "*.mmd", run = "mermaid" },
-	{ url = "*.mermaid", run = "mermaid" },
+	# Markdown and Mermaid go through the vendored myazin-mermaid-glow previewer,
+	# which swaps every mermaid fence for ASCII art and pipes the document
+	# through glow. mdcat stays locked in package.toml as an alternative but is
+	# not enabled.
+	{ url = "*.md", run = "myazin-mermaid-glow" },
+	{ url = "*.mmd", run = "myazin-mermaid-glow" },
+	{ url = "*.mermaid", run = "myazin-mermaid-glow" },
 
 	# Tabular data uses DuckDB; parquet-preview and rich-preview are locked in
 	# package.toml as alternatives but not enabled. miller is deliberately not
