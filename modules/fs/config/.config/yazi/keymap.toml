@@ -49,6 +49,20 @@ on = ["e", "g", "s"]
 run = "plugin eza-preview toggle-git-status"
 desc = "Toggle showing git status"
 
+# toggle-pane.yazi: resize the panes at runtime by rewriting `mgr.ratio`.
+# Both actions toggle, so the same key restores the ratio from yazi.toml.
+# Binding bare `t` shadows the `t t` chord below; new tabs stay on `е е` and
+# <C-t> is left free for a replacement if the Latin chord is needed again.
+[[mgr.prepend_keymap]]
+on = "T"
+run = "plugin toggle-pane min-preview"
+desc = "Hide the preview pane"
+
+[[mgr.prepend_keymap]]
+on = "t"
+run = "plugin toggle-pane max-preview"
+desc = "Maximize the preview pane"
+
 [[mgr.prepend_keymap]]
 on = ["у", "е"]
 run = "plugin eza-preview"
@@ -416,6 +430,13 @@ desc = "New tab"
 on = ["е", "к"]
 run = "tab_rename --interactive"
 desc = "Rename tab"
+
+# toggle-pane (T -> Е). Only the shifted key is duplicated: a bare `е` would
+# shadow the `е е` and `е к` chords above, so `t` stays Latin-only.
+[[mgr.prepend_keymap]]
+on = "Е"
+run = "plugin toggle-pane min-preview"
+desc = "Hide the preview pane"
 
 # fr plugin (f r / f a -> а к / а ф)
 [[mgr.prepend_keymap]]
