@@ -48,15 +48,32 @@ local function scrollback_fzf(_, pane)
 
   -- GUI-launched WezTerm inherits launchd's minimal PATH, which excludes Homebrew;
   -- prepend it so fzf resolves even when the pane's shell profile isn't sourced.
-  local cmd =
-    string.format('export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"; cat %q | %q; rm -f %q', tmp, SCROLLBACK_FZF, tmp)
+  -- --ansi is mandatory: get_lines_as_escapes emits SGR sequences that fzf prints
+  -- literally without it. --no-preview drops the bat preview that FZF_DEFAULT_OPTS
+  -- would add for the runs that do inherit the zsh environment; scrollback lines
+  -- are not file names. --multi marks several lines with Tab. --no-mouse keeps fzf
+  -- from grabbing mouse reporting, so dragging selects text in the terminal and
+  -- WezTerm copies it on release; without it every click goes to fzf instead.
+  -- Enter copies the picked lines instead of printing them into a pane that is
+  -- about to close; an empty selection (Esc) must not wipe the clipboard.
+  local cmd = string.format(
+    'export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"; '
+      .. 'picked=$(%q --ansi --reverse --no-preview --no-mouse --multi <%q); rm -f %q; '
+      .. '[ -n "$picked" ] && printf %%s "$picked" | pbcopy',
+    SCROLLBACK_FZF,
+    tmp,
+    tmp
+  )
+  -- kitty opened this as an overlay window covering the pane; WezTerm has no
+  -- overlay, so zoom the split to get the same full-window picker.
   local ok_split, split_err = pcall(function()
-    pane:split({
+    local fzf_pane = pane:split({
       direction = "Right",
       top_level = true,
-      size = 0.65,
+      size = 0.5,
       args = { "/bin/bash", "-c", cmd },
     })
+    fzf_pane:tab():set_zoomed(true)
   end)
   if not ok_split then
     wezterm.log_error("scrollback_fzf: " .. tostring(split_err))
