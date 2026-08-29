@@ -63,17 +63,18 @@ prepend_rules = [
 ]
 
 [plugin]
-# Preloaders have a hard limit of 16 rules across built-in and custom rules. Group extensions with {a,b,c}.
+# Preloaders have a hard limit of 16 rules across built-in and custom rules; Yazi
+# itself ships 8 of them (magick, svg, image, video, pdf, font x2, trash), so at
+# most 8 custom rules fit here. Group extensions with {a,b,c}. Preloading only
+# warms the cache — anything dropped here still previews through the rules below.
 prepend_preloaders = [
 	{ mime = "{audio,video,image}/*", run = "mediainfo" },
-	{ mime = "application/subrip", run = "mediainfo" },
 
 	# `.json` is deliberately absent: no previewer rule below routes JSON to
 	# DuckDB, so preloading it only spawns a query whose cache nothing reads.
 	{ url = "*.{csv,tsv,parquet,txt,xlsx}", run = "duckdb", multi = false },
 
 	{ mime = "application/{vnd.openxmlformats-officedocument.*,openxmlformats-officedocument.*,vnd.oasis.opendocument.*,oasis.opendocument.*,ms-*,msword}", run = "office" },
-	{ url = "*.docx", run = "office" },
 
 	{ url = "*.epub", run = "preview-epub" },
 
