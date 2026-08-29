@@ -35,3 +35,6 @@ done
 unset zsh_config_dir zsh_config_file
 
 [[ ! -r "$POWERLEVEL9K_CONFIG_FILE" ]] || source "$POWERLEVEL9K_CONFIG_FILE"
+
+# The plugins above rebuild PATH, so Node 24 is pinned after they load.
+export PATH="/opt/homebrew/opt/node@24/bin:$PATH"
