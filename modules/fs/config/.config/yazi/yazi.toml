@@ -36,21 +36,21 @@ ueberzug_offset = [0, 0, 0, 0]
 # installs it, so the entry stays as an optional second choice rather than the
 # default it used to be.
 vscode = [
-	{ run = 'code "$@"', desc = "VS Code", orphan = true, for = "unix" },
+	{ run = 'code %s', desc = "VS Code", orphan = true, for = "unix" },
 ]
 
 # Terminal editors, offered alongside `edit` ($EDITOR) as alternatives in the
 # `open --interactive` picker.
 micro = [
-	{ run = 'micro "$@"', desc = "micro", block = true, for = "unix" },
+	{ run = 'micro %s', desc = "micro", block = true, for = "unix" },
 ]
 
 mcedit = [
-	{ run = 'mcedit "$@"', desc = "mcedit", block = true, for = "unix" },
+	{ run = 'mcedit %s', desc = "mcedit", block = true, for = "unix" },
 ]
 
 nvim = [
-	{ run = 'nvim "$@"', desc = "nvim", block = true, for = "unix" },
+	{ run = 'nvim %s', desc = "nvim", block = true, for = "unix" },
 ]
 
 [open]

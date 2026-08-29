@@ -158,12 +158,12 @@ desc = "Scroll preview down"
 
 [[mgr.prepend_keymap]]
 on = "o"
-run = 'shell "code \"$@\"" --orphan'
+run = 'shell "code %s" --orphan'
 desc = "Open in VS Code"
 
 [[mgr.prepend_keymap]]
 on = "щ"
-run = 'shell "code \"$@\"" --orphan'
+run = 'shell "code %s" --orphan'
 desc = "Open in VS Code"
 
 [[mgr.prepend_keymap]]
@@ -174,12 +174,12 @@ desc = "Open with..."
 # Midnight Commander's F3/F4: view and edit the hovered file.
 [[mgr.prepend_keymap]]
 on = "<F3>"
-run = 'shell "mcview \"$@\"" --block'
+run = 'shell "mcview %s" --block'
 desc = "View with mcview"
 
 [[mgr.prepend_keymap]]
 on = "<F4>"
-run = 'shell "mcedit \"$@\"" --block'
+run = 'shell "mcedit %s" --block'
 desc = "Edit with mcedit"
 
 [[mgr.prepend_keymap]]
