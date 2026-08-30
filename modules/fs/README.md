@@ -158,7 +158,7 @@ fzf, Yazi, Neovim, and other programs, so output-shaping options such as
 
 ### Yazi plugins
 
-`ya pkg install` restores every revision locked in `package.toml`. Three plugins
+`ya pkg install` restores every revision locked in `package.toml`. Four plugins
 sit outside that mechanism:
 
 - `vscode-git-gutter`, the previewer for `text/*`, has no public upstream to
@@ -173,6 +173,13 @@ sit outside that mechanism:
   the surrounding prose. `glow` is required; `mermaid-ascii` is optional and
   the fences stay as source without it. Its own README documents the
   configuration and the cache.
+- `myazin-fzf-flat`, bound to `\` and `ё`, is written for this repository and
+  vendored the same way. It runs fzf over a single depth-capped `fd` listing of
+  the current directory and reveals the pick, covering the case the built-in
+  `fzf` jump on `Z` handles badly: a wanted entry that sits in the directory
+  already on screen, under a large subtree. `|` and `Ё` pass a depth of 2 to the
+  same plugin and so reach one level below it. It needs `fzf` and `fd`, and
+  falls back to Debian's `fdfind` name.
 - `miller` is not locked at all: its upstream still ships the pre-0.3 `init.lua`
   layout that `ya pkg` cannot deploy. The `mlr` binary is installed and works on
   its own.

@@ -267,6 +267,29 @@ on = "Я"
 run = ["plugin fzf", "plugin autosave"]
 desc = "Jump with fzf"
 
+# myazin-fzf-flat.yazi: fzf over a depth-capped listing, unlike the `Z` / `Я`
+# jump above, which walks the whole subtree. The shifted keys widen the cap to
+# one level below the current directory.
+[[mgr.prepend_keymap]]
+on = "\\"
+run = "plugin myazin-fzf-flat"
+desc = "Search this dir with fzf (no subdirs)"
+
+[[mgr.prepend_keymap]]
+on = "ё"
+run = "plugin myazin-fzf-flat"
+desc = "Search this dir with fzf (no subdirs)"
+
+[[mgr.prepend_keymap]]
+on = "|"
+run = "plugin myazin-fzf-flat 2"
+desc = "Search this dir with fzf (1 level deep)"
+
+[[mgr.prepend_keymap]]
+on = "Ё"
+run = "plugin myazin-fzf-flat 2"
+desc = "Search this dir with fzf (1 level deep)"
+
 [[mgr.prepend_keymap]]
 on = "т"
 run = "find_arrow"
