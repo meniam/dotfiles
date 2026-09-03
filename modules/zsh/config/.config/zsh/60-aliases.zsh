@@ -19,7 +19,8 @@ alias cd='>/dev/null cd'
 alias mv='mv -i'
 alias cp='cp -i'
 alias rm='rm -i'
-alias ls='ls --color=auto'
+# -p appends a slash to directories so the kitty path hints (kitty_mod+p>f) can pick them up.
+alias ls='ls --color=auto -p'
 alias lla='ls --color=auto -laphc'
 
 # Let eza's bundled theme control file colors instead of inherited LS_COLORS rules.
