@@ -48,13 +48,16 @@ The cask manifest installs these application groups:
 | `~/.hammerspoon/init.lua` | Configures window-management hotkeys and input-source automation. |
 | `~/.config/wezterm/wezterm.lua` | Configures appearance, window sizing, tabs, panes, key bindings, and scrollback search. |
 | `~/.config/kitty/kitty.conf` | Loads the themed, font, window, tab, and keyboard fragments from `conf.d/`. |
-| `~/.config/kitty/scripts/toggle-split.sh` | Creates a vertical split when a tab has one pane, otherwise focuses the recent pane. |
+| `~/.config/kitty/startup.session` | Runs Herdr in the first tab when kitty is started plainly; a window opened with `cmd+n` still runs the shell. |
 | `~/.config/duti/settings.duti` | Assigns default applications for source, configuration, and plain-text types. |
 | `~/.config/launchservices/handlers.conf` | Assigns default applications for extensions that have no type of their own. |
 
 The Kitty and WezTerm keymaps include macOS shortcuts and Cyrillic-layout
-counterparts. The Kitty split helper uses remote control through
-`unix:/tmp/kitty` and prefers `jq`, falling back to Python for JSON parsing.
+counterparts. Kitty defines no `ctrl+a` chords: splits, pane navigation and
+zoom are handled by Herdr, which uses `ctrl+a` as its prefix. Both terminals
+send Option as Alt so that Alt chords reach terminal applications such as micro
+and Herdr: WezTerm for both keys, Kitty for the left one only, so the right
+Option still composes characters.
 
 Cmd+Shift and Ctrl+Shift with the arrow keys send the Shift+Home and Shift+End
 sequences `\x1b[1;2H` and `\x1b[1;2F`. They used to send `\x1b[97;6u` and

@@ -7,9 +7,10 @@ light_name = "catppuccin-latte"
 dark_name = "catppuccin"
 
 [theme.custom]
-# panel_bg = "#14191e"
+panel_bg = "transparent"
 accent = "#cba6f7"
-# surface0 = "#85149f"
+surface0 = "#14191e"
+
 # surface1 = "#98834e"
 # surface_dim = "#3d3d3d"
 # overlay0 = "#30637a"
@@ -29,8 +30,19 @@ default_shell = "/bin/zsh"
 
 [keys]
 prefix = "ctrl+a"
-toggle_sidebar = "prefix+a"
-new_tab = "ctrl+alt+o"
+toggle_sidebar = ["prefix+b", "cmd+shift+left", "cmd+shift+right"]
+split_vertical = ["prefix+backslash", "prefix+|"]
+split_horizontal = "prefix+minus"
+focus_pane_left = ["prefix+h", "prefix+left"]
+focus_pane_down = ["prefix+j", "prefix+down"]
+focus_pane_up = ["prefix+k", "prefix+up"]
+focus_pane_right = ["prefix+l", "prefix+right"]
+new_tab = ["cmd+t", "ctrl+alt+o"]
+next_tab = ["prefix+n", "cmd+right", "ctrl+tab"]
+previous_tab = ["prefix+p", "cmd+left", "ctrl+shift+tab"]
+close_tab = ["prefix+shift+x", "cmd+w"]
+next_workspace = "cmd+shift+down"
+previous_workspace = "cmd+shift+up"
 
 [ui]
 mouse_capture = true
@@ -41,11 +53,31 @@ pane_gaps = false
 agent_panel_sort = "spaces"
 
 show_agent_labels_on_pane_borders = true
+
+# Create tabs immediately with generated names instead of asking for one.
+prompt_new_tab_name = false
+
+tab_bar_position = "top"
+
+# Right side of the tab bar shows status widgets (Herdr 0.8.2+).
+tab_bar_right = [
+  { type = "hostname" },
+  { type = "datetime", format = "%H:%M" },
+]
+tab_bar_right_separator = " | "
+
 [worktrees]
 directory = "~/.herdr/worktrees"
 
 [session]
 resume_agents_on_restore = true
+
+# Split when the tab has one pane, otherwise jump to a neighboring pane.
+# prefix+ctrl+a is reserved by Herdr (it sends a literal prefix key).
+[[keys.command]]
+key = "prefix+a"
+type = "shell"
+command = "~/.config/herdr/scripts/toggle-split.sh"
 
 [[keys.command]]
 key = "prefix+f"
@@ -56,6 +88,14 @@ command = "herdr plugin action invoke open-file-viewer --plugin herdr-file-viewe
 key = "prefix+shift+f"
 type = "shell"
 command = "herdr plugin action invoke open-file-viewer-tab --plugin herdr-file-viewer"
+
+[[keys.command]]
+key = "prefix+t"
+type = "popup"
+command = "exec \"${SHELL:-sh}\""
+description = "open scratch terminal"
+width = "80%"
+height = "80%"
 
 [ui.sound]
 enabled = true

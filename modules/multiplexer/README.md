@@ -22,7 +22,8 @@ Terminal multiplexing for regular shell sessions and coding-agent workflows.
 | `~/.config/tmux/yank.sh` | Copies through native clipboard tools, a remote tunnel, or OSC 52. |
 | `~/.config/tmux/renew_env.sh` | Refreshes selected environment variables in live shell panes. |
 | `~/.config/tmux/tmux.remote.conf` | Provides an optional remote-session status layout and clipboard tunnel port. It is bundled but not sourced automatically. |
-| `~/.config/herdr/config.toml` | Selects Zsh, a `Ctrl-A` prefix, Tokyo Night styling, agent labels, worktree storage, session restore, sound, and file-viewer commands. |
+| `~/.config/herdr/config.toml` | Selects Zsh, a `Ctrl-A` prefix, Tokyo Night styling, agent labels, worktree storage, session restore, sound, splits, pane navigation, and file-viewer commands. |
+| `~/.config/herdr/scripts/toggle-split.sh` | Creates a right split when a tab has one pane, otherwise focuses a neighboring pane. Bound to `Ctrl-A a`. |
 
 The tmux configuration declares battery, prefix highlighting, online status,
 sidebar, copy/search, open, and system-statistics plugins. Several helper files

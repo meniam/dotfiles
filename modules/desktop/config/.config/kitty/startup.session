@@ -1,0 +1,5 @@
+# Startup session for a plain start of kitty: one tab running Herdr. The shell
+# is interactive and login so Herdr inherits the PATH the zsh module builds,
+# and it takes over the tab once Herdr exits or detaches.
+new_tab
+launch /bin/zsh -i -l -c 'herdr; exec /bin/zsh -i -l'
