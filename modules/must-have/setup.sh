@@ -5,7 +5,7 @@ set -euo pipefail
 
 if command -v micro >/dev/null 2>&1; then
   step "Installing micro plugins" "*"
-  for plugin in fzf filemanager editorconfig palettero manipulator detectindent; do
+  for plugin in fzf filemanager editorconfig palettero manipulator detectindent quoter joinLines toggle mdtblfmt; do
     micro -plugin install "$plugin" || warn "micro plugin '$plugin' could not be installed automatically."
   done
 

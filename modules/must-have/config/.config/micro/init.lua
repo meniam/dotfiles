@@ -37,3 +37,46 @@ function quitOnSecondEscape(bp)
 
     return true
 end
+
+-- Open a file picked in fzf. The fzf plugin's own command opens the pick in
+-- place of the current buffer and closes that buffer without asking about
+-- unsaved changes, so this one opens a new tab instead, unless the current
+-- buffer is an empty unnamed one that costs nothing to replace.
+--
+-- fzf runs in the real terminal with micro's screen suspended, not in the
+-- embedded terminal the plugin prefers. That emulator shows fzf without any
+-- colour: fzf writes every style as `ESC[;...m`, with an empty first
+-- parameter, and the emulator's CSI parser stops at a parameter it cannot
+-- convert to a number and drops the whole sequence. It also cannot render
+-- 24-bit colour, bold, or reverse. The real terminal has none of these limits,
+-- so fzf looks as it does at the shell prompt, and FZF_DEFAULT_OPTS from the
+-- zsh module applies unchanged.
+
+local shell = import("micro/shell")
+local buffer = import("micro/buffer")
+local strings = import("strings")
+
+function fzfOpen(bp)
+    -- The error is ignored on purpose: fzf exits 1 when nothing matched and
+    -- 130 on Escape, and both simply mean there is nothing to open.
+    local output, _ = shell.RunInteractiveShell("fzf", false, true)
+    local path = strings.TrimSpace(output)
+    if path == "" then
+        return true
+    end
+
+    local buf, err = buffer.NewBufferFromFile(path)
+    if err ~= nil then
+        micro.InfoBar():Error(err)
+        return true
+    end
+
+    local current = bp.Buf
+    if current.Path == "" and not current:Modified() then
+        bp:OpenBuffer(buf)
+    else
+        bp:AddTab()
+        micro.CurPane():OpenBuffer(buf)
+    end
+    return true
+end

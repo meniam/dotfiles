@@ -34,15 +34,21 @@ modules on macOS and Debian/Ubuntu Linux.
 | `~/.wgetrc` | Configures timestamping, bounded retries, timeouts, recursive behavior, and stable requested filenames. |
 | `~/.editorconfig` | Provides fallback UTF-8, line-ending, whitespace, and indentation rules outside projects with their own EditorConfig. |
 | `~/.hushlogin` | Suppresses the login banner in new shells. |
-| `~/.config/micro/settings.json` | Configures Micro's theme, indentation, clipboard, search, wrapping, editor UI, and the per-filetype overrides described below. |
-| `~/.config/micro/bindings.json` | Binds the file tree, fuzzy file open, replace prompt, and case conversion to Alt keys, and quit to a double Escape. |
-| `~/.config/micro/init.lua` | Holds the `quitOnSecondEscape` function the Escape binding ends in. |
-| `~/.config/micro/colorschemes/catppuccin-macchiato.micro` | The [Catppuccin](https://github.com/catppuccin/micro) Macchiato colorscheme `settings.json` selects. |
+| `~/.config/micro/settings.json` | Configures Micro's theme, indentation, clipboard, search, wrapping, editor UI, the plugin channels `setup.sh` installs from, and the per-filetype overrides described below. |
+| `~/.config/micro/bindings.json` | Binds the file tree, fuzzy file open, replace prompt, case conversion, line joining, and a wrap toggle to Alt keys, and quit to a double Escape. |
+| `~/.config/micro/init.lua` | Holds the `quitOnSecondEscape` function the Escape binding ends in and the `fzfOpen` function behind `Alt-o`. |
+| `~/.config/micro/colorschemes/myazin.micro` | The personal `myazin` colorscheme `settings.json` selects. |
+| `~/.config/micro/colorschemes/catppuccin-macchiato.micro` | The [Catppuccin](https://github.com/catppuccin/micro) Macchiato colorscheme, kept as an alternative. |
 | `~/.config/direnv/direnv.toml` | Raises direnv's slow-`.envrc` warning to 20 seconds and stops it from printing the changed variables on every directory switch. |
 
 `setup.sh` installs the Micro plugins `fzf`, `filemanager`, `editorconfig`,
-`palettero`, `manipulator`, and `detectindent`. A failed plugin installation is
-reported as a warning and does not fail the module.
+`palettero`, `manipulator`, `detectindent`, `quoter`, `joinLines`, `toggle`,
+and `mdtblfmt`. The last two come from the [micro-garden](https://github.com/micro-garden/unofficial-plugin-channel)
+channel, which `settings.json` lists in `pluginchannels` next to the official
+one; the option replaces Micro's default list rather than extending it, so the
+official channel has to stay listed. Stow links `settings.json` before
+`setup.sh` runs, so the installer sees both channels. A failed plugin
+installation is reported as a warning and does not fail the module.
 
 `detectindent` reads the indentation out of the file being opened and sets
 `tabsize` and `tabstospaces` from it. It covers what `editorconfig` cannot: that
@@ -75,10 +81,20 @@ release it downloads has the same omission.
 
 The keys bound in `bindings.json` are Alt keys, because Micro's own defaults
 already claim every useful Ctrl combination. `Alt-t` toggles the `filemanager`
-tree, `Alt-o` opens a file through `fzf`, `Alt-r` opens the command bar with
-`replace` prefilled, and `Alt-u` and `Alt-l` upper-case and lower-case the
-selection through `manipulator`. On macOS these require the terminal to send
-Option as Meta; the WezTerm configuration in the `desktop` module does.
+tree, `Alt-o` opens a file through fzf, `Alt-r` opens the command bar with
+`replace` prefilled, `Alt-u` and `Alt-l` upper-case and lower-case the
+selection through `manipulator`, `Alt-j` joins the current line with the next
+one, or all selected lines, through `joinLines`, and `Alt-w` toggles `softwrap`
+and `wordwrap` together for the current buffer through `toggle`, for a YAML or
+plain-text file that wants the Markdown wrapping. On macOS these require the
+terminal to send Option as Meta, which both terminal configurations in the
+`desktop` module do.
+
+`quoter` wraps a selection in the quote or bracket typed over it: select text
+and press `"`, `'`, `` ` ``, `(`, `[`, `{`, or `<`. It is on through the
+`quoter.enable` option, which defaults to true. `mdtblfmt` aligns every
+Markdown table in the buffer; it is a command, `Ctrl-e` then `mdtblfmt`, and
+only handles tables whose rows start with a pipe.
 
 `Enter` is bound to `lua:filemanager.try_open_at_cursor|InsertNewline`, so it
 opens the entry under the cursor in the file tree and inserts a line break
@@ -86,6 +102,19 @@ everywhere else. The plugin itself only opens on `Tab` and a mouse click: its
 tree is a read-only buffer, where `Enter` is suppressed. `try_open_at_cursor`
 returns nothing outside the tree, which counts as failure and hands the press
 on to `InsertNewline`.
+
+`Alt-o` runs `fzfOpen` from `init.lua` rather than the `fzf` plugin's own
+command. That command opens the pick in place of the current buffer and closes
+that buffer without asking about unsaved changes; `fzfOpen` opens a new tab
+instead, unless the current buffer is an empty unnamed one. It also runs fzf in
+the real terminal with Micro's screen suspended, where the plugin prefers
+Micro's embedded terminal. That emulator shows fzf without any colour: fzf
+writes every style as `ESC[;...m`, with an empty first parameter, and the
+emulator's CSI parser stops at a parameter it cannot convert to a number and
+drops the whole sequence. It cannot render 24-bit colour, bold, or reverse
+either. In the real terminal fzf looks as it does at the shell prompt, and
+`FZF_DEFAULT_OPTS` from the `zsh` module applies unchanged. The plugin stays
+installed for its `fzf` command.
 
 Escape quits, but only when it is pressed twice within 750 ms: the first press
 arms the exit and says so in the infobar, the second one runs `Quit`, which
@@ -99,11 +128,18 @@ press by clearing the infobar hint the first one wrote. Escape keeps aborting
 the command bar and the search prompt, which are a different pane with its own
 keymap.
 
-The colorscheme is Catppuccin Macchiato, stowed as a file under
-`~/.config/micro/colorschemes/` rather than installed as a plugin. It needs
-24-bit colour, which Micro emits only when `MICRO_TRUECOLOR` is set; the `zsh`
-module exports it on a terminal that advertises true colour. Without it the
-scheme still loads, quantized to the 256-colour palette.
+The colorscheme is `myazin`, a personal scheme stowed as a file under
+`~/.config/micro/colorschemes/`. Its background is the `#14191e` the Kitty
+and Herdr configurations use, so the editor does not stand out from the rest
+of the window, its accent is the Herdr mauve `#cba6f7`, and the remaining
+colours come from the Catppuccin Mocha palette. Catppuccin Macchiato is stowed
+next to it as an alternative; `set colorscheme catppuccin-macchiato` switches
+to it. Both need 24-bit colour, which Micro emits only when `MICRO_TRUECOLOR`
+is set; the `zsh` module exports it on a terminal that advertises true colour.
+Without it a scheme still loads, quantized to the 256-colour palette. Note
+that `set` rewrites `settings.json`, which is a symlink into this repository:
+it drops every option at its default value and sorts the rest, so restore the
+file from Git after trying a scheme out.
 
 `settings.json` carries per-filetype overrides for tab characters in Makefiles
 and Go, two-space indentation in YAML, soft wrapping in Markdown and Git commit

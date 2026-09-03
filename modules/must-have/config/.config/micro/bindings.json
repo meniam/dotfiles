@@ -2,8 +2,10 @@
     "Escape": "Deselect|RemoveAllMultiCursors|UnhighlightSearch|lua:initlua.quitOnSecondEscape",
     "Enter": "lua:filemanager.try_open_at_cursor|InsertNewline",
     "Alt-t": "command:tree",
-    "Alt-o": "command:fzf",
+    "Alt-o": "lua:initlua.fzfOpen",
     "Alt-r": "command-edit:replace ",
     "Alt-u": "command:upper",
-    "Alt-l": "command:lower"
+    "Alt-l": "command:lower",
+    "Alt-j": "lua:joinLines.joinLines",
+    "Alt-w": "command:togglelocal softwrap,command:togglelocal wordwrap"
 }

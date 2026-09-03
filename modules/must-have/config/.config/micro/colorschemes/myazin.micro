@@ -1,0 +1,75 @@
+# myazin: a personal dark colorscheme for micro.
+#
+# The background is #14191e, the same as the Kitty background and the Herdr
+# surface, so the editor does not stand out from the rest of the window. The
+# accent is the mauve #cba6f7 Herdr uses; the remaining colours come from the
+# Catppuccin Mocha palette that accent belongs to. Needs 24-bit colour, which
+# micro emits when MICRO_TRUECOLOR is set.
+
+# Base
+color-link default "#cdd6f4,#14191e"
+color-link comment "italic #7f849c"
+color-link ignore "#6c7086"
+
+# Syntax
+color-link identifier "#89b4fa"
+color-link identifier.class "#f9e2af"
+color-link identifier.macro "#cba6f7"
+color-link identifier.var "#cdd6f4"
+
+color-link constant "#fab387"
+color-link constant.bool "#fab387"
+color-link constant.number "#fab387"
+color-link constant.string "#a6e3a1"
+color-link constant.specialChar "#f5c2e7"
+
+color-link statement "#cba6f7"
+color-link preproc "#f5c2e7"
+color-link preproc.shebang "#7f849c"
+
+color-link type "#f9e2af"
+color-link type.keyword "#cba6f7"
+color-link type.extended "default"
+
+color-link symbol "#94e2d5"
+color-link symbol.brackets "#cdd6f4"
+color-link symbol.operator "#94e2d5"
+color-link symbol.tag "#89b4fa"
+
+color-link special "#f5c2e7"
+color-link underlined "underline #89dceb"
+color-link error "bold #f38ba8"
+color-link todo "bold #f9e2af"
+
+# Editor chrome
+color-link statusline "#cdd6f4,#1b2128"
+color-link statusline.inactive "#7f849c,#1b2128"
+color-link statusline.suggestions "#cdd6f4,#313244"
+color-link tabbar "#7f849c,#1b2128"
+color-link tabbar.active "bold #cba6f7,#1b2128"
+color-link divider "#313244"
+color-link scrollbar "#45475a"
+
+color-link line-number "#45475a"
+color-link current-line-number "#cba6f7"
+color-link cursor-line "#1c2229"
+color-link color-column "#1c2229"
+color-link indent-char "#313244"
+
+color-link selection "#cdd6f4,#313244"
+color-link hlsearch "#14191e,#f9e2af"
+color-link match-brace "bold #14191e,#cba6f7"
+color-link trailingws "#f38ba8,#45241f"
+color-link tab-error "#f38ba8,#45241f"
+
+# Gutter and diff
+color-link gutter-info "#89b4fa"
+color-link gutter-warning "#f9e2af"
+color-link gutter-error "#f38ba8"
+color-link diff-added "#a6e3a1"
+color-link diff-modified "#f9e2af"
+color-link diff-deleted "#f38ba8"
+
+# Info bar
+color-link message "#cdd6f4"
+color-link error-message "bold #f38ba8"

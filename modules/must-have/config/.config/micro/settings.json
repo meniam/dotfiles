@@ -1,6 +1,10 @@
 {
-    "colorscheme": "catppuccin-macchiato",
+    "colorscheme": "myazin",
     "clipboard": "terminal",
+    "pluginchannels": [
+        "https://raw.githubusercontent.com/micro-editor/plugin-channel/master/channel.json",
+        "https://raw.githubusercontent.com/micro-garden/unofficial-plugin-channel/master/channel.json"
+    ],
     "tabsize": 4,
     "tabstospaces": true,
     "autoindent": true,
