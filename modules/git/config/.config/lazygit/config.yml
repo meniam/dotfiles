@@ -7,9 +7,9 @@ gui:
   scrollOffMargin: 5
   sidePanelWidth: 0.25
 git:
-  pagers:
+  diffRenderers:
     - colorArg: always
-      pager: delta --no-gitconfig --dark --paging=never --hunk-header-style=omit --syntax-theme="Dracula" --minus-style="white darkred" --plus-style="white darkgreen" --navigate --line-numbers --hyperlinks --keep-plus-minus-markers --tabs=4 --wrap-max-lines=2 --file-style="yellow bold" --file-decoration-style="yellow ul" --hunk-header-decoration-style="magenta box" --line-numbers-left-style="dim white" --line-numbers-right-style="dim white" --line-numbers-minus-style=red --line-numbers-plus-style=green --line-numbers-zero-style="dim white" --map-styles="bold magenta => magenta dim italic, bold cyan => cyan dim italic"
+      command: delta --no-gitconfig --dark --paging=never --hunk-header-style=omit --syntax-theme="Dracula" --minus-style="white darkred" --plus-style="white darkgreen" --navigate --line-numbers --hyperlinks --keep-plus-minus-markers --tabs=4 --wrap-max-lines=2 --file-style="yellow bold" --file-decoration-style="yellow ul" --hunk-header-decoration-style="magenta box" --line-numbers-left-style="dim white" --line-numbers-right-style="dim white" --line-numbers-minus-style=red --line-numbers-plus-style=green --line-numbers-zero-style="dim white" --map-styles="bold magenta => magenta dim italic, bold cyan => cyan dim italic"
 os:
   editPreset: vscode
 refresher:
