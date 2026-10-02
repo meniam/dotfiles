@@ -25,38 +25,68 @@ hs.hotkey.bind(mash, "Down", function()
 end)
 
 -- Position selected applications after their main window becomes available.
+local centered = {0.09, 0.1, 0.83, 0.8}
+
+local layouts = {
+  ["Arc"] = {0, 0, 0.5, 1},
+  ["ChatGPT"] = {0.3, 0.1, 0.4, 0.8},
+  ["Telegram"] = centered,
+  ["WezTerm"] = centered,
+  ["kitty"] = centered,
+  ["Code"] = centered,
+  ["Cursor"] = centered,
+  ["Docker"] = centered,
+  ["Docker Desktop"] = centered,
+  ["Zoom Workplace"] = centered,
+  ["Google Chrome"] = centered,
+  ["Finder"] = centered,
+  ["Photos"] = centered,
+  ["Snagit"] = centered,
+  ["Sublime Text"] = centered,
+  ["App Store"] = centered,
+  ["PhpStorm"] = "maximize",
+}
+
+local function apply(win, unit)
+  if unit == "maximize" then
+    win:maximize()
+  else
+    win:moveToUnit(unit)
+  end
+end
+
+-- Electron apps take seconds to open their first window, so keep asking for it,
+-- then apply the layout once more because they restore their own saved frame.
+local function place(app, unit, attempt)
+  attempt = attempt or 1
+
+  local win = app:mainWindow()
+  if win and win:isStandard() then
+    apply(win, unit)
+    hs.timer.doAfter(1.5, function()
+      if win:isVisible() then
+        apply(win, unit)
+      end
+    end)
+    return
+  end
+
+  if app:isRunning() and attempt < 20 then
+    hs.timer.doAfter(0.5, function()
+      place(app, unit, attempt + 1)
+    end)
+  end
+end
+
 app_watcher = hs.application.watcher.new(function(app_name, event_type, app)
   if event_type ~= hs.application.watcher.launched then
     return
   end
 
-  hs.timer.doAfter(0.8, function()
-    local win = app:mainWindow()
-    if not win then
-      return
-    end
-
-    if app_name == "Arc" then
-      win:moveToUnit({0, 0, 0.5, 1})
-    elseif app_name == "Telegram" then
-      -- win:setFrame(hs.geometry.rect(1400, 80, 420, 900))
-      win:moveToUnit({0.09, 0.1, 0.83, 0.8})
-    elseif app_name == "WezTerm" then
-      win:moveToUnit({0.09, 0.1, 0.83, 0.8})
-    elseif app_name == "Code" then
-      win:moveToUnit({0.09, 0.1, 0.83, 0.8})
-    elseif app_name == "Docker" then
-      win:moveToUnit({0.09, 0.1, 0.83, 0.8})
-    elseif app_name == "Docker Desktop" then
-      win:moveToUnit({0.09, 0.1, 0.83, 0.8})
-    elseif app_name == "ChatGPT" then
-      win:moveToUnit({0.3, 0.1, 0.4, 0.8})
-    elseif app_name == "Zoom Workplace" then
-      win:moveToUnit({0.09, 0.1, 0.83, 0.8})
-    elseif app_name == "PhpStorm" then
-      win:maximize()
-    end
-  end)
+  local unit = layouts[app_name]
+  if unit then
+    place(app, unit)
+  end
 end)
 
 app_watcher:start()
