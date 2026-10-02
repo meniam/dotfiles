@@ -138,6 +138,7 @@ config.harfbuzz_features = { "zero" }
 config.colors = {
   foreground = "#c7c7c7",
   background = "#14191e",
+--  background = "#0a0500",
 
   cursor_bg = "#fefffe",
   cursor_fg = "#000000",
@@ -195,10 +196,10 @@ config.colors = {
 
 -- Window
 config.adjust_window_size_when_changing_font_size = false
-config.window_background_opacity = 0.85
+config.window_background_opacity = 0.90
 if wezterm.target_triple:find("apple") then
   config.window_decorations = "RESIZE | MACOS_FORCE_DISABLE_SHADOW"
-  config.macos_window_background_blur = 30
+  config.macos_window_background_blur = 0
 else
   config.window_decorations = "RESIZE"
 end
