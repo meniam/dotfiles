@@ -19,9 +19,10 @@ also get a few tools that work alongside ssh rather than replace it.
 | [sshuttle](https://github.com/sshuttle/sshuttle) | Tunnels arbitrary traffic over a plain SSH login, with no server-side setup. |
 | [autossh](https://www.harding.motd.ca/autossh/) | Restarts a tunnel when it dies, which `mosh` does not cover. |
 
-The payload is `~/.ssh/config` plus one Zsh fragment (see below), and `setup.sh`
-creates `~/.ssh/sockets` and `~/.ssh/config.d`, restricting them and `~/.ssh`
-itself to mode `0700`.
+The payload is `~/.ssh/config.d/zz-defaults.conf` plus one Zsh fragment (see
+below). `setup.sh` seeds a plain `~/.ssh/config` that includes it, creates
+`~/.ssh/sockets`, and restricts both directories and `~/.ssh` itself to mode
+`0700`.
 
 ## Reaching an agent
 
@@ -45,29 +46,38 @@ file. For any other shell the equivalent belongs in a machine-local rc file.
 ## Include order
 
 Unlike Git, ssh keeps the **first** value it obtains for a keyword and ignores
-every later one. A `Host *` block placed at the top of a config therefore locks
-in its settings permanently — nothing further down, in this file or in an
-included one, can override them.
+every later one. A `Host *` block read early therefore locks in its settings
+permanently — nothing read after it can override them.
 
-So the includes come first and the catch-all block comes last:
+`~/.ssh/config` is a regular file that belongs to the machine. `setup.sh`
+creates it when it is missing and otherwise only makes sure it includes
+`config.d` (see [Replacing an existing config](#replacing-an-existing-config)):
 
 ```sshconfig
-Include ~/.ssh/config.local
 Include ~/.ssh/config.d/*.conf
-
-Host *
-    ...
 ```
 
-Per-host entries in `~/.ssh/config.local` win, and `Host *` only supplies the
-keywords nothing else claimed. Neither include has to exist: ssh skips an
-include path that does not resolve without warning.
+The repository owns only `config.d/zz-defaults.conf`, which holds the
+`Host *` block. The glob expands in lexical order and the `zz-` prefix sorts it
+after every other drop-in, so per-host entries in `config.d/*.conf` are read
+first and win, and `Host *` only supplies the keywords nothing else claimed.
+ssh skips a glob that matches nothing without warning, so no drop-in has to
+exist besides the defaults.
 
-Both live outside the repository. `config.local` is the single-file escape
-hatch for private hosts, users, ports, jump hosts, and identity files;
-`config.d/*.conf` is there for splitting that up per project or per employer.
-Keeping them out of the repo is what allows the module to be public — no
-hostnames, usernames, or key paths are committed.
+Keep hosts out of `~/.ssh/config` itself. An `Include` that follows a `Host`
+line applies only to that host, so host blocks there would have to sit after
+the `Include` and would lose to the defaults.
+
+The split exists because tools such as OrbStack, Colima, or VS Code Remote
+edit `~/.ssh/config` on their own. When it was a symlink into the repository,
+those edits landed in the tracked file; now they stay on the machine. An older
+install that still has the symlink gets it replaced by the seeded file on the
+next `setup.sh` run.
+
+Private hosts, users, ports, jump hosts, and identity files go in
+`config.d/*.conf`, one file per project or per employer. Keeping them out of
+the repo is what allows the module to be public — no hostnames, usernames, or
+key paths are committed.
 
 ## What the defaults do
 
@@ -113,7 +123,7 @@ and stops it from offering everything the agent holds. It is the usual fix for
 `Too many authentication failures` on a machine with many keys. It also makes
 agent-only keys unusable — keys held by 1Password, Secretive, or a YubiKey
 have no file on disk to name, so ssh would stop offering them entirely.
-Set it per host in `config.local`, next to the `IdentityFile` it applies to,
+Set it per host in a `config.d` drop-in, next to the `IdentityFile` it applies to,
 rather than globally:
 
 ```sshconfig
@@ -138,7 +148,7 @@ rewriting the whole file once:
 ssh-keygen -H -f ~/.ssh/known_hosts   # the previous contents stay as known_hosts.old
 ```
 
-Add the keyword to `config.local` if that trade is worth it on a given machine.
+Add the keyword to a `config.d` drop-in if that trade is worth it on a given machine.
 
 **Cipher, MAC, and key exchange lists** are not pinned either. A hardcoded list
 ages into either a weak configuration or one that cannot reach older servers;
@@ -146,7 +156,8 @@ the upstream defaults track current practice on their own.
 
 ## Replacing an existing config
 
-The installer moves a pre-existing `~/.ssh/config` into
-`~/.dotfiles-backups/<timestamp>-<pid>/` before stow links this one, so nothing
-is lost. Private host entries from the backup belong in `~/.ssh/config.local`,
-where the `Include` picks them up and where they stay out of version control.
+`setup.sh` keeps an existing `~/.ssh/config`. When the file has no `Include`
+of `config.d` yet, it prepends the `Include` line above, so it comes before
+the first `Host` line and the defaults take effect. A file that already
+includes `config.d` anywhere is left exactly as it is. Host entries from such a
+file are best moved into a `config.d` drop-in, for the ordering reason above.
