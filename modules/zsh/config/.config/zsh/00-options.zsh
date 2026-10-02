@@ -34,6 +34,11 @@ bindkey '\x1bOF' end-of-line
 bindkey '\x1b[1~' beginning-of-line
 bindkey '\x1b[4~' end-of-line
 
+# Bind Delete to delete the character under the cursor. Emacs mode leaves
+# `\e[3~` unbound, so zsh eats `\e[3` and inserts the trailing `~`.
+[[ -n "${terminfo[kdch1]:-}" ]] && bindkey "${terminfo[kdch1]}" delete-char
+bindkey '\x1b[3~' delete-char
+
 # Show and navigate completion candidates with consecutive Tab presses.
 # Complete words at the cursor so command options and arguments remain discoverable.
 setopt auto_list auto_menu complete_in_word always_to_end
