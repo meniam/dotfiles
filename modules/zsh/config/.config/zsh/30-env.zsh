@@ -73,8 +73,25 @@ fi
 # the mise.toml, .tool-versions, or .nvmrc that applies to the current
 # directory; a directory that pins nothing is left alone, so the Homebrew or
 # APT toolchain stays in charge outside projects.
+#
+# Startup runs the hook twice: once inside `mise activate`, and again at the
+# first prompt, because the files sourced after this one change PATH. Either run
+# can print a `status.show_tools` line such as `mise -node@24.21.0` when the
+# shell inherits mise state from its parent (an editor terminal, a nested
+# shell), and any output before the first prompt trips the Powerlevel10k
+# instant prompt warning. Both startup runs are therefore silenced; the first
+# precmd swaps the quiet wrapper for the real hook, so later prompts and
+# directory changes still report tool changes.
 if (( $+commands[mise] )); then
-  eval "$(mise activate zsh)"
+  eval "$(mise activate zsh)" 2>/dev/null
+
+  # Swapped in place, not removed and re-added, so the hook keeps its slot
+  # ahead of the prompt theme's precmd.
+  _mise_hook_precmd_first() {
+    precmd_functions[${precmd_functions[(i)_mise_hook_precmd_first]}]=_mise_hook_precmd
+    _mise_hook_precmd 2>/dev/null
+  }
+  precmd_functions[${precmd_functions[(i)_mise_hook_precmd]}]=_mise_hook_precmd_first
 fi
 
 # Load an approved .envrc when entering a directory and unload it when leaving.
