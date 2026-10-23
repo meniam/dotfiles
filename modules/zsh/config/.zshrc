@@ -38,3 +38,7 @@ unset zsh_config_dir zsh_config_file
 
 # The plugins above rebuild PATH, so Node 24 is pinned after they load.
 export PATH="/opt/homebrew/opt/node@24/bin:$PATH"
+
+# >>> agterm agent-status >>>
+source '/Users/eugene/.config/agterm/agent-status/shell/integration.sh'
+# <<< agterm agent-status <<<
