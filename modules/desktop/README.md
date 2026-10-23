@@ -35,9 +35,8 @@ The cask manifest installs these application groups:
 
 - inspection and automation: Apparency, KeyCastr, Raycast, and Suspicious
   Package
-- connectivity: Tunnelblick, Pritunl, Wireshark, and Wireshark App
-- Quick Look extensions: QLColorCode, QLMarkdown, QLStephen, QuickLook Video,
-  QuickLookASE, and WebPQuickLook
+- connectivity: Tunnelblick, Pritunl, and Wireshark
+- Quick Look extensions: QLMarkdown and QuickLook Video
 - development and productivity: Bruno, LibreOffice, and pgAdmin 4
 - desktop media: qBittorrent and Spotify
 
