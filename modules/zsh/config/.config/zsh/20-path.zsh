@@ -29,7 +29,7 @@ path_entries=(
   "${HOMEBREW_PREFIX:-/opt/homebrew}/opt/grep/libexec/gnubin"
   "${HOMEBREW_PREFIX:-/opt/homebrew}/opt/python/libexec/bin"
   "${HOMEBREW_PREFIX:-/opt/homebrew}/opt/ruby/bin"
-  "${HOMEBREW_PREFIX:-/opt/homebrew}/opt/postgresql@16/bin"
+  "${HOMEBREW_PREFIX:-/opt/homebrew}/opt/libpq/bin"
   "/usr/local/bin"
   "/usr/local/sbin"
   "/usr/sbin"
