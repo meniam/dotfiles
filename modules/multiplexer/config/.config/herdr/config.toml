@@ -29,7 +29,7 @@ surface0 = "#14191e"
 default_shell = "/bin/zsh"
 
 [keys]
-prefix = "ctrl+a"
+prefix = "ctrl+b"
 toggle_sidebar = ["prefix+b", "cmd+shift+left", "cmd+shift+right"]
 split_vertical = ["prefix+backslash", "prefix+|"]
 split_horizontal = "prefix+minus"
@@ -43,12 +43,26 @@ previous_tab = ["prefix+p", "cmd+left", "ctrl+shift+tab"]
 close_tab = ["prefix+shift+x", "cmd+w"]
 next_workspace = "cmd+shift+down"
 previous_workspace = "cmd+shift+up"
+move_tab_previous = "cmd+alt+left"
+move_tab_next = "cmd+alt+right"
+resize_pane_left = "ctrl+shift+alt+left"
+resize_pane_down = "ctrl+shift+alt+down"
+resize_pane_up = "ctrl+shift+alt+up"
+resize_pane_right = "ctrl+shift+alt+right"
+last_pane = "prefix+semicolon"
 
 [ui]
 mouse_capture = true
 accent = "#cba6f7"
 pane_borders = true
 pane_gaps = false
+
+# tmux-style splitters: no frame around the pane area, no scrollbar column.
+pane_outer_borders = false
+pane_scrollbars = false
+
+# Distinct glyphs for blocked, working, done and idle, not only colored dots.
+status_indicators = "symbols"
 
 agent_panel_sort = "spaces"
 
@@ -73,7 +87,7 @@ directory = "~/.herdr/worktrees"
 resume_agents_on_restore = true
 
 # Split when the tab has one pane, otherwise jump to a neighboring pane.
-# prefix+ctrl+a is reserved by Herdr (it sends a literal prefix key).
+# prefix+ctrl+b is reserved by Herdr (it sends a literal prefix key).
 [[keys.command]]
 key = "prefix+a"
 type = "shell"
@@ -98,7 +112,12 @@ width = "80%"
 height = "80%"
 
 [ui.sound]
-enabled = true
+enabled = false
+
+# A background agent that finishes or waits for input raises a macOS
+# notification instead of a sound.
+[ui.toast]
+delivery = "system"
 
 [experimental]
 pane_history = true
