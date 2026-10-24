@@ -52,8 +52,8 @@ The cask manifest installs these application groups:
 | `~/.config/launchservices/handlers.conf` | Assigns default applications for extensions that have no type of their own. |
 
 The Kitty and WezTerm keymaps include macOS shortcuts and Cyrillic-layout
-counterparts. Kitty defines no `ctrl+a` chords: splits, pane navigation and
-zoom are handled by Herdr, which uses `ctrl+a` as its prefix. Both terminals
+counterparts. Kitty defines no `ctrl+b` chords: splits, pane navigation and
+zoom are handled by Herdr, which uses `ctrl+b` as its prefix. Both terminals
 send Option as Alt so that Alt chords reach terminal applications such as micro
 and Herdr: WezTerm for both keys, Kitty for the left one only, so the right
 Option still composes characters.
