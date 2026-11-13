@@ -55,6 +55,16 @@ local function apply(win, unit)
   end
 end
 
+-- Apply the layout once more after a delay because apps restore their own saved frame.
+local function place_window(win, unit)
+  apply(win, unit)
+  hs.timer.doAfter(1.5, function()
+    if win:isVisible() then
+      apply(win, unit)
+    end
+  end)
+end
+
 -- Electron apps take seconds to open their first window, so keep asking for it,
 -- then apply the layout once more because they restore their own saved frame.
 local function place(app, unit, attempt)
@@ -62,12 +72,7 @@ local function place(app, unit, attempt)
 
   local win = app:mainWindow()
   if win and win:isStandard() then
-    apply(win, unit)
-    hs.timer.doAfter(1.5, function()
-      if win:isVisible() then
-        apply(win, unit)
-      end
-    end)
+    place_window(win, unit)
     return
   end
 
@@ -90,6 +95,22 @@ app_watcher = hs.application.watcher.new(function(app_name, event_type, app)
 end)
 
 app_watcher:start()
+
+-- Apps that are already running open new windows without a launch event
+-- (VS Code after Cmd+W, `code -n`, a new Finder window), so place those too.
+window_watcher = hs.window.filter.new(false)
+for name in pairs(layouts) do
+  window_watcher:allowApp(name)
+end
+
+window_watcher:subscribe(hs.window.filter.windowCreated, function(win, app_name)
+  local unit = layouts[app_name]
+  if unit and win:isStandard() then
+    hs.timer.doAfter(0.3, function()
+      place_window(win, unit)
+    end)
+  end
+end)
 
 -- Switch to the English input source whenever WezTerm receives focus.
 -- Keep the watcher in a global variable so Hammerspoon does not discard it.
