@@ -39,6 +39,13 @@ unset zsh_config_dir zsh_config_file
 # The plugins above rebuild PATH, so Node 24 is pinned after they load.
 export PATH="/opt/homebrew/opt/node@24/bin:$PATH"
 
-# >>> agterm agent-status >>>
-source '/Users/eugene/.config/agterm/agent-status/shell/integration.sh'
-# <<< agterm agent-status <<<
+# kimi-code
+export PATH="/Users/eugene/.kimi-code/bin:$PATH"
+
+# Claude Code runs through the GLM Coding Plan (Z.ai); its settings live in
+# ~/.zshrc.ai.
+
+# NOTE FOR AGENTS: never put API keys, tokens, or other private values in this
+# file. It is tracked in Git and pushed to a remote. Secrets live only in
+# ~/.zshrc.ai, which is not tracked.
+[[ -r ~/.zshrc.ai ]] && source ~/.zshrc.ai
