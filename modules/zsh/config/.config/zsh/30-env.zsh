@@ -44,9 +44,9 @@ fi
 # it before, so Git fell through to `vi`.
 #
 # Resolved here rather than as `core.editor` in the git module: that module does
-# not depend on nvim, so hardcoding it there breaks Git on a machine that
-# installed git without nvim. The loop degrades to whatever is present instead.
-for zsh_editor_candidate in nvim vim vi; do
+# not depend on micro, so hardcoding it there breaks Git on a machine that
+# installed git without micro. The loop degrades to whatever is present instead.
+for zsh_editor_candidate in micro nvim vim vi; do
   if (( $+commands[$zsh_editor_candidate] )); then
     export EDITOR="$zsh_editor_candidate"
     export VISUAL="$zsh_editor_candidate"
