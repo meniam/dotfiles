@@ -3,6 +3,8 @@
     "Enter": "lua:filemanager.try_open_at_cursor|InsertNewline",
     "Alt-t": "command:tree",
     "Alt-o": "lua:initlua.fzfOpen",
+    "Ctrl-p": "FindPrevious",
+    "Alt-p": "command:palettero",
     "Alt-r": "command-edit:replace ",
     "Alt-u": "command:upper",
     "Alt-l": "command:lower",

@@ -47,6 +47,24 @@ if command -v micro >/dev/null 2>&1; then
       warn "micro plugin 'filemanager' could not be patched for mouse clicks."
     fi
   fi
+
+  # palettero lists its commands through a bare `fzf`, which inherits the bat
+  # preview from FZF_DEFAULT_OPTS in the zsh module. Its candidates are commands
+  # rather than paths, so bat reports a missing file for every line. The
+  # explicit `--no-preview` overrides the inherited one; the grep keeps the step
+  # idempotent.
+  palettero_lua="$micro_plug_dir/palettero/main.lua"
+  if [ -f "$palettero_lua" ] && ! grep -q -- "--no-preview" "$palettero_lua"; then
+    if sed \
+      -e 's/fzf --layout=reverse/fzf --layout=reverse --no-preview/' \
+      "$palettero_lua" >"$palettero_lua.patched"; then
+      mv "$palettero_lua.patched" "$palettero_lua"
+      log "Patched the micro palettero plugin to drop the fzf preview."
+    else
+      rm -f "$palettero_lua.patched"
+      warn "micro plugin 'palettero' could not be patched to drop the fzf preview."
+    fi
+  fi
 else
   warn "micro is unavailable; plugin installation is skipped."
 fi

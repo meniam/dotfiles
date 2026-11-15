@@ -73,6 +73,11 @@ object` and opens nothing; `LocFromVisual` replaces it. The patch is reapplied
 after every install because it is overwritten each time, and skipped when the
 old call is gone, so a fixed release ends it.
 
+It patches `palettero` the same way. The plugin lists its commands through a
+bare `fzf`, which inherits the bat preview from `FZF_DEFAULT_OPTS` in the `zsh`
+module, and bat reports a missing file for every command line. The patch adds
+`--no-preview` to that call and is skipped once the flag is there.
+
 Every run reports `palettero is already installed but out-of-date`. The plugin
 omits the `VERSION` declaration from its `main.lua`, so Micro reads the
 installed version as `0.0.0-unknown` and compares that against the `0.0.5` in
@@ -86,7 +91,10 @@ tree, `Alt-o` opens a file through fzf, `Alt-r` opens the command bar with
 selection through `manipulator`, `Alt-j` joins the current line with the next
 one, or all selected lines, through `joinLines`, and `Alt-w` toggles `softwrap`
 and `wordwrap` together for the current buffer through `toggle`, for a YAML or
-plain-text file that wants the Markdown wrapping. On macOS these require the
+plain-text file that wants the Markdown wrapping. `Alt-p` opens the `palettero`
+command palette. The plugin binds itself to `Ctrl-p` unless `bindings.json`
+claims that key, which would take `FindPrevious` away from `Ctrl-n`'s pair, so
+`bindings.json` binds `Ctrl-p` back to `FindPrevious`. On macOS these require the
 terminal to send Option as Meta, which both terminal configurations in the
 `desktop` module do.
 

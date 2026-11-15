@@ -56,7 +56,11 @@ color-link cursor-line "#1c2229"
 color-link color-column "#1c2229"
 color-link indent-char "#313244"
 
-color-link selection "#cdd6f4,#313244"
+# Micro has no group for the current search match: a find selects it, and the
+# selection is painted over hlsearch. So the selection is the loud green that
+# marks the current match among the yellow ones, at a 5:1 contrast for the
+# white text.
+color-link selection "bold #ffffff,#2e7d32"
 color-link hlsearch "#14191e,#f9e2af"
 color-link match-brace "bold #14191e,#cba6f7"
 color-link trailingws "#f38ba8,#45241f"
