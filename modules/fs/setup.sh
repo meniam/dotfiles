@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Install Yazi and its locked plugins, plus Ouch and RAR/UnRAR for archives.
+# Install Yazi and its locked plugins, plus Ouch for archives.
 set -euo pipefail
 . "$DOTFILES_DIR/lib/common.sh"
 detect_os
@@ -311,25 +311,4 @@ if [ "$OS" = "linux" ] && ! command -v ouch >/dev/null 2>&1; then
     [ -n "$source_binary" ] || die "The release does not contain the 'ouch' binary."
     install -Dm755 "$source_binary" "$HOME/.local/bin/ouch"
   fi
-fi
-
-if [ "$OS" = "mac" ] && { ! command -v rar >/dev/null 2>&1 || ! command -v unrar >/dev/null 2>&1; }; then
-  step "Installing RAR and UnRAR with Homebrew" "*"
-  brew install --cask rar
-fi
-
-if [ "$OS" = "linux" ]; then
-  # RAR support is proprietary: it lives in non-free and is not built for every
-  # architecture. Treat it as optional so the rest of the module still counts.
-  for package in rar unrar; do
-    command -v "$package" >/dev/null 2>&1 && continue
-    if apt_has_candidate "$package"; then
-      step "Installing $package from configured APT sources" "*"
-      apt_install "$package" || warn "'$package' could not be installed."
-      continue
-    fi
-
-    warn "'$package' is unavailable from the configured APT sources on $(dpkg --print-architecture 2>/dev/null || uname -m)."
-    warn "Enable the non-free component, or extract RAR archives with 7z instead."
-  done
 fi

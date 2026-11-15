@@ -38,7 +38,6 @@ managing files and disk space.
 | [Midnight Commander](https://midnight-commander.org/) | Provides a dual-pane terminal file manager and editor. |
 | Zip, UnZip, 7-Zip, Zstandard, bzip2, and tar | Creates and extracts common archive formats. |
 | [Ouch](https://github.com/ouch-org/ouch) | Provides one interface for multiple archive formats. |
-| RAR and UnRAR | Creates and extracts proprietary RAR archives when platform packages are available. |
 | [Ncdu](https://dev.yorhel.nl/ncdu), [Dust](https://github.com/bootandy/dust), and [Duf](https://github.com/muesli/duf) | Inspects disk usage and free space. |
 | [Pydf](https://github.com/k4rtik/pydf) | Displays colourized filesystem usage on Linux. |
 
@@ -132,9 +131,6 @@ fzf, Yazi, Neovim, and other programs, so output-shaping options such as
   `ya pkg install`.
 - Linux installs Ouch from APT when available and otherwise downloads its
   official static release for x86_64 or arm64.
-- RAR and UnRAR may require a non-free repository on Linux. Their absence is a
-  warning during setup and does not hold the probe back, since neither command
-  can be installed everywhere.
 - `setup.sh` creates `~/.parallel/will-cite`. Without it GNU Parallel prints its
   citation request into the stderr of every script that calls it.
 - Homebrew installs GNU tar as `gtar`, because `tar` on macOS is a system
