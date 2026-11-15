@@ -33,9 +33,9 @@ The formula manifest installs:
 
 The cask manifest installs these application groups:
 
-- inspection and automation: Apparency, KeyCastr, Raycast, and Suspicious
+- inspection and automation: Apparency, KeyCastr, and Suspicious
   Package
-- connectivity: Tunnelblick, Pritunl, and Wireshark
+- connectivity: Pritunl and Wireshark
 - Quick Look extensions: QLMarkdown and QuickLook Video
 - development and productivity: Bruno, LibreOffice, and pgAdmin 4
 
