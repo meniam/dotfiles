@@ -52,7 +52,7 @@ The `zsh` module evaluates `mise activate zsh` when the binary is present. That
 line defines a `mise` shell function, registers a `precmd` hook, and rewrites
 `PATH` on every prompt from the config files that apply to the current
 directory. In a directory with no pin, mise adds nothing and Homebrew's
-`node@24` — or whatever the `node24` module installed — stays in charge.
+`node@26` — or whatever the `node26` module installed — stays in charge.
 
 Activation happens in `30-env.zsh`, which `.zshrc` sources for interactive
 shells only. Scripts, cron jobs, and IDEs that spawn a non-interactive shell
@@ -96,11 +96,11 @@ conversion.
 
 ## Relationship with the other modules
 
-**`node24`** installs one fixed Node through Homebrew or NodeSource and links it
+**`node26`** installs one fixed Node through Homebrew or NodeSource and links it
 onto `PATH`. mise overrides it only inside a project that pins a version;
-everywhere else `node` remains the `node24` build. Keeping both is reasonable —
+everywhere else `node` remains the `node26` build. Keeping both is reasonable —
 one is the machine-wide default, the other is the per-project override — but a
-machine that has fully moved to mise does not need `node24` at all.
+machine that has fully moved to mise does not need `node26` at all.
 
 **`direnv`**, installed by the `must-have` module, is the part that needs care.
 Both tools inspect the environment before and after their own hook and both
